@@ -26,4 +26,9 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() { return this.column; }
+
+    //Override toString Method
+    public String toString(){
+        return this.row + "," + this.column;
+    }
 }

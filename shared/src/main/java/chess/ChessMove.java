@@ -35,4 +35,8 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() { return this.promotionPiece; }
+
+    public String toString(){
+        return getStartPosition().toString() + ", " + getEndPosition().toString();
+    }
 }

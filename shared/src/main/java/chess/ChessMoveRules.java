@@ -25,9 +25,8 @@ public class ChessMoveRules {
             int tempRow = position.getRow();
             int tempColumn = position.getColumn();
 
-            while (tempRow + rowDirections[i] >= 1 && tempRow + rowDirections[i] < 8 &&
-                    tempColumn + colDirections[i] >= 1 && tempColumn + colDirections[i] < 8) {
-
+            while (tempRow + rowDirections[i] >= 1 && tempRow + rowDirections[i] <= 8 &&
+                    tempColumn + colDirections[i] >= 1 && tempColumn + colDirections[i] <= 8) {
                 tempRow += rowDirections[i];
                 tempColumn += colDirections[i];
 
@@ -35,8 +34,7 @@ public class ChessMoveRules {
                 chessMoveCollection.add(new ChessMove(position, endPosition, null));
             }
         }
-
-        return chessMoveCollection;
+            return chessMoveCollection;
     }
     Collection<ChessMove> knightMoveRules(ChessPosition position) {
         return chessMoveCollection;
