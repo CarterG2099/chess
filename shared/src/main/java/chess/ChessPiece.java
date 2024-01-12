@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -47,6 +48,21 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessMoveRules moveRules = new ChessMoveRules(); // Create an instance of ChessMoveRules
+        switch (this.getPieceType()) {
+            case KING:
+                return moveRules.kingMoveRules(myPosition);
+            case QUEEN:
+                return moveRules.queenMoveRules(myPosition);
+            case BISHOP:
+                return moveRules.bishopMoveRules(myPosition);
+            case KNIGHT:
+                return moveRules.knightMoveRules(myPosition);
+            case ROOK:
+                return moveRules.rookMoveRules(myPosition);
+            case PAWN:
+                return moveRules.pawnMoveRules(myPosition);
+        }
+        return new ArrayList<>();
     }
 }
