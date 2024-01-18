@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -51,17 +52,17 @@ public class ChessPiece {
         ChessMoveRules moveRules = new ChessMoveRules(); // Create an instance of ChessMoveRules
         switch (this.getPieceType()) {
             case KING:
-                return moveRules.kingMoveRules(myPosition);
+                return moveRules.kingMoveRules(myPosition, this.color);
             case QUEEN:
-                return moveRules.queenMoveRules(myPosition);
+                return moveRules.queenMoveRules(myPosition, this.color);
             case BISHOP:
-                return moveRules.bishopMoveRules(myPosition);
+                return moveRules.bishopMoveRules(myPosition, this.color);
             case KNIGHT:
-                return moveRules.knightMoveRules(myPosition);
+                return moveRules.knightMoveRules(myPosition, this.color);
             case ROOK:
-                return moveRules.rookMoveRules(myPosition);
+                return moveRules.rookMoveRules(myPosition, this.color);
             case PAWN:
-                return moveRules.pawnMoveRules(myPosition);
+                return moveRules.pawnMoveRules(myPosition, this.color);
         }
         return new ArrayList<>();
     }
@@ -73,5 +74,18 @@ public class ChessPiece {
         else {
             return this.color + "," + this.type + " ";
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return type == that.type && color == that.color;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, color);
     }
 }
