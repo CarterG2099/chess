@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class ChessMoveRules {
 
-    private Collection<ChessMove> chessMoveCollection = new ArrayList<ChessMove>();
+    private final Collection<ChessMove> chessMoveCollection = new ArrayList<ChessMove>();
     public ChessMoveRules () {
 
     }
@@ -16,8 +16,8 @@ public class ChessMoveRules {
 
     /**
      * Returns all the possible positions that the queen can move to
-     * @param position
-     * @param color
+     * @param position position of chessPiece
+     * @param color team color of chess piece
      * @return Collection of chessMoves
      */
     Collection<ChessMove> queenMoveRules(ChessPosition position, ChessGame.TeamColor color) {
@@ -58,6 +58,8 @@ public class ChessMoveRules {
         return chessMoveCollection;
     }
     Collection<ChessMove> knightMoveRules(ChessPosition position, ChessGame.TeamColor color) {
+        int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+
         return chessMoveCollection;
     }
     Collection<ChessMove> rookMoveRules(ChessPosition position, ChessGame.TeamColor color) {
@@ -66,62 +68,70 @@ public class ChessMoveRules {
     Collection<ChessMove> pawnMoveRules(ChessPosition position, ChessGame.TeamColor color) {
         int row = position.getRow();
         int col = position.getColumn();
-        int [][] directions = {{1,-1},{1,0},{1,1},{-1,-1},{-1,0},{-1,1}};
-        //Determine moves based on the color
+        ChessPiece.PieceType promotionPiece = null;
         if (color == ChessGame.TeamColor.WHITE){
             //Check for diagonal attacks
             ChessPosition newPosition = new ChessPosition(row+1, col-1);
             if (ChessBoard.getPiece(newPosition) != null){
                     if (ChessBoard.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
             newPosition = new ChessPosition(row+1, col+1);
             if (ChessBoard.getPiece(newPosition) != null){
                 if (ChessBoard.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
             //Check for forward move
             newPosition = new ChessPosition(row+1, col);
             if (ChessBoard.getPiece(newPosition) == null){
-                chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 //First move can move forward 2
                 newPosition = new ChessPosition(row+2, col);
                 if (row == 2 && ChessBoard.getPiece(newPosition) == null){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
-
-
         }
+
         //Black Pawn moves
         else {
             //Check for diagonal attack
             ChessPosition newPosition = new ChessPosition(row-1, col-1);
             if (ChessBoard.getPiece(newPosition) != null){
                 if (ChessBoard.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
             newPosition = new ChessPosition(row-1, col+1);
             if (ChessBoard.getPiece(newPosition) != null){
                 if (ChessBoard.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
             //Check for forward move
             newPosition = new ChessPosition(row-1, col);
             if (ChessBoard.getPiece(newPosition) == null){
-                chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 //First move can move forward 2
                 newPosition = new ChessPosition(row-2, col);
                 if (row == 7 && ChessBoard.getPiece(newPosition) == null){
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                    chessMoveCollection.add(new ChessMove(position, newPosition, promotionPiece));
                 }
             }
 
         }
         return chessMoveCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }

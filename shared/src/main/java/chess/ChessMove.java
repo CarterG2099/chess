@@ -21,12 +21,12 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition() { return this.startPosition; }
+    public ChessPosition getStartPosition() { return startPosition; }
 
     /**
      * @return ChessPosition of ending location
      */
-    public ChessPosition getEndPosition() { return this.endPosition; }
+    public ChessPosition getEndPosition() { return endPosition; }
 
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
@@ -34,9 +34,22 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() { return this.promotionPiece; }
+    public ChessPiece.PieceType getPromotionPiece() { return promotionPiece; }
 
     public String toString(){
-        return getStartPosition().toString() + ", " + getEndPosition().toString();
+        return getStartPosition().toString() + ", " + getEndPosition().toString() + " PP=" + promotionPiece;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessMove that = (ChessMove) o;
+        return that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && that.promotionPiece.equals(promotionPiece);
     }
 }

@@ -19,16 +19,29 @@ public class ChessPosition {
      * @return which row this position is in
      * 1 codes for the bottom row
      */
-    public int getRow() { return this.row; }
+    public int getRow() { return row; }
 
     /**
      * @return which column this position is in
      * 1 codes for the left row
      */
-    public int getColumn() { return this.column; }
+    public int getColumn() { return column; }
 
     //Override toString Method
     public String toString(){
         return this.row + "," + this.column;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPosition that = (ChessPosition) o;
+        return row == that.row && column == that.column;
     }
 }
