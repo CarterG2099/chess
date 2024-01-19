@@ -21,7 +21,7 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                 ChessPiece pieceAtPosition = ChessBoard.getPiece(newPosition);
                 //Empty Space
                 if (pieceAtPosition == null) chessMoveCollection.add(new ChessMove(position, newPosition, null));
-                //Opponent - capture and stop progress
+                //Opponents piece capture and stop progress
                 else if (pieceAtPosition.getTeamColor() != color) {
                     chessMoveCollection.add(new ChessMove(position, newPosition, null));
                     break;
