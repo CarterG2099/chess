@@ -52,9 +52,11 @@ public class ChessPiece {
         ChessMoveRules moveRules = new ChessMoveRules(); // Create an instance of ChessMoveRules
         switch (this.getPieceType()) {
             case KING:
-                return moveRules.kingMoveRules(myPosition, this.color);
+                KingMovesCalculaor kingMovesCalculator = new KingMovesCalculaor();
+                return kingMovesCalculator.pieceMoves(board, myPosition, this.color);
             case QUEEN:
-                return moveRules.queenMoveRules(myPosition, this.color);
+                QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator();
+                return queenMovesCalculator.pieceMoves(board, myPosition, this.color);
             case BISHOP:
                 BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator();
                 return bishopMovesCalculator.pieceMoves(board, myPosition, this.color);
