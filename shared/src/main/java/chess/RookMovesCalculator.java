@@ -18,7 +18,7 @@ public class RookMovesCalculator implements PieceMovesCalculator{
                 //Check for out of bounds
                 if (row < 1 || row > 8 || col < 1 || col > 8) break;
                 ChessPosition newPosition = new ChessPosition(row, col);
-                ChessPiece pieceAtPosition = ChessBoard.getPiece(newPosition);
+                ChessPiece pieceAtPosition = board.getPiece(newPosition);
                 //Empty Space
                 if (pieceAtPosition == null) chessMoveCollection.add(new ChessMove(position, newPosition, null));
                 //Opponents piece capture and stop progress

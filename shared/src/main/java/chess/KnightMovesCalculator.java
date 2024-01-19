@@ -14,10 +14,9 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
             int col = position.getColumn() + move[1];
             if (row >= 1 && row <= 8 && col >= 1 && col <= 8) {
                 ChessPosition newPosition = new ChessPosition(row, col);
-                ChessPiece pieceAtPosition = ChessBoard.getPiece(newPosition);
+                ChessPiece pieceAtPosition = board.getPiece(newPosition);
                 if (pieceAtPosition == null) chessMoveCollection.add(new ChessMove(position, newPosition, null));
-                else if (pieceAtPosition.getTeamColor() != color)
-                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                else if (pieceAtPosition.getTeamColor() != color) chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
         }
         return chessMoveCollection;

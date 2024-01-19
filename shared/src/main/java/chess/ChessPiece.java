@@ -49,7 +49,6 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessMoveRules moveRules = new ChessMoveRules(); // Create an instance of ChessMoveRules
         switch (this.getPieceType()) {
             case KING:
                 KingMovesCalculaor kingMovesCalculator = new KingMovesCalculaor();
