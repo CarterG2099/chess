@@ -56,13 +56,17 @@ public class ChessPiece {
             case QUEEN:
                 return moveRules.queenMoveRules(myPosition, this.color);
             case BISHOP:
-                return moveRules.bishopMoveRules(myPosition, this.color);
+                BishopMovesCalculator bishopMovesCalculator = new BishopMovesCalculator();
+                return bishopMovesCalculator.pieceMoves(board, myPosition, this.color);
             case KNIGHT:
-                return moveRules.knightMoveRules(myPosition, this.color);
+                KnightMovesCalculator knightMovesCalculator = new KnightMovesCalculator();
+                return knightMovesCalculator.pieceMoves(board, myPosition, this.color);
             case ROOK:
-                return moveRules.rookMoveRules(myPosition, this.color);
+                RookMovesCalculator rookMovesCalculator = new RookMovesCalculator();
+                return rookMovesCalculator.pieceMoves(board, myPosition, this.color);
             case PAWN:
-                return moveRules.pawnMoveRules(myPosition, this.color);
+                PawnMovesCalculaor pawnMovesCalculator = new PawnMovesCalculaor();
+                return pawnMovesCalculator.pieceMoves(board, myPosition, this.color);
         }
         return new ArrayList<>();
     }
