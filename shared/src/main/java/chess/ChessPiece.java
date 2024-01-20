@@ -86,7 +86,7 @@ public class ChessPiece {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessPiece that = (ChessPiece) o;
-        return type.equals(that.type) && color.equals(that.color);
+        return Objects.equals(type, that.type) && Objects.equals(color, that.color);
     }
 
     @Override
