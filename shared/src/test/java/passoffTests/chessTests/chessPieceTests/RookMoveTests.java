@@ -31,7 +31,7 @@ public class RookMoveTests {
 
 
     @Test
-    public void rookCaptureEnemy() {
+    public void bishopCaptureEnemy() {
         validateMoves("""
                         | | | | | | | | |
                         | | | | | | | | |
