@@ -8,9 +8,9 @@ import java.util.Arrays;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable{
 
-    private static final ChessPiece[][] board = new ChessPiece[8][8];
+    private static ChessPiece[][] board = new ChessPiece[8][8];
 
     public ChessBoard() {
         for (int row = 0; row < 8; row++) {
@@ -28,6 +28,10 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[position.getRow()-1][position.getColumn()-1] = piece;
+    }
+
+    public void removePiece(ChessPosition position){
+        board[position.getRow()][position.getColumn()] = null;
     }
 
     /**
@@ -112,4 +116,22 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.hashCode(board);
     }
+
+    @Override
+    protected Object clone() {
+        // Deep copy the contents of the board
+        ChessBoard clonedBoard = new ChessBoard();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPosition tempPosition = new ChessPosition(row, col);
+                ChessPiece originalPiece = getPiece(tempPosition);
+                if (originalPiece != null) {
+                    clonedBoard.addPiece(tempPosition, originalPiece);
+                }
+            }
+        }
+        return clonedBoard;
+    }
+
+
 }
