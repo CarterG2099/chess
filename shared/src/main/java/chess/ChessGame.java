@@ -70,7 +70,8 @@ public class ChessGame {
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
         board.removePiece(move.getStartPosition());
-        board.addPiece(move.getEndPosition(), pieceToMove);
+        if(move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToMove.getTeamColor(), move.getPromotionPiece()));
+        else board.addPiece(move.getEndPosition(), pieceToMove);
         InvalidMoveException ex = new InvalidMoveException();
         //Make sure it is the right teams turn
         if(pieceToMove.getTeamColor() != getTeamTurn())
