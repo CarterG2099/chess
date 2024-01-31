@@ -48,7 +48,12 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece pieceToCheck = board.getPiece()
+        ChessPiece pieceToCheck = board.getPiece(startPosition);
+        Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
+        for(ChessMove move : validMoves) {
+            makeMove(move);
+        }
+        return validMoves;
     }
 
     /**
