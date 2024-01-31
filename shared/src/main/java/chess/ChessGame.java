@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -49,11 +50,15 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece pieceToCheck = board.getPiece(startPosition);
         Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
-        for(ChessMove move : validMoves) {
+        Iterator<ChessMove> iterator = validMoves.iterator();
+        while (iterator.hasNext()) {
+            ChessMove move = iterator.next();
             try {
                 makeMove(move);
-            } catch (InvalidMoveException ex){
-                validMoves.remove(move);
+            } catch (InvalidTurnException ex) {
+                return validMoves;
+            } catch (InvalidMoveException ex) {
+                iterator.remove(); // Safely remove the element
             }
         }
         return validMoves;
@@ -65,20 +70,19 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException{
+    public void makeMove(ChessMove move) throws InvalidMoveException, InvalidTurnException{
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
         board.removePiece(move.getStartPosition());
         if(move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToMove.getTeamColor(), move.getPromotionPiece()));
         else board.addPiece(move.getEndPosition(), pieceToMove);
-        InvalidMoveException ex = new InvalidMoveException();
+        InvalidTurnException wrongTeam = new InvalidTurnException();
         //Make sure it is the right teams turn
         if(pieceToMove.getTeamColor() != getTeamTurn())
         {
             board = tempBoard;
-            System.out.println(pieceToMove);
-            throw ex;
+            throw wrongTeam;
         }
         //Check to make sure move is even part of their moves
         Collection<ChessMove> possibleMoves = new ArrayList<>();
@@ -102,9 +106,10 @@ public class ChessGame {
                 possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
                 break;
         }
+        InvalidMoveException invalidMove = new InvalidMoveException();
         if(!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
             board = tempBoard;
-            throw ex;
+            throw invalidMove;
         }
         //After making the move, change the teams turn
         if(getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
@@ -201,7 +206,16 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition tempPosition = new ChessPosition(row, col);
+                ChessPiece tempPiece = board.getPiece(tempPosition);
+                if (tempPiece != null && teamColor == tempPiece.getTeamColor()) validMoves.addAll(validMoves(tempPosition));
+            }
+        }
+        if(validMoves.isEmpty()) return true;
+        return false;
     }
 
     /**
