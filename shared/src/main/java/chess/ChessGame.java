@@ -52,6 +52,7 @@ public class ChessGame {
         Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
         for(ChessMove move : validMoves) {
             makeMove(move);
+            if(isInCheck())
         }
         return validMoves;
     }
@@ -124,20 +125,22 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        ChessBoard tempBoard = (ChessBoard) board.clone();
-        ChessPosition kingPosition = null;
         boolean inCheck = true;
-        for(int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition tempPosition = new ChessPosition(row, col);
-                ChessPiece tempPiece = board.getPiece(tempPosition);
-                if (tempPiece != null && tempPiece.getPieceType() == ChessPiece.PieceType.KING && tempPiece.getTeamColor() == teamColor) {
-                    kingPosition = tempPosition;
-                    Collection<ChessMove> kingPossibleMoves = new KingMovesCalculaor().pieceMoves(board, kingPosition, teamColor);
-                    for (ChessMove move : kingPossibleMoves) {
-                        makeMove(move);
-                        if (!isInCheck(teamColor)) inCheck = false;
-                        board = (ChessBoard) tempBoard.clone();
+        if(isInCheck(teamColor)) {
+            ChessBoard tempBoard = (ChessBoard) board.clone();
+            ChessPosition kingPosition = null;
+            for (int row = 1; row <= 8; row++) {
+                for (int col = 1; col <= 8; col++) {
+                    ChessPosition tempPosition = new ChessPosition(row, col);
+                    ChessPiece tempPiece = board.getPiece(tempPosition);
+                    if (tempPiece != null && tempPiece.getPieceType() == ChessPiece.PieceType.KING && tempPiece.getTeamColor() == teamColor) {
+                        kingPosition = tempPosition;
+                        Collection<ChessMove> kingPossibleMoves = new KingMovesCalculaor().pieceMoves(board, kingPosition, teamColor);
+                        for (ChessMove move : kingPossibleMoves) {
+                            makeMove(move);
+                            if (!isInCheck(teamColor)) inCheck = false;
+                            board = (ChessBoard) tempBoard.clone();
+                        }
                     }
                 }
             }
