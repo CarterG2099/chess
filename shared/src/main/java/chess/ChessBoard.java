@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public class ChessBoard implements Cloneable{
 
-    private static ChessPiece[][] board = new ChessPiece[8][8];
+    private ChessPiece[][] board = new ChessPiece[8][8];
 
     public ChessBoard() {
         for (int row = 0; row < 8; row++) {
@@ -31,7 +31,7 @@ public class ChessBoard implements Cloneable{
     }
 
     public void removePiece(ChessPosition position){
-        board[position.getRow()][position.getColumn()] = null;
+        board[position.getRow()-1][position.getColumn()-1] = null;
     }
 
     /**
@@ -121,8 +121,8 @@ public class ChessBoard implements Cloneable{
     protected Object clone() {
         // Deep copy the contents of the board
         ChessBoard clonedBoard = new ChessBoard();
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
                 ChessPosition tempPosition = new ChessPosition(row, col);
                 ChessPiece originalPiece = getPiece(tempPosition);
                 if (originalPiece != null) {

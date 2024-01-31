@@ -51,8 +51,11 @@ public class ChessGame {
         ChessPiece pieceToCheck = board.getPiece(startPosition);
         Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
         for(ChessMove move : validMoves) {
-            makeMove(move);
-            if(isInCheck())
+            try {
+                makeMove(move);
+            } catch (InvalidMoveException ex){
+                validMoves.remove(move);
+            }
         }
         return validMoves;
     }
@@ -63,10 +66,42 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) {
+    public void makeMove(ChessMove move) throws InvalidMoveException{
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
+        //Check to make sure move is even part of their moves
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        switch (pieceToMove.getPieceType()) {
+            case KING:
+                possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case QUEEN:
+                possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case KNIGHT:
+                possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case BISHOP:
+                possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case ROOK:
+                possibleMoves.addAll(new RookMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case PAWN:
+                possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+        }
+        InvalidMoveException ex = new InvalidMoveException();
+        if(!possibleMoves.contains(move)) {
+            throw ex;
+        }
+        //Clone the board in case the move is invalid
+        ChessBoard tempBoard = (ChessBoard) board.clone();
         board.removePiece(move.getStartPosition());
         board.addPiece(move.getEndPosition(), pieceToMove);
+        if(isInCheck(pieceToMove.getTeamColor())) {
+            board = tempBoard;
+            throw ex;
+        }
     }
 
     /*
@@ -110,7 +145,7 @@ public class ChessGame {
 
         for(ChessMove move : opponentMoves){
             ChessPosition endPosition = move.getEndPosition();
-            if(endPosition.getRow() == kingPosition.getRow() && endPosition.getColumn() == kingPosition.getColumn()){
+            if(kingPosition != null && endPosition.getRow() == kingPosition.getRow() && endPosition.getColumn() == kingPosition.getColumn()){
                 return true;
             }
         }
@@ -137,14 +172,17 @@ public class ChessGame {
                         kingPosition = tempPosition;
                         Collection<ChessMove> kingPossibleMoves = new KingMovesCalculaor().pieceMoves(board, kingPosition, teamColor);
                         for (ChessMove move : kingPossibleMoves) {
-                            makeMove(move);
-                            if (!isInCheck(teamColor)) inCheck = false;
-                            board = (ChessBoard) tempBoard.clone();
+                            try {
+                                makeMove(move);
+                            } catch (InvalidMoveException ex){
+                                inCheck = true;
+                            }
                         }
                     }
                 }
             }
         }
+        else inCheck = false;
         return inCheck;
     }
 

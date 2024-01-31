@@ -14,12 +14,12 @@ public class PawnMovesCalculaor implements PieceMovesCalculator {
         if (color == ChessGame.TeamColor.WHITE) {
             //Check for diagonal attacks
             ChessPosition newPosition = new ChessPosition(row + 1, col - 1);
-            if (board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+            if (col > 1 && board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
                 if (row == 7) promotionMoves(position, newPosition);
                 else chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
             newPosition = new ChessPosition(row + 1, col + 1);
-            if (board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
+            if (col < 8 && board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.BLACK) {
                 if (row == 7) promotionMoves(position, newPosition);
                 else chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
@@ -40,12 +40,12 @@ public class PawnMovesCalculaor implements PieceMovesCalculator {
         else {
             //Check for diagonal attack
             ChessPosition newPosition = new ChessPosition(row - 1, col - 1);
-            if (board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if (col > 1 && board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
                 if (row == 2) promotionMoves(position, newPosition);
                 else chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
             newPosition = new ChessPosition(row - 1, col + 1);
-            if (board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if (col < 8 && board.getPiece(newPosition) != null && board.getPiece(newPosition).getTeamColor() == ChessGame.TeamColor.WHITE) {
                 if (row == 2) promotionMoves(position, newPosition);
                 else chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
