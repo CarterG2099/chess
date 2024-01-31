@@ -28,8 +28,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        if(team == TeamColor.WHITE) teamTurn = TeamColor.BLACK;
-        else teamTurn = TeamColor.WHITE;
+        teamTurn = team;
     }
 
     /**
@@ -68,40 +67,47 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException{
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
-        //Check to make sure move is even part of their moves
-        Collection<ChessMove> possibleMoves = new ArrayList<>();
-        switch (pieceToMove.getPieceType()) {
-            case KING:
-                possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case QUEEN:
-                possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case KNIGHT:
-                possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case BISHOP:
-                possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case ROOK:
-                possibleMoves.addAll(new RookMovesCalculator().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case PAWN:
-                possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(board, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-        }
-        InvalidMoveException ex = new InvalidMoveException();
-        if(!possibleMoves.contains(move)) {
-            throw ex;
-        }
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
         board.removePiece(move.getStartPosition());
         board.addPiece(move.getEndPosition(), pieceToMove);
-        if(isInCheck(pieceToMove.getTeamColor())) {
+        InvalidMoveException ex = new InvalidMoveException();
+        //Make sure it is the right teams turn
+        if(pieceToMove.getTeamColor() != getTeamTurn())
+        {
+            board = tempBoard;
+            System.out.println(pieceToMove);
+            throw ex;
+        }
+        //Check to make sure move is even part of their moves
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
+        switch (pieceToMove.getPieceType()) {
+            case KING:
+                possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case QUEEN:
+                possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case KNIGHT:
+                possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case BISHOP:
+                possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case ROOK:
+                possibleMoves.addAll(new RookMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case PAWN:
+                possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+        }
+        if(!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
             board = tempBoard;
             throw ex;
         }
+        //After making the move, change the teams turn
+        if(getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
+        else setTeamTurn(TeamColor.WHITE);
     }
 
     /*
