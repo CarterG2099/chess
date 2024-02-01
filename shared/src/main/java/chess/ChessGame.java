@@ -161,9 +161,7 @@ public class ChessGame {
 
         for(ChessMove move : opponentMoves){
             ChessPosition endPosition = move.getEndPosition();
-            if(kingPosition != null && endPosition.getRow() == kingPosition.getRow() && endPosition.getColumn() == kingPosition.getColumn()){
-                return true;
-            }
+            if(kingPosition != null && endPosition.getRow() == kingPosition.getRow() && endPosition.getColumn() == kingPosition.getColumn()) return true;
         }
         return false;
     }
