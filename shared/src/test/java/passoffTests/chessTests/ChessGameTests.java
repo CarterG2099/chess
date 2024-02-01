@@ -779,4 +779,3 @@ public class ChessGameTests {
                 "ChessGame validMoves did not return the correct moves");
     }
 }
-
