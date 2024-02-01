@@ -13,7 +13,7 @@ import java.util.Iterator;
 public class ChessGame {
 
     private ChessBoard board = new ChessBoard();
-    private TeamColor teamTurn;
+    private TeamColor teamTurn = TeamColor.WHITE;
     public ChessGame() {
 
     }
@@ -49,14 +49,13 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece pieceToCheck = board.getPiece(startPosition);
+        if(pieceToCheck == null) return null;
         Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
         Iterator<ChessMove> iterator = validMoves.iterator();
         while (iterator.hasNext()) {
             ChessMove move = iterator.next();
             try {
                 makeMove(move);
-            } catch (InvalidTurnException ex) {
-                return validMoves;
             } catch (InvalidMoveException ex) {
                 iterator.remove(); // Safely remove the element
             }
@@ -70,46 +69,47 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException, InvalidTurnException{
+    public void makeMove(ChessMove move) throws InvalidMoveException{
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
         board.removePiece(move.getStartPosition());
         if(move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToMove.getTeamColor(), move.getPromotionPiece()));
         else board.addPiece(move.getEndPosition(), pieceToMove);
-        InvalidTurnException wrongTeam = new InvalidTurnException();
+        InvalidMoveException ex = new InvalidMoveException();
         //Make sure it is the right teams turn
-        if(pieceToMove.getTeamColor() != getTeamTurn())
+        if(pieceToMove != null && pieceToMove.getTeamColor() != getTeamTurn())
         {
             board = tempBoard;
-            throw wrongTeam;
+            throw ex;
         }
         //Check to make sure move is even part of their moves
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        switch (pieceToMove.getPieceType()) {
-            case KING:
-                possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case QUEEN:
-                possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case KNIGHT:
-                possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case BISHOP:
-                possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case ROOK:
-                possibleMoves.addAll(new RookMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
-            case PAWN:
-                possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                break;
+        if(pieceToMove != null) {
+            switch (pieceToMove.getPieceType()) {
+                case KING:
+                    possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+                case QUEEN:
+                    possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+                case KNIGHT:
+                    possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+                case BISHOP:
+                    possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+                case ROOK:
+                    possibleMoves.addAll(new RookMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+                case PAWN:
+                    possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    break;
+            }
         }
-        InvalidMoveException invalidMove = new InvalidMoveException();
         if(!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
             board = tempBoard;
-            throw invalidMove;
+            throw ex;
         }
         //After making the move, change the teams turn
         if(getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
@@ -207,13 +207,17 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         Collection<ChessMove> validMoves = new ArrayList<>();
+        ChessGame.TeamColor original = getTeamTurn();
+        setTeamTurn(teamColor);
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition tempPosition = new ChessPosition(row, col);
                 ChessPiece tempPiece = board.getPiece(tempPosition);
-                if (tempPiece != null && teamColor == tempPiece.getTeamColor()) validMoves.addAll(validMoves(tempPosition));
+                if (tempPiece != null && teamColor == tempPiece.getTeamColor())
+                    validMoves.addAll(validMoves(tempPosition));
             }
         }
+        setTeamTurn(original);
         if(validMoves.isEmpty()) return true;
         return false;
     }
