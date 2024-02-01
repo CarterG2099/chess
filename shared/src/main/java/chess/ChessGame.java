@@ -49,19 +49,23 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece pieceToCheck = board.getPiece(startPosition);
-        if(pieceToCheck == null) return null;
+        if (pieceToCheck == null) return null;
+
         Collection<ChessMove> validMoves = pieceToCheck.pieceMoves(board, startPosition);
         Iterator<ChessMove> iterator = validMoves.iterator();
+
         while (iterator.hasNext()) {
             ChessMove move = iterator.next();
-            try {
-                makeMove(move);
-            } catch (InvalidMoveException ex) {
-                iterator.remove(); // Safely remove the element
-            }
+            ChessBoard tempBoard = (ChessBoard) board.clone();
+            board.removePiece(move.getStartPosition());
+            if (move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToCheck.getTeamColor(), move.getPromotionPiece()));
+            else board.addPiece(move.getEndPosition(), pieceToCheck);
+            if (isInCheck(pieceToCheck.getTeamColor())) iterator.remove(); // Use iterator to safely remove the element
+            board = tempBoard;
         }
         return validMoves;
     }
+
 
     /**
      * Makes a move in a chess game
@@ -174,8 +178,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         boolean inCheck = true;
         if(isInCheck(teamColor)) {
-            ChessBoard tempBoard = (ChessBoard) board.clone();
-            ChessPosition kingPosition = null;
+            ChessPosition kingPosition;
             for (int row = 1; row <= 8; row++) {
                 for (int col = 1; col <= 8; col++) {
                     ChessPosition tempPosition = new ChessPosition(row, col);
