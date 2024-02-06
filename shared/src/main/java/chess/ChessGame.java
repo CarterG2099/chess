@@ -69,7 +69,11 @@ public class ChessGame {
         return validMoves;
     }
 
-
+    /**
+     * If valid castling move, move the rook
+     * @param move the Kings move that the rook position is calculated from
+     * @return boolean if castling is valid or not
+     */
     private boolean castling(ChessMove move){
         //If moving left
         if(move.getStartPosition().getColumn() - move.getEndPosition().getColumn() == 2) {
@@ -103,6 +107,12 @@ public class ChessGame {
         else return true;
     }
 
+    /**
+     * Determines if rook is in danger in order to validate castling move
+     * @param rookPosition the end position of the rook in a castling move
+     * @param teamColor same color as the rook being checked
+     * @return true if the rook is in danger for castling
+     */
     public boolean rookInDanger(ChessPosition rookPosition, TeamColor teamColor) {
         Collection<ChessMove> opponentMoves = new ArrayList<>();
         for(int row = 1; row <= 8; row++){
