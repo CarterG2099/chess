@@ -13,11 +13,7 @@ public class ChessBoard implements Cloneable{
     private ChessPiece[][] board = new ChessPiece[8][8];
 
     public ChessBoard() {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                board[row][col] = null; // Initialize all cells to null initially
-            }
-        }
+
     }
 
     /**

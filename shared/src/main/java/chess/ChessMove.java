@@ -30,6 +30,7 @@ public class ChessMove {
      */
     public ChessPosition getEndPosition() { return endPosition; }
 
+
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
      * chess move

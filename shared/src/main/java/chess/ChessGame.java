@@ -57,15 +57,89 @@ public class ChessGame {
         while (iterator.hasNext()) {
             ChessMove move = iterator.next();
             ChessBoard tempBoard = (ChessBoard) board.clone();
-            board.removePiece(move.getStartPosition());
-            if (move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToCheck.getTeamColor(), move.getPromotionPiece()));
-            else board.addPiece(move.getEndPosition(), pieceToCheck);
-            if (isInCheck(pieceToCheck.getTeamColor())) iterator.remove(); // Use iterator to safely remove the element
+            board.removePiece(move.getStartPosition()); //Remove the piece
+            if (move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToCheck.getTeamColor(), move.getPromotionPiece())); //Add the promotion piece
+            else board.addPiece(move.getEndPosition(), pieceToCheck); //Add the piece
+            if (isInCheck(pieceToCheck.getTeamColor())) iterator.remove(); // Use iterator to safely remove the element if its in check
+            if(pieceToCheck.getPieceType() == ChessPiece.PieceType.KING && !castling(move)) {
+                iterator.remove(); //Check if king move is castling and if valid
+            }
             board = tempBoard;
         }
         return validMoves;
     }
 
+
+    private boolean castling(ChessMove move){
+        //If moving left
+        if(move.getStartPosition().getColumn() - move.getEndPosition().getColumn() == 2) {
+            ChessPosition rookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() - 4);
+            ChessPosition newRookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() - 1);
+            ChessGame.TeamColor color = board.getPiece(rookPosition).getTeamColor();
+            if(!rookInDanger(newRookPosition, color)) {
+                ChessPiece rookToMove = board.getPiece(rookPosition);
+                board.removePiece(rookPosition);
+                board.addPiece(newRookPosition, rookToMove);
+                return true;
+            }
+            //Rook in danger
+            return false;
+        }
+        //Moving right
+        else if(move.getStartPosition().getColumn() - move.getEndPosition().getColumn() == -2) {
+            ChessPosition rookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() + 3);
+            ChessPosition newRookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() + 1);
+            ChessGame.TeamColor color = board.getPiece(rookPosition).getTeamColor();
+            if(!rookInDanger(newRookPosition, color)) {
+                ChessPiece rookToMove = board.getPiece(rookPosition);
+                board.removePiece(rookPosition);
+                board.addPiece(newRookPosition, rookToMove);
+                return true;
+            }
+            //Rook in danger
+            return false;
+        }
+        //Not a castling move
+        else return true;
+    }
+
+    public boolean rookInDanger(ChessPosition rookPosition, TeamColor teamColor) {
+        Collection<ChessMove> opponentMoves = new ArrayList<>();
+        for(int row = 1; row <= 8; row++){
+            for(int col = 1; col <= 8; col++){
+                ChessPosition tempPosition = new ChessPosition(row, col);
+                ChessPiece tempPiece = board.getPiece(tempPosition);
+                if(tempPiece != null && tempPiece.getTeamColor() != teamColor) {
+                    switch (tempPiece.getPieceType()) {
+                        case KING:
+                            opponentMoves.addAll(new KingMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                        case QUEEN:
+                            opponentMoves.addAll(new QueenMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                        case KNIGHT:
+                            opponentMoves.addAll(new KnightMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                        case BISHOP:
+                            opponentMoves.addAll(new BishopMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                        case ROOK:
+                            opponentMoves.addAll(new RookMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                        case PAWN:
+                            opponentMoves.addAll(new PawnMovesCalculaor().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            break;
+                    }
+                }
+            }
+        }
+
+        for(ChessMove move : opponentMoves){
+            ChessPosition endPosition = move.getEndPosition();
+            if(endPosition.getRow() == rookPosition.getRow() && endPosition.getColumn() == rookPosition.getColumn()) return true;
+        }
+        return false;
+    }
 
     /**
      * Makes a move in a chess game
@@ -77,9 +151,21 @@ public class ChessGame {
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
+
+        //Check for castling move (have to adjust to fit the tests instead of using my own moves that are created
+        if(pieceToMove.getPieceType() == ChessPiece.PieceType.KING && Math.abs(move.getEndPosition().getColumn() - move.getStartPosition().getColumn()) > 1) {
+            //Check king is not in check
+            if(!isInCheck(pieceToMove.getTeamColor()))
+                castling(move);
+        }
+
+        //Move the original piece
         board.removePiece(move.getStartPosition());
+
+        //Check for promotion add
         if(move.getPromotionPiece() != null) board.addPiece(move.getEndPosition(), new ChessPiece(pieceToMove.getTeamColor(), move.getPromotionPiece()));
         else board.addPiece(move.getEndPosition(), pieceToMove);
+
         InvalidMoveException ex = new InvalidMoveException();
         //Make sure it is the right teams turn
         if(pieceToMove != null && pieceToMove.getTeamColor() != getTeamTurn())
@@ -92,7 +178,9 @@ public class ChessGame {
         if(pieceToMove != null) {
             switch (pieceToMove.getPieceType()) {
                 case KING:
-                    possibleMoves.addAll(new KingMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator();
+                    if(!pieceToMove.hasPieceMoved()) kingMovesCalculator.castling(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor());
+                    possibleMoves.addAll(kingMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
                     break;
                 case QUEEN:
                     possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
@@ -104,7 +192,8 @@ public class ChessGame {
                     possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
                     break;
                 case ROOK:
-                    possibleMoves.addAll(new RookMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator();
+                    possibleMoves.addAll(rookMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
                     break;
                 case PAWN:
                     possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
@@ -118,6 +207,8 @@ public class ChessGame {
         //After making the move, change the teams turn
         if(getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
         else setTeamTurn(TeamColor.WHITE);
+        //Mark the piece as having moved
+        pieceToMove.pieceMoved();
     }
 
     /*
@@ -137,7 +228,7 @@ public class ChessGame {
                 if(tempPiece != null && tempPiece.getTeamColor() != teamColor) {
                     switch (tempPiece.getPieceType()) {
                         case KING:
-                            opponentMoves.addAll(new KingMovesCalculaor().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
+                            opponentMoves.addAll(new KingMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
                             break;
                         case QUEEN:
                             opponentMoves.addAll(new QueenMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
@@ -183,7 +274,7 @@ public class ChessGame {
                     ChessPiece tempPiece = board.getPiece(tempPosition);
                     if (tempPiece != null && tempPiece.getPieceType() == ChessPiece.PieceType.KING && tempPiece.getTeamColor() == teamColor) {
                         kingPosition = tempPosition;
-                        Collection<ChessMove> kingPossibleMoves = new KingMovesCalculaor().pieceMoves(board, kingPosition, teamColor);
+                        Collection<ChessMove> kingPossibleMoves = new KingMovesCalculator().pieceMoves(board, kingPosition, teamColor);
                         for (ChessMove move : kingPossibleMoves) {
                             try {
                                 makeMove(move);

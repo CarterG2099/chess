@@ -14,6 +14,8 @@ public class ChessPiece {
 
     private final PieceType type;
     private final ChessGame.TeamColor color;
+    private boolean hasMoved = false;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.type = type;
         this.color = pieceColor;
@@ -41,6 +43,10 @@ public class ChessPiece {
      */
     public PieceType getPieceType() { return this.type; }
 
+    public boolean hasPieceMoved() { return hasMoved; }
+
+    public void pieceMoved() { hasMoved = true; }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -51,7 +57,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         switch (this.getPieceType()) {
             case KING:
-                KingMovesCalculaor kingMovesCalculator = new KingMovesCalculaor();
+                KingMovesCalculator kingMovesCalculator = new KingMovesCalculator();
+                if(!hasMoved) kingMovesCalculator.castling(board, myPosition, this.color);
                 return kingMovesCalculator.pieceMoves(board, myPosition, this.color);
             case QUEEN:
                 QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator();
