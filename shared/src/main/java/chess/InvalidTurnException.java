@@ -5,7 +5,8 @@ package chess;
  */
 public class InvalidTurnException extends InvalidMoveException {
 
-    public InvalidTurnException() {}
+    public InvalidTurnException() {
+    }
 
     public InvalidTurnException(String message) {
         super(message);

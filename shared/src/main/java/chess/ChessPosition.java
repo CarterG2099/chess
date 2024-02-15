@@ -12,6 +12,7 @@ public class ChessPosition {
 
     private final int row;
     private final int column;
+
     public ChessPosition(int row, int col) {
         this.row = row;
         this.column = col;
@@ -21,13 +22,17 @@ public class ChessPosition {
      * @return which row this position is in
      * 1 codes for the bottom row
      */
-    public int getRow() { return row; }
+    public int getRow() {
+        return row;
+    }
 
     /**
      * @return which column this position is in
      * 1 codes for the left row
      */
-    public int getColumn() { return column; }
+    public int getColumn() {
+        return column;
+    }
 
     //Override toString Method
 

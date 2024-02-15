@@ -36,16 +36,24 @@ public class ChessPiece {
     /**
      * @return Which team this chess piece belongs to
      */
-    public ChessGame.TeamColor getTeamColor() { return this.color; }
+    public ChessGame.TeamColor getTeamColor() {
+        return this.color;
+    }
 
     /**
      * @return which type of chess piece this piece is
      */
-    public PieceType getPieceType() { return this.type; }
+    public PieceType getPieceType() {
+        return this.type;
+    }
 
-    public boolean hasPieceMoved() { return hasMoved; }
+    public boolean hasPieceMoved() {
+        return hasMoved;
+    }
 
-    public void pieceMoved() { hasMoved = true; }
+    public void pieceMoved() {
+        hasMoved = true;
+    }
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -58,7 +66,7 @@ public class ChessPiece {
         switch (this.getPieceType()) {
             case KING:
                 KingMovesCalculator kingMovesCalculator = new KingMovesCalculator();
-                if(!hasMoved) kingMovesCalculator.castling(board, myPosition, this.color);
+                if (!hasMoved) kingMovesCalculator.castling(board, myPosition, this.color);
                 return kingMovesCalculator.pieceMoves(board, myPosition, this.color);
             case QUEEN:
                 QueenMovesCalculator queenMovesCalculator = new QueenMovesCalculator();
@@ -82,8 +90,7 @@ public class ChessPiece {
     public String toString() {
         if (this.type == null) {
             return "Color=NULL Piece=NULL";
-        }
-        else {
+        } else {
             return this.color + "," + this.type + " ";
         }
     }

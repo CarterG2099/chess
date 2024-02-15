@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class KnightMovesCalculator implements PieceMovesCalculator{
+public class KnightMovesCalculator implements PieceMovesCalculator {
     private final Collection<ChessMove> chessMoveCollection = new ArrayList<ChessMove>();
 
     @Override
@@ -16,7 +16,8 @@ public class KnightMovesCalculator implements PieceMovesCalculator{
                 ChessPosition newPosition = new ChessPosition(row, col);
                 ChessPiece pieceAtPosition = board.getPiece(newPosition);
                 if (pieceAtPosition == null) chessMoveCollection.add(new ChessMove(position, newPosition, null));
-                else if (pieceAtPosition.getTeamColor() != color) chessMoveCollection.add(new ChessMove(position, newPosition, null));
+                else if (pieceAtPosition.getTeamColor() != color)
+                    chessMoveCollection.add(new ChessMove(position, newPosition, null));
             }
         }
         return chessMoveCollection;
