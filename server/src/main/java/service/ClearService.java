@@ -1,17 +1,26 @@
 package service;
 
-import model.AuthData;
+import dataAccess.*;
 
 public class ClearService {
-    public static void deleteAuthToken() {
 
+    public void clearData() throws DataAccessException {
+        deleteAuthToken();
+        deleteUserData();
+        deleteGameData();
+    }
+    private void deleteAuthToken() throws DataAccessException {
+        AuthDAO authDao = new MemoryAuthDAO();
+        authDao.deleteAuthData();
     }
 
-    public void deleteUserData() {
-
+    private void deleteUserData() throws DataAccessException {
+        UserDAO userDAO = new MemoryUserDAO();
+        userDAO.deleteUserData();
     }
 
-    public void deleteGameData() {
-
+    private void deleteGameData() throws DataAccessException {
+        GameDAO gameDAO = new MemoryGameDAO();
+        gameDAO.deleteGameData();
     }
 }

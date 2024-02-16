@@ -8,14 +8,16 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
+//        DbServer dbServer = new DbServer();
         // Register your endpoints and handle exceptions here.
-        Spark.post("/user", userServer::register);
-        Spark.post("/db", dbServer::clearData);
+        Spark.post("/user", UserServer::register);
+        Spark.delete("/db", DbServer::clearData);
 
         Spark.awaitInitialization();
         return Spark.port();
     }
+
+
 
     public void stop() {
         Spark.stop();
