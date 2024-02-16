@@ -62,11 +62,14 @@ public class ChessGame {
             ChessMove move = iterator.next();
             ChessBoard tempBoard = (ChessBoard) board.clone();
             board.removePiece(move.getStartPosition()); //Remove the piece
-            if (move.getPromotionPiece() != null)
+            if (move.getPromotionPiece() != null) {
                 board.addPiece(move.getEndPosition(), new ChessPiece(pieceToCheck.getTeamColor(), move.getPromotionPiece())); //Add the promotion piece
-            else board.addPiece(move.getEndPosition(), pieceToCheck); //Add the piece
-            if (isInCheck(pieceToCheck.getTeamColor()))
+            } else {
+                board.addPiece(move.getEndPosition(), pieceToCheck); //Add the piece
+            }
+            if (isInCheck(pieceToCheck.getTeamColor())) {
                 iterator.remove(); // Use iterator to safely remove the element if its in check
+            }
             if (pieceToCheck.getPieceType() == ChessPiece.PieceType.KING && !castling(move)) {
                 iterator.remove(); //Check if king move is castling and if valid
             }
