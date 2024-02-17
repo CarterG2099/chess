@@ -2,7 +2,7 @@ package service;
 
 import dataAccess.*;
 
-public class ClearService {
+public class DbService {
 
     public void clearData() throws DataAccessException {
         deleteAuthToken();

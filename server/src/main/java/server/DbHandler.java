@@ -2,22 +2,22 @@ package server;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
-import service.ClearService;
+import service.DbService;
 import spark.Request;
 import spark.Response;
 
-public class DbServer extends Server {
+public class DbHandler extends Server {
     public static Object clearData(Request req, Response res) {
-        ClearService clearService = new ClearService();
+        DbService dbService = new DbService();
         Gson gson = new Gson();
 
         try {
-            clearService.clearData();
+            dbService.clearData();
             StatusResponse statusResponse = new StatusResponse(200);
             return gson.toJson(statusResponse);
-        } catch (DataAccessException e) {
+        } catch (DataAccessException ex) {
             res.status(500); // Internal Server Error
-            return gson.toJson("Error clearing " + e.getMessage());
+            return gson.toJson("Error clearing " + ex.getMessage());
         }
     }
 }

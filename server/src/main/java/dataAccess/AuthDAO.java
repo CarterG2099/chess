@@ -1,7 +1,9 @@
 package dataAccess;
 
+import model.AuthData;
+
 public interface AuthDAO {
     void deleteAuthData() throws DataAccessException;
     String getAuthToken();
-    void createAuthToken(String username);
+    AuthData createAuthToken(String username);
 }
