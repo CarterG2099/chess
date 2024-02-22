@@ -9,8 +9,6 @@ import spark.Response;
 public class DbHandler extends Server {
     public static Object clearData(Request req, Response res) {
         DbService dbService = new DbService();
-        Gson gson = new Gson();
-
         try {
             dbService.clearData();
             return translateSuccessToJson(res);
