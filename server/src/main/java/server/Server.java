@@ -34,7 +34,7 @@ public class Server {
     static Object translateExceptionToJson(DataAccessException ex, Response res){
         StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode());
         res.status(ex.getStatusCode());
-        res.body(ex.message);
+        res.body(ex.getMessage());
         return gson.toJson(statusResponse);
     }
     static Object translateSuccessToJson(){
