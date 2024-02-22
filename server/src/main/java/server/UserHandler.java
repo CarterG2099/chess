@@ -15,7 +15,7 @@ public class UserHandler extends Server {
     private static final UserService userService = new UserService();
     public static Object register(Request req, Response res) {
         try{
-            UserData userData = translateFromJson(req);
+            UserData userData = (UserData) translateFromJson(req);
             return gson.toJson(userService.register(userData));
         } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
@@ -24,7 +24,7 @@ public class UserHandler extends Server {
 
     public static Object login(Request req, Response res) {
         try {
-            UserData userData = translateFromJson(req);
+            UserData userData = (UserData) translateFromJson(req);
             return gson.toJson(userService.login(userData));
         } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
@@ -34,6 +34,7 @@ public class UserHandler extends Server {
     public static Object logout(Request req, Response res) {
         try{
             String authToken = req.headers("Authorization");
+            userService.validAuthToken(authToken);
             userService.logout(authToken);
             return translateSuccessToJson();
         } catch (DataAccessException ex) {

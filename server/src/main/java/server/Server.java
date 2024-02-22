@@ -22,12 +22,14 @@ public class Server {
         Spark.delete("/db", DbHandler::clearData);
         Spark.post("/session", UserHandler::login);
         Spark.delete("/session", UserHandler::logout);
+        Spark.get("/game", GameHandler::listGames);
+        Spark.post("/game", GameHandler::createGame);
 
         Spark.awaitInitialization();
         return Spark.port();
     }
 
-    static UserData translateFromJson(Request req){
+    static Object translateFromJson(Request req){
         return gson.fromJson(req.body(), UserData.class);
     }
 

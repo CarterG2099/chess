@@ -23,7 +23,7 @@ public class UserService {
     public AuthData login(UserData user) throws DataAccessException{
         UserData tempUser = Server.userDAO.getUser(user.username());
         if (tempUser != null) {
-            if (verifyLogin(tempUser, user.username(), user.password())) {
+            if (validUser(tempUser, user.username(), user.password())) {
                 return Server.authDAO.createAuthToken(user.username());
             }
         }
@@ -34,10 +34,18 @@ public class UserService {
         Server.authDAO.deleteAuthToken(authToken);
     }
 
-    private boolean verifyLogin(UserData user, String username, String password) throws DataAccessException {
+    private boolean validUser(UserData user, String username, String password) throws DataAccessException {
         if (Objects.equals(user.username(), username) && Objects.equals(user.password(), password)) {
             return true;
         }
         throw new DataAccessException("Unauthorized", 401);
+    }
+
+    public boolean validAuthToken(String authToken) throws DataAccessException{
+        AuthData user = Server.authDAO.getAuthToken(authToken);
+        if(user == null){
+            throw new DataAccessException("Unauthorized", 401);
+        }
+        return true;
     }
 }
