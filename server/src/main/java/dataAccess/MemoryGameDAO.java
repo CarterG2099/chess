@@ -12,7 +12,7 @@ public class MemoryGameDAO implements GameDAO{
         try {
             gameDataArrayList.clear();
         } catch (Exception ex) {
-            throw new DataAccessException("Game Data");
+            throw new DataAccessException("Game Data", 500);
         }
     }
 }

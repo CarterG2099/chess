@@ -13,7 +13,7 @@ public class MemoryAuthDAO implements AuthDAO{
         try {
             authDataArrayList.clear();
         } catch (Exception ex) {
-            throw new DataAccessException("Auth Data");
+            throw new DataAccessException("Auth Data", 500);
         }
     }
 
@@ -28,5 +28,20 @@ public class MemoryAuthDAO implements AuthDAO{
         AuthData temptAuthData = new AuthData(username, authToken);
         authDataArrayList.add(temptAuthData);
         return temptAuthData;
+    }
+
+    @Override
+    public void deleteAuthToken(String authToken) throws DataAccessException{
+        try {
+            for(AuthData user : authDataArrayList) {
+                if (user.authToken().equals(authToken)) {
+                    authDataArrayList.remove(user);
+                    return;
+                }
+            }
+            throw new DataAccessException("No user found", 500);
+        } catch(Exception ex){
+            throw new DataAccessException("No user found", 500);
+        }
     }
 }

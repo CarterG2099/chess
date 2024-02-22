@@ -13,11 +13,9 @@ public class DbHandler extends Server {
 
         try {
             dbService.clearData();
-            StatusResponse statusResponse = new StatusResponse(200);
-            return gson.toJson(statusResponse);
+            return translateSuccessToJson();
         } catch (DataAccessException ex) {
-            res.status(500); // Internal Server Error
-            return gson.toJson("Error clearing " + ex.getMessage());
+            return translateExceptionToJson(ex, res);
         }
     }
 }

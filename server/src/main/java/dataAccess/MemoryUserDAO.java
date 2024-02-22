@@ -11,7 +11,7 @@ public class MemoryUserDAO implements UserDAO{
         try {
             userDataArrayList.clear();
         } catch (Exception ex) {
-            throw new DataAccessException("User Data");
+            throw new DataAccessException("User Data", 500);
         }
     }
 

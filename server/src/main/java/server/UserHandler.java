@@ -9,17 +9,16 @@ import service.UserService;
 import spark.Request;
 import spark.Response;
 
-public class UserHandler extends Server {
+import javax.xml.crypto.Data;
 
-    private static final Gson gson = new Gson();
+public class UserHandler extends Server {
     private static final UserService userService = new UserService();
     public static Object register(Request req, Response res) {
         try{
             UserData userData = translateFromJson(req);
             return gson.toJson(userService.register(userData));
         } catch (DataAccessException ex) {
-            res.status(500); // Internal Server Error
-            return gson.toJson("Error: " + ex.getMessage());
+            return translateExceptionToJson(ex, res);
         }
     }
 
@@ -28,22 +27,17 @@ public class UserHandler extends Server {
             UserData userData = translateFromJson(req);
             return gson.toJson(userService.login(userData));
         } catch (DataAccessException ex) {
-            res.status(500);
-            return gson.toJson("Error logging in");
+            return translateExceptionToJson(ex, res);
         }
     }
 
     public static Object logout(Request req, Response res) {
         try{
-            UserData userData = translateFromJson(req);
-            return gson.toJson(userService.logout(userData));
+            String authToken = req.headers("Authorization");
+            userService.logout(authToken);
+            return translateSuccessToJson();
         } catch (DataAccessException ex) {
-            res.status(500);
-            return gson.toJson("Error logging out");
+            return translateExceptionToJson(ex, res);
         }
-    }
-
-    private static UserData translateFromJson(Request req){
-        return gson.fromJson(req.body(), UserData.class);
     }
 }

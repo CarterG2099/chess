@@ -1,8 +1,6 @@
 package service;
 
-import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
-import dataAccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 import server.Server;
@@ -16,8 +14,9 @@ public class UserService {
             Server.userDAO.createUser(user.username(), user.password(), user.email());
             return Server.authDAO.createAuthToken(user.username());
         }
-        throw new DataAccessException("User Already Exists");
+        throw new DataAccessException("Already Taken", 403);
     }
+
     public AuthData login(UserData user) throws DataAccessException{
         UserData tempUser = Server.userDAO.getUser(user.username());
         if (tempUser != null) {
@@ -25,14 +24,17 @@ public class UserService {
                 return Server.authDAO.createAuthToken(user.username());
             }
         }
-        throw new DataAccessException("Incorrect Login");
+        throw new DataAccessException("Unauthorized", 401);
     }
-    public void logout(UserData user) {}
 
-    private boolean verifyLogin(UserData user, String username, String password){
+    public void logout(String authToken) throws DataAccessException{
+        Server.authDAO.deleteAuthToken(authToken);
+    }
+
+    private boolean verifyLogin(UserData user, String username, String password) throws DataAccessException {
         if (Objects.equals(user.username(), username) && Objects.equals(user.password(), password)) {
             return true;
         }
-        return false;
+        throw new DataAccessException("Unauthorized", 401);
     }
 }
