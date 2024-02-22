@@ -7,7 +7,7 @@ public class DataAccessException extends Exception{
     public String message;
     public int statusCode;
     public DataAccessException(String message, int statusCode ) {
-        this.message = message;
+        this.message = "Error: " + message;
         this.statusCode = statusCode;
     }
 

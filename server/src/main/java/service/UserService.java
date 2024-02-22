@@ -10,6 +10,9 @@ import java.util.Objects;
 
 public class UserService {
     public AuthData register(UserData user) throws DataAccessException{
+        if(user.username() == null || user.password() == null || user.email() == null){
+            throw new DataAccessException("Bad Request", 400);
+        }
         if(Server.userDAO.getUser(user.username()) == null) {
             Server.userDAO.createUser(user.username(), user.password(), user.email());
             return Server.authDAO.createAuthToken(user.username());
