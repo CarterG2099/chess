@@ -5,11 +5,11 @@ import dataAccess.*;
 public class DbService {
 
     public void clearData() throws DataAccessException {
-        deleteAuthToken();
+        deleteAuthData();
         deleteUserData();
         deleteGameData();
     }
-    private void deleteAuthToken() throws DataAccessException {
+    private void deleteAuthData() throws DataAccessException {
         AuthDAO authDao = new MemoryAuthDAO();
         authDao.deleteAuthData();
     }
