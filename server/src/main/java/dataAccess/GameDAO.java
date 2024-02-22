@@ -9,4 +9,8 @@ public interface GameDAO {
     ArrayList<GameData> getGameList();
 
     void addGame(GameData gameData) throws DataAccessException;
+
+    GameData getGame(int gameId);
+
+    void deleteGame(GameData game);
 }

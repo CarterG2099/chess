@@ -48,4 +48,9 @@ public class UserService {
         }
         return true;
     }
+
+    public UserData getUser(String authToken){
+        AuthData userAuthData = Server.authDAO.getAuthToken(authToken);
+        return Server.userDAO.getUser(userAuthData.username());
+    }
 }

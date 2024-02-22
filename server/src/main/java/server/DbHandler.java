@@ -13,7 +13,7 @@ public class DbHandler extends Server {
 
         try {
             dbService.clearData();
-            return translateSuccessToJson();
+            return translateSuccessToJson(res);
         } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }

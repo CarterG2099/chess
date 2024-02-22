@@ -2,4 +2,6 @@ package model;
 
 import chess.ChessGame;
 
-public record GameData(String gameId, String whiteUsername, String blackUsername, String gameName, ChessGame game) { }
+import java.util.ArrayList;
+
+public record GameData(int gameId, String whiteUsername, String blackUsername, String gameName, ChessGame chessGame, String playerColor, ArrayList<UserData> observerList) { }

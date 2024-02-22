@@ -21,7 +21,27 @@ public class MemoryGameDAO implements GameDAO{
         return gameDataArrayList;
     }
 
-    public void addGame(GameData game){
-        gameDataArrayList.add(game);
+    public void addGame(GameData gameToAdd) throws DataAccessException{
+        for(GameData game : gameDataArrayList){
+            if(game.gameId() == gameToAdd.gameId()){
+                throw new DataAccessException("Already taken", 403);
+            }
+            else {
+                gameDataArrayList.add(gameToAdd);
+            }
+        }
+    }
+
+    public GameData getGame(int gameId){
+        for(GameData game : gameDataArrayList){
+            if(game.gameId() == gameId){
+                return game;
+            }
+        }
+        return null;
+    }
+
+    public void deleteGame(GameData gameToDelete){
+        gameDataArrayList.removeIf(game -> gameToDelete.equals(game));
     }
 }
