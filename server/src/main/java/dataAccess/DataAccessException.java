@@ -20,9 +20,4 @@ public class DataAccessException extends Exception {
     public int getStatusCode() {
         return statusCode;
     }
-
-    @Override
-    public String toString() {
-        return "Error: " + message;
-    }
 }
