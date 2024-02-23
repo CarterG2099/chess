@@ -2,9 +2,7 @@ package dataAccess;
 
 import model.GameData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MemoryGameDAO implements GameDAO{
     private final ArrayList<GameData> gameDataArrayList = new ArrayList<>();
@@ -13,7 +11,7 @@ public class MemoryGameDAO implements GameDAO{
         try {
             gameDataArrayList.clear();
         } catch (Exception ex) {
-            throw new DataAccessException("Game Data", 500);
+            throw new DataAccessException("GDAO:deleteGameData", 500);
         }
     }
 
@@ -23,25 +21,29 @@ public class MemoryGameDAO implements GameDAO{
 
     public void addGame(GameData gameToAdd) throws DataAccessException{
         for(GameData game : gameDataArrayList){
-            if(game.gameId() == gameToAdd.gameId()){
-                throw new DataAccessException("Already taken", 403);
-            }
-            else {
-                gameDataArrayList.add(gameToAdd);
+            if(game.gameID() == gameToAdd.gameID()) {
+                throw new DataAccessException("Already taken in GDAO:addGame", 403);
             }
         }
+        gameDataArrayList.add(gameToAdd);
     }
 
-    public GameData getGame(int gameId){
+    public GameData getGame(int gameId) throws DataAccessException{
         for(GameData game : gameDataArrayList){
-            if(game.gameId() == gameId){
+            if(game.gameID() == gameId){
                 return game;
             }
         }
-        return null;
+        throw new DataAccessException("Bad Request in GDAO:getGame", 400);
     }
 
-    public void deleteGame(GameData gameToDelete){
-        gameDataArrayList.removeIf(game -> gameToDelete.equals(game));
+    public void deleteGame(GameData gameToDelete) throws DataAccessException{
+        for(GameData game : gameDataArrayList){
+            if (game.gameID() == gameToDelete.gameID()){
+                gameDataArrayList.remove(game);
+                return;
+            }
+        }
+        throw new DataAccessException("Bad Request in GDAO:deleteGame", 400);
     }
 }

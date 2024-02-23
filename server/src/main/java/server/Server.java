@@ -24,20 +24,20 @@ public class Server {
         Spark.delete("/session", UserHandler::logout);
         Spark.get("/game", GameHandler::listGames);
         Spark.post("/game", GameHandler::createGame);
-        Spark.put("/game", GameHandler::joinGame);
+        Spark.put("/game", GameHandler::joinRequest);
 
         Spark.awaitInitialization();
         return Spark.port();
     }
 
     static Object translateExceptionToJson(DataAccessException ex, Response res){
-        StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode());
+        StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode(), null, null);
         res.status(ex.getStatusCode());
         res.body(ex.getMessage());
         return gson.toJson(statusResponse);
     }
     static Object translateSuccessToJson(Response res){
-        StatusResponse statusResponse = new StatusResponse("Success", 200);
+        StatusResponse statusResponse = new StatusResponse("Success", 200, null, null);
         res.status(200);
         res.body("Success");
         return gson.toJson(statusResponse);

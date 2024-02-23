@@ -7,7 +7,6 @@ import model.UserData;
 import server.Server;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 public class GameService {
@@ -17,31 +16,43 @@ public class GameService {
     }
 
     public GameData createGame(GameData gameData) throws DataAccessException {
-        if (gameData.gameName().isEmpty()) {
-            throw new DataAccessException("Bad Request", 400);
+        if (gameData.gameName() == null) {
+            throw new DataAccessException("Bad Request in GS:createGame", 400);
         }
         int gameId = new Random().nextInt(1000);
-        GameData newGame = new GameData(gameId, "", "", gameData.gameName(), new ChessGame(), "", new ArrayList<>());
+        GameData newGame = new GameData(gameId, null, null, gameData.gameName(), new ChessGame(), "", new ArrayList<>());
         Server.gameDAO.addGame(newGame);
         return newGame;
     }
 
     public void joinGame(GameData gameData, UserData user) throws DataAccessException {
-        GameData oldGame = Server.gameDAO.getGame(gameData.gameId());
+        GameData oldGame = Server.gameDAO.getGame(gameData.gameID());
         Server.gameDAO.deleteGame(gameData);
         String playerColor = gameData.playerColor();
-        String blackUsername = "";
-        String whiteUsername = "";
+        String blackUsername = oldGame.blackUsername();
+        String whiteUsername = oldGame.whiteUsername();
         ArrayList<UserData> observerLIst = oldGame.observerList();
+        System.out.println(playerColor);
         switch (playerColor){
-            case "":
+            case null:
                 observerLIst.add(user);
-            case "White":
-                whiteUsername = user.username();
-            case "Black":
-                blackUsername = user.username();
+                break;
+            case "WHITE":
+                if(oldGame.whiteUsername() == null) {
+                    whiteUsername = user.username();
+                    break;
+                }
+                throw new DataAccessException("Forbidden: White user already set", 403);
+            case "BLACK":
+                if(oldGame.blackUsername() == null) {
+                    blackUsername = user.username();
+                    break;
+                }
+                throw new DataAccessException("Forbidden: Black user already set", 403);
+            default:
+                throw new DataAccessException("Unexpected value: " + playerColor, 400);
         }
-        GameData newGame = new GameData(oldGame.gameId(),whiteUsername,blackUsername,oldGame.gameName(), oldGame.chessGame(), "", observerLIst);
+        GameData newGame = new GameData(oldGame.gameID(),whiteUsername,blackUsername,oldGame.gameName(), oldGame.chessGame(), "", observerLIst);
         Server.gameDAO.addGame(newGame);
     }
 }

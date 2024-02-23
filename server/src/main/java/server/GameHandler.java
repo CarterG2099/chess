@@ -1,16 +1,12 @@
 package server;
 
 import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import service.GameService;
 import service.UserService;
 import spark.Request;
 import spark.Response;
-
-import javax.xml.crypto.Data;
 
 public class GameHandler extends Server {
     private static final GameService gameService = new GameService();
@@ -22,7 +18,7 @@ public class GameHandler extends Server {
             userService.validAuthToken(authToken);
             GameData gameData = gson.fromJson(req.body(), GameData.class);
             gameData = gameService.createGame(gameData);
-            StatusResponse statusResponse = new StatusResponse(String.valueOf(gameData.gameId()), 200);
+            StatusResponse statusResponse = new StatusResponse("Success", 200, String.valueOf(gameData.gameID()), null);
             return gson.toJson(statusResponse);
         } catch(DataAccessException ex){
             return translateExceptionToJson(ex, res);
@@ -34,14 +30,15 @@ public class GameHandler extends Server {
         try{
             String authToken = req.headers("Authorization");
             userService.validAuthToken(authToken);
-            return gson.toJson(gameService.getGames());
+            StatusResponse statusResponse = new StatusResponse("Success", 200, null, gameService.getGames());
+            return gson.toJson(statusResponse);
 
         }catch(DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }
     }
 
-    public static Object joinGame(Request req, Response res) {
+    public static Object joinRequest(Request req, Response res) {
         try {
             String authToken = req.headers("Authorization");
             userService.validAuthToken(authToken);
