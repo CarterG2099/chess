@@ -1,5 +1,7 @@
 package chess;
 
+import chess.MovesCalculator.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -197,31 +199,29 @@ public class ChessGame {
         }
         //Check to make sure move is even part of their moves
         Collection<ChessMove> possibleMoves = new ArrayList<>();
-        if (pieceToMove != null) {
-            switch (pieceToMove.getPieceType()) {
-                case KING:
-                    KingMovesCalculator kingMovesCalculator = new KingMovesCalculator();
-                    if (!pieceToMove.hasPieceMoved())
-                        kingMovesCalculator.castling(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor());
-                    possibleMoves.addAll(kingMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-                case QUEEN:
-                    possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-                case KNIGHT:
-                    possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-                case BISHOP:
-                    possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-                case ROOK:
-                    RookMovesCalculator rookMovesCalculator = new RookMovesCalculator();
-                    possibleMoves.addAll(rookMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-                case PAWN:
-                    possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
-                    break;
-            }
+        switch (pieceToMove.getPieceType()) {
+            case KING:
+                KingMovesCalculator kingMovesCalculator = new KingMovesCalculator();
+                if (!pieceToMove.hasPieceMoved())
+                    kingMovesCalculator.castling(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor());
+                possibleMoves.addAll(kingMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case QUEEN:
+                possibleMoves.addAll(new QueenMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case KNIGHT:
+                possibleMoves.addAll(new KnightMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case BISHOP:
+                possibleMoves.addAll(new BishopMovesCalculator().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case ROOK:
+                RookMovesCalculator rookMovesCalculator = new RookMovesCalculator();
+                possibleMoves.addAll(rookMovesCalculator.pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
+            case PAWN:
+                possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
+                break;
         }
         if (!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
             board = tempBoard;
