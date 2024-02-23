@@ -8,6 +8,7 @@ import server.Server;
 import service.DbService;
 import service.GameService;
 import service.UserService;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 public class ServiceTests {
@@ -24,14 +25,12 @@ public class ServiceTests {
     private static Server server;
 
 
-
-
     @BeforeAll
     public static void init() throws DataAccessException {
         server = new Server();
         dbService.clearData();
-        existingUser = new UserData("ExistingUser","existingPassword", "existing@email.com");
-        existingUser = new UserData("NewUser","newPassword", "new@email.com");
+        existingUser = new UserData("ExistingUser", "existingPassword", "existing@email.com");
+        existingUser = new UserData("NewUser", "newPassword", "new@email.com");
 
     }
 
@@ -58,7 +57,7 @@ public class ServiceTests {
     }
 
     @Test
-    public void registerBadInfo(){
+    public void registerBadInfo() {
         UserData incompleteUser = new UserData("Incomplete", null, "incomplete email");
         Assertions.assertThrows(DataAccessException.class, () -> {
             userService.register(incompleteUser);
@@ -72,7 +71,7 @@ public class ServiceTests {
     }
 
     @Test
-    public void loginUnregisteredUser(){
+    public void loginUnregisteredUser() {
         UserData unregisteredUSer = new UserData("Unregistered", "no password", "no email");
         Assertions.assertThrows(DataAccessException.class, () -> {
             userService.login(unregisteredUSer);
@@ -94,7 +93,8 @@ public class ServiceTests {
         });
     }
 
-    @Test public void validBadAuthToken() {
+    @Test
+    public void validBadAuthToken() {
         Assertions.assertThrows(DataAccessException.class, () -> {
             userService.validAuthToken("badAuthToken");
         });

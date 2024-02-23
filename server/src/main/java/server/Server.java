@@ -2,7 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import dataAccess.*;
-import spark.*;
+import spark.Response;
+import spark.Spark;
 
 public class Server {
 

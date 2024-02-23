@@ -1,6 +1,6 @@
 package service;
 
-import dataAccess.*;
+import dataAccess.DataAccessException;
 import server.Server;
 
 public class DbService {
