@@ -12,28 +12,28 @@ public class GameHandler extends Server {
     private static final GameService gameService = new GameService();
     private static final UserService userService = new UserService();
 
-    public static Object createGame(Request req, Response res){
-        try{
+    public static Object createGame(Request req, Response res) {
+        try {
             String authToken = req.headers("Authorization");
             userService.validAuthToken(authToken);
             GameData gameData = gson.fromJson(req.body(), GameData.class);
             gameData = gameService.createGame(gameData);
             StatusResponse statusResponse = new StatusResponse("Success", 200, String.valueOf(gameData.gameID()), null);
             return gson.toJson(statusResponse);
-        } catch(DataAccessException ex){
+        } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }
     }
 
 
-    public static Object listGames(Request req, Response res){
-        try{
+    public static Object listGames(Request req, Response res) {
+        try {
             String authToken = req.headers("Authorization");
             userService.validAuthToken(authToken);
             StatusResponse statusResponse = new StatusResponse("Success", 200, null, gameService.getGames());
             return gson.toJson(statusResponse);
 
-        }catch(DataAccessException ex) {
+        } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }
     }
@@ -46,7 +46,7 @@ public class GameHandler extends Server {
             GameData gameData = gson.fromJson(req.body(), GameData.class);
             gameService.joinGame(gameData, user);
             return translateSuccessToJson(res);
-        } catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }
     }

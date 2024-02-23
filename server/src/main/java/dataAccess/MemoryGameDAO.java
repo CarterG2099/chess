@@ -4,8 +4,9 @@ import model.GameData;
 
 import java.util.ArrayList;
 
-public class MemoryGameDAO implements GameDAO{
+public class MemoryGameDAO implements GameDAO {
     private final ArrayList<GameData> gameDataArrayList = new ArrayList<>();
+
     @Override
     public void deleteGameData() throws DataAccessException {
         try {
@@ -15,31 +16,31 @@ public class MemoryGameDAO implements GameDAO{
         }
     }
 
-    public ArrayList<GameData> getGameList(){
+    public ArrayList<GameData> getGameList() {
         return gameDataArrayList;
     }
 
-    public void addGame(GameData gameToAdd) throws DataAccessException{
-        for(GameData game : gameDataArrayList){
-            if(game.gameID() == gameToAdd.gameID()) {
+    public void addGame(GameData gameToAdd) throws DataAccessException {
+        for (GameData game : gameDataArrayList) {
+            if (game.gameID() == gameToAdd.gameID()) {
                 throw new DataAccessException("Already taken in GDAO:addGame", 403);
             }
         }
         gameDataArrayList.add(gameToAdd);
     }
 
-    public GameData getGame(int gameId) throws DataAccessException{
-        for(GameData game : gameDataArrayList){
-            if(game.gameID() == gameId){
+    public GameData getGame(int gameId) throws DataAccessException {
+        for (GameData game : gameDataArrayList) {
+            if (game.gameID() == gameId) {
                 return game;
             }
         }
         throw new DataAccessException("Bad Request in GDAO:getGame", 400);
     }
 
-    public void deleteGame(GameData gameToDelete) throws DataAccessException{
-        for(GameData game : gameDataArrayList){
-            if (game.gameID() == gameToDelete.gameID()){
+    public void deleteGame(GameData gameToDelete) throws DataAccessException {
+        for (GameData game : gameDataArrayList) {
+            if (game.gameID() == gameToDelete.gameID()) {
                 gameDataArrayList.remove(game);
                 return;
             }

@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class GameService {
 
-    public ArrayList<GameData> getGames(){
+    public ArrayList<GameData> getGames() {
         return Server.gameDAO.getGameList();
     }
 
@@ -33,18 +33,18 @@ public class GameService {
         String whiteUsername = oldGame.whiteUsername();
         ArrayList<UserData> observerLIst = oldGame.observerList();
         System.out.println(playerColor);
-        switch (playerColor){
+        switch (playerColor) {
             case null:
                 observerLIst.add(user);
                 break;
             case "WHITE":
-                if(oldGame.whiteUsername() == null) {
+                if (oldGame.whiteUsername() == null) {
                     whiteUsername = user.username();
                     break;
                 }
                 throw new DataAccessException("Forbidden: White user already set", 403);
             case "BLACK":
-                if(oldGame.blackUsername() == null) {
+                if (oldGame.blackUsername() == null) {
                     blackUsername = user.username();
                     break;
                 }
@@ -52,7 +52,7 @@ public class GameService {
             default:
                 throw new DataAccessException("Unexpected value: " + playerColor, 400);
         }
-        GameData newGame = new GameData(oldGame.gameID(),whiteUsername,blackUsername,oldGame.gameName(), oldGame.chessGame(), "", observerLIst);
+        GameData newGame = new GameData(oldGame.gameID(), whiteUsername, blackUsername, oldGame.gameName(), oldGame.chessGame(), "", observerLIst);
         Server.gameDAO.addGame(newGame);
     }
 }

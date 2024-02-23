@@ -1,8 +1,6 @@
 package dataAccess;
 
 import model.AuthData;
-import model.UserData;
-
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -20,8 +18,8 @@ public class MemoryAuthDAO implements AuthDAO {
 
     @Override
     public AuthData getAuthToken(String authtoken) {
-        for(AuthData user : authDataArrayList) {
-            if(user.authToken().equals(authtoken)){
+        for (AuthData user : authDataArrayList) {
+            if (user.authToken().equals(authtoken)) {
                 return user;
             }
         }
@@ -39,7 +37,7 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void deleteAuthToken(String authToken) throws DataAccessException {
         AuthData userToDeleteToken = getAuthToken(authToken);
-        if(userToDeleteToken == null) {
+        if (userToDeleteToken == null) {
             throw new DataAccessException("No user found", 401);
         }
         authDataArrayList.removeIf(user -> user.equals(userToDeleteToken));

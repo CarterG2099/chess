@@ -2,7 +2,6 @@ package server;
 
 import com.google.gson.Gson;
 import dataAccess.*;
-import model.UserData;
 import spark.*;
 
 public class Server {
@@ -30,13 +29,14 @@ public class Server {
         return Spark.port();
     }
 
-    static Object translateExceptionToJson(DataAccessException ex, Response res){
+    static Object translateExceptionToJson(DataAccessException ex, Response res) {
         StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode(), null, null);
         res.status(ex.getStatusCode());
         res.body(ex.getMessage());
         return gson.toJson(statusResponse);
     }
-    static Object translateSuccessToJson(Response res){
+
+    static Object translateSuccessToJson(Response res) {
         StatusResponse statusResponse = new StatusResponse("Success", 200, null, null);
         res.status(200);
         res.body("Success");
