@@ -1,13 +1,18 @@
 package serviceTests;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import service.DbService;
 import service.GameService;
 import service.UserService;
+
+import java.util.ArrayList;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
@@ -110,5 +115,29 @@ public class ServiceTests {
         Assertions.assertThrows(NullPointerException.class, () -> {
             userService.getUser("BadToken");
         });
+    }
+
+    @Test
+    public void createGameSuccess() throws DataAccessException {
+        GameData gameToAdd = new GameData(0, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        GameData game = gameService.createGame(gameToAdd);
+        Assertions.assertEquals(gameToAdd.gameName(), game.gameName());
+
+    }
+
+    @Test
+    public void createGameNoName() {
+        GameData gameToAdd = new GameData(0, "white", "black", null, new ChessGame(), "Color",  new ArrayList<>());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            gameService.createGame(gameToAdd);
+        });
+    }
+
+    @Test
+    public void getGamesSuccess() throws DataAccessException {
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        gameService.createGame(gameToAdd);
+        ArrayList<GameData> gameList = gameService.getGames();
+        Assertions.assertEquals(gameToAdd.gameName(), gameList.get(0).gameName());
     }
 }
