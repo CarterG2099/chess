@@ -92,7 +92,7 @@ public class ChessGame {
             ChessPosition rookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() - 4);
             ChessPosition newRookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() - 1);
             ChessGame.TeamColor color = board.getPiece(rookPosition).getTeamColor();
-            if (!rookInDanger(newRookPosition, color)) {
+            if (rookInDanger(newRookPosition, color)) {
                 ChessPiece rookToMove = board.getPiece(rookPosition);
                 board.removePiece(rookPosition);
                 board.addPiece(newRookPosition, rookToMove);
@@ -106,7 +106,7 @@ public class ChessGame {
             ChessPosition rookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() + 3);
             ChessPosition newRookPosition = new ChessPosition(move.getStartPosition().getRow(), move.getStartPosition().getColumn() + 1);
             ChessGame.TeamColor color = board.getPiece(rookPosition).getTeamColor();
-            if (!rookInDanger(newRookPosition, color)) {
+            if (rookInDanger(newRookPosition, color)) {
                 ChessPiece rookToMove = board.getPiece(rookPosition);
                 board.removePiece(rookPosition);
                 board.addPiece(newRookPosition, rookToMove);
@@ -119,14 +119,7 @@ public class ChessGame {
         else return true;
     }
 
-    /**
-     * Determines if rook is in danger in order to validate castling move
-     *
-     * @param rookPosition the end position of the rook in a castling move
-     * @param teamColor    same color as the rook being checked
-     * @return true if the rook is in danger for castling
-     */
-    public boolean rookInDanger(ChessPosition rookPosition, TeamColor teamColor) {
+    public Collection<ChessMove> collectOpponentMoves(ChessGame.TeamColor teamColor) {
         Collection<ChessMove> opponentMoves = new ArrayList<>();
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -156,13 +149,23 @@ public class ChessGame {
                 }
             }
         }
-
+        return opponentMoves;
+    }
+    /**
+     * Determines if rook is in danger in order to validate castling move
+     *
+     * @param rookPosition the end position of the rook in a castling move
+     * @param teamColor    same color as the rook being checked
+     * @return true if the rook is in danger for castling
+     */
+    public boolean rookInDanger(ChessPosition rookPosition, TeamColor teamColor) {
+        Collection<ChessMove> opponentMoves = collectOpponentMoves(teamColor);
         for (ChessMove move : opponentMoves) {
             ChessPosition endPosition = move.getEndPosition();
             if (endPosition.getRow() == rookPosition.getRow() && endPosition.getColumn() == rookPosition.getColumn())
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -241,7 +244,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        Collection<ChessMove> opponentMoves = new ArrayList<>();
+        Collection<ChessMove> opponentMoves = collectOpponentMoves(teamColor);
         ChessPosition kingPosition = null;
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -249,31 +252,8 @@ public class ChessGame {
                 ChessPiece tempPiece = board.getPiece(tempPosition);
                 if (tempPiece != null && tempPiece.getPieceType() == ChessPiece.PieceType.KING && tempPiece.getTeamColor() == teamColor)
                     kingPosition = tempPosition;
-                if (tempPiece != null && tempPiece.getTeamColor() != teamColor) {
-                    switch (tempPiece.getPieceType()) {
-                        case KING:
-                            opponentMoves.addAll(new KingMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                        case QUEEN:
-                            opponentMoves.addAll(new QueenMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                        case KNIGHT:
-                            opponentMoves.addAll(new KnightMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                        case BISHOP:
-                            opponentMoves.addAll(new BishopMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                        case ROOK:
-                            opponentMoves.addAll(new RookMovesCalculator().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                        case PAWN:
-                            opponentMoves.addAll(new PawnMovesCalculaor().pieceMoves(board, tempPosition, tempPiece.getTeamColor()));
-                            break;
-                    }
-                }
             }
         }
-
         for (ChessMove move : opponentMoves) {
             ChessPosition endPosition = move.getEndPosition();
             if (kingPosition != null && endPosition.getRow() == kingPosition.getRow() && endPosition.getColumn() == kingPosition.getColumn())
