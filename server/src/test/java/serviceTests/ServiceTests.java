@@ -99,4 +99,16 @@ public class ServiceTests {
             userService.validAuthToken("badAuthToken");
         });
     }
+
+    @Test
+    public void getUserSuccess() {
+        Assertions.assertEquals(existingUser, userService.getUser(existingAuthToken));
+    }
+
+    @Test
+    public void getUserBadToken() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            userService.getUser("BadToken");
+        });
+    }
 }
