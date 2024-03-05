@@ -99,6 +99,11 @@ public class ServiceTests {
     }
 
     @Test
+    public void validAuthTokenSuccess() throws DataAccessException {
+        Assertions.assertTrue(userService.validAuthToken(existingAuthToken));
+    }
+
+    @Test
     public void validBadAuthToken() {
         Assertions.assertThrows(DataAccessException.class, () -> {
             userService.validAuthToken("badAuthToken");
@@ -141,12 +146,18 @@ public class ServiceTests {
         Assertions.assertEquals(gameToAdd.gameName(), gameList.get(0).gameName());
     }
 
+    @Test
+    public void getGamesEmpty() throws DataAccessException {
+        ArrayList<GameData> gameList = gameService.getGames();
+        Assertions.assertEquals(0, gameList.size());
+    }
+
 //    @Test
 //    public void joinGameSuccess() throws DataAccessException {
 //        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "WHITE",  new ArrayList<>());
-//        gameService.createGame(gameToAdd);
+//        Server.gameDAO.addGame(gameToAdd);
 //        gameService.joinGame(gameToAdd, existingUser);
-//        GameData game = gameService.getGame(gameToAdd.gameID());
+//        GameData game = Server.gameDAO.getGame(gameToAdd.gameID());
 //        Assertions.assertEquals(existingUser.username(), game.whiteUsername());
 //    }
 }
