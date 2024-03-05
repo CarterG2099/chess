@@ -48,6 +48,27 @@ public class ServiceTests {
     }
 
     @Test
+    public void clearGameData() throws DataAccessException {
+        dbService.clearData();
+        ArrayList<GameData> games = Server.gameDAO.getGameList();
+        Assertions.assertEquals(0, games.size());
+    }
+
+    @Test
+    public void clearUserData() throws DataAccessException {
+        dbService.clearData();
+        UserData user = Server.userDAO.getUser(existingUser.username());
+        Assertions.assertNull(user);
+    }
+
+    @Test
+    public void clearAuthData() throws DataAccessException {
+        dbService.clearData();
+        AuthData auth = Server.authDAO.getAuthToken(existingAuthToken);
+        Assertions.assertNull(auth);
+    }
+
+    @Test
     public void registerSuccess() throws DataAccessException {
         dbService.clearData();
         AuthData registerResult = userService.register(existingUser);
@@ -150,6 +171,23 @@ public class ServiceTests {
     public void getGamesEmpty() throws DataAccessException {
         ArrayList<GameData> gameList = gameService.getGames();
         Assertions.assertEquals(0, gameList.size());
+    }
+
+    @Test
+    public void deleteGameSuccess() throws DataAccessException {
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        Server.gameDAO.addGame(gameToAdd);
+        Server.gameDAO.deleteGame(gameToAdd);
+        ArrayList<GameData> gameList = gameService.getGames();
+        Assertions.assertEquals(0, gameList.size());
+    }
+
+    @Test
+    public void deleteGameNoGame() {
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        Assertions.assertThrows(DataAccessException.class, () -> {
+            Server.gameDAO.deleteGame(gameToAdd);
+        });
     }
 
 //    @Test
