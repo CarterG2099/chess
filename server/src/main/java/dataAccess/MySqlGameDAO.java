@@ -2,6 +2,7 @@ package dataAccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -44,8 +45,9 @@ public class MySqlGameDAO implements GameDAO{
         String game_name = gameData.gameName();
         String white_username = gameData.whiteUsername();
         String black_username = gameData.blackUsername();
-        var statement = "INSERT INTO game_data (game_id, white_username, black_username, game_name) VALUES (?, ?, ?, ?)";
-        DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name);
+        ArrayList<UserData> observer_list = new ArrayList<>();
+        var statement = "INSERT INTO game_data (game_id, white_username, black_username, game_name, chess_game, player_color, observer_list) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name, null, null, observer_list);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class MySqlGameDAO implements GameDAO{
     public void deleteGame(GameData game) throws DataAccessException {
         var statement = "DELETE FROM game_data WHERE game_id = ?";
         if(DatabaseManager.executeUpdate(statement, game.gameID()) == 0){
-            throw new DataAccessException("No game found", 401);
+            throw new DataAccessException("No game found", 400);
         }
 
     }
@@ -81,10 +83,14 @@ public class MySqlGameDAO implements GameDAO{
         var black_username = rs.getString("black_username");
         var game_name = rs.getString("game_name");
         var chess_game_var = rs.getString("chess_game");
-        ChessGame chess_game = gson.fromJson(chess_game_var, ChessGame.class);
+        ChessGame chess_game = new ChessGame();
+        if(chess_game_var != null){
+            chess_game = gson.fromJson(chess_game_var, ChessGame.class);
+        }
         var player_color = rs.getString("player_color");
         var observer_var = rs.getString("observer_list");
-        ArrayList<UserData> observer = gson.fromJson(observer_var, (Type) UserData.class);
+        Type listType = new TypeToken<ArrayList<UserData>>() {}.getType();
+        ArrayList<UserData> observer = gson.fromJson(observer_var, listType);
         return new GameData(game_id, white_username, black_username, game_name, chess_game, player_color, observer);
     }
 }

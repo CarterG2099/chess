@@ -31,11 +31,11 @@ public class GameService {
         String playerColor = gameData.playerColor();
         String blackUsername = oldGame.blackUsername();
         String whiteUsername = oldGame.whiteUsername();
-        ArrayList<UserData> observerLIst = oldGame.observerList();
+        ArrayList<UserData> observerList = oldGame.observerList();
         System.out.println(playerColor);
         switch (playerColor) {
             case null:
-                observerLIst.add(user);
+                observerList.add(user);
                 break;
             case "WHITE":
                 if (oldGame.whiteUsername() == null) {
@@ -52,7 +52,7 @@ public class GameService {
             default:
                 throw new DataAccessException("Unexpected value: " + playerColor, 400);
         }
-        GameData newGame = new GameData(oldGame.gameID(), whiteUsername, blackUsername, oldGame.gameName(), oldGame.chessGame(), "", observerLIst);
+        GameData newGame = new GameData(oldGame.gameID(), whiteUsername, blackUsername, oldGame.gameName(), oldGame.chessGame(), "", observerList);
         Server.gameDAO.addGame(newGame);
     }
 }
