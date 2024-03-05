@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class MySqlAuthDAO implements AuthDAO{
+public class MySqlAuthDAO implements AuthDAO {
     @Override
     public void deleteAuthData() throws DataAccessException {
         var statement = "DELETE FROM auth_data";
@@ -44,7 +44,7 @@ public class MySqlAuthDAO implements AuthDAO{
     @Override
     public void deleteAuthToken(String authToken) throws DataAccessException {
         var statement = "DELETE FROM auth_data WHERE auth_token = ?";
-        if(DatabaseManager.executeUpdate(statement, authToken) == 0){
+        if (DatabaseManager.executeUpdate(statement, authToken) == 0) {
             throw new DataAccessException("No user found", 401);
         }
     }

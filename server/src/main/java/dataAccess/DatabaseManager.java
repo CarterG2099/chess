@@ -86,8 +86,7 @@ public class DatabaseManager {
                         } else {
                             ps.setString(i + 1, p);
                         }
-                    }
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
+                    } else if (param instanceof Integer p) ps.setInt(i + 1, p);
                     else if (param instanceof ArrayList<?>) ps.setString(i + 1, new Gson().toJson(param));
 //                    else if (param instanceof ChessGame) ps.setObject(i + 1, new Gson().toJson(param));
                     else if (param == null) ps.setNull(i + 1, NULL);

@@ -1,4 +1,4 @@
-package dataAccessTests;
+package passoffTests.serverTests;
 
 import chess.ChessGame;
 import org.junit.jupiter.api.*;
@@ -13,8 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

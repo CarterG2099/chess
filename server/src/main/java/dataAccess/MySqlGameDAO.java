@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MySqlGameDAO implements GameDAO{
+public class MySqlGameDAO implements GameDAO {
     @Override
     public void deleteGameData() throws DataAccessException {
         var statement = "DELETE FROM game_data";
@@ -65,12 +65,13 @@ public class MySqlGameDAO implements GameDAO{
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()), 500);
         }
-        return null;    }
+        return null;
+    }
 
     @Override
     public void deleteGame(GameData game) throws DataAccessException {
         var statement = "DELETE FROM game_data WHERE game_id = ?";
-        if(DatabaseManager.executeUpdate(statement, game.gameID()) == 0){
+        if (DatabaseManager.executeUpdate(statement, game.gameID()) == 0) {
             throw new DataAccessException("No game found", 400);
         }
 
@@ -84,12 +85,13 @@ public class MySqlGameDAO implements GameDAO{
         var game_name = rs.getString("game_name");
         var chess_game_var = rs.getString("chess_game");
         ChessGame chess_game = new ChessGame();
-        if(chess_game_var != null){
+        if (chess_game_var != null) {
             chess_game = gson.fromJson(chess_game_var, ChessGame.class);
         }
         var player_color = rs.getString("player_color");
         var observer_var = rs.getString("observer_list");
-        Type listType = new TypeToken<ArrayList<UserData>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<UserData>>() {
+        }.getType();
         ArrayList<UserData> observer = gson.fromJson(observer_var, listType);
         return new GameData(game_id, white_username, black_username, game_name, chess_game, player_color, observer);
     }
