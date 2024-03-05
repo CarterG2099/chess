@@ -28,7 +28,7 @@ public class MySqlGameDAO implements GameDAO{
             var statement = "SELECT * FROM game_data";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
-                    if (rs.next()) {
+                    while (rs.next()) {
                         gameDataArrayList.add(readGameData(rs));
                     }
                 }
