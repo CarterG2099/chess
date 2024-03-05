@@ -33,6 +33,7 @@ public class ServiceTests {
     @BeforeAll
     public static void init() throws DataAccessException {
         server = new Server();
+        Server.setMySqlDAOs();
         dbService.clearData();
         existingUser = new UserData("ExistingUser", "existingPassword", "existing@email.com");
         existingUser = new UserData("NewUser", "newPassword", "new@email.com");
@@ -106,7 +107,7 @@ public class ServiceTests {
     }
 
     @Test
-    public void getUserSuccess() {
+    public void getUserSuccess() throws DataAccessException {
         Assertions.assertEquals(existingUser, userService.getUser(existingAuthToken));
     }
 
@@ -140,4 +141,13 @@ public class ServiceTests {
         ArrayList<GameData> gameList = gameService.getGames();
         Assertions.assertEquals(gameToAdd.gameName(), gameList.get(0).gameName());
     }
+
+//    @Test
+//    public void joinGameSuccess() throws DataAccessException {
+//        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "WHITE",  new ArrayList<>());
+//        gameService.createGame(gameToAdd);
+//        gameService.joinGame(gameToAdd, existingUser);
+//        GameData game = gameService.getGame(gameToAdd.gameID());
+//        Assertions.assertEquals(existingUser.username(), game.whiteUsername());
+//    }
 }

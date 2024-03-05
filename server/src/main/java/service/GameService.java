@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class GameService {
 
-    public ArrayList<GameData> getGames() {
+    public ArrayList<GameData> getGames() throws DataAccessException {
         return Server.gameDAO.getGameList();
     }
 

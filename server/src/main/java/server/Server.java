@@ -5,15 +5,19 @@ import dataAccess.*;
 import spark.Response;
 import spark.Spark;
 
+import java.sql.Connection;
+
 public class Server {
 
-    public static AuthDAO authDAO = new MemoryAuthDAO();
-    public static UserDAO userDAO = new MemoryUserDAO();
-    public static GameDAO gameDAO = new MemoryGameDAO();
+    public static AuthDAO authDAO;
+    public static UserDAO userDAO;
+    public static GameDAO gameDAO;
     static final Gson gson = new Gson();
 
-    public int run(int desiredPort) {
+    public int run(int desiredPort){
         Spark.port(desiredPort);
+//        setMemoryDAOs();
+        setMySqlDAOs();
 
         Spark.staticFiles.location("web");
         Spark.post("/user", UserHandler::register);
@@ -29,9 +33,11 @@ public class Server {
     }
 
     static Object translateExceptionToJson(DataAccessException ex, Response res) {
+        if(res != null) {
+            res.status(ex.getStatusCode());
+            res.body(ex.getMessage());
+        }
         StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode(), null, null);
-        res.status(ex.getStatusCode());
-        res.body(ex.getMessage());
         return gson.toJson(statusResponse);
     }
 
@@ -41,6 +47,19 @@ public class Server {
         res.body("Success");
         return gson.toJson(statusResponse);
     }
+
+    private static void setMemoryDAOs() {
+        authDAO = new MemoryAuthDAO();
+        userDAO = new MemoryUserDAO();
+        gameDAO = new MemoryGameDAO();
+    }
+
+    public static void setMySqlDAOs() {
+        authDAO = new MySqlAuthDAO();
+        userDAO = new MySqlUserDAO();
+        gameDAO = new MySqlGameDAO();
+    }
+
 
     public void stop() {
         Spark.stop();

@@ -49,7 +49,7 @@ public class UserService {
         return true;
     }
 
-    public UserData getUser(String authToken) {
+    public UserData getUser(String authToken) throws DataAccessException {
         AuthData userAuthData = Server.authDAO.getAuthToken(authToken);
         return Server.userDAO.getUser(userAuthData.username());
     }
