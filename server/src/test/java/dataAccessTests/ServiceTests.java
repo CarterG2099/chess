@@ -1,6 +1,5 @@
-package serviceTests;
+package dataAccessTests;
 
-import chess.ChessBoard;
 import chess.ChessGame;
 import dataAccess.DataAccessException;
 import model.AuthData;
