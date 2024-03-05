@@ -41,7 +41,7 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    private static void createDatabase() throws DataAccessException {
         try {
             var statement = "SELECT COUNT(*) AS count FROM information_schema.SCHEMATA WHERE SCHEMA_NAME=" + databaseName;
             var conn = DriverManager.getConnection(connectionUrl, user, password);
@@ -104,5 +104,56 @@ public class DatabaseManager {
             throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()), 500);
         }
     }
+    private static final String[] createStatements = {
+            """
+            CREATE TABLE IF NOT EXISTS  auth_data (
+              `auth_id` int NOT NULL AUTO_INCREMENT,
+              `username` varchar(256),
+              `auth_token` varchar(256),
+              PRIMARY KEY (`auth_id`),
+              INDEX(type),
+              INDEX(name)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS  user_data (
+              `user_id` int NOT NULL AUTO_INCREMENT,
+              `username` varchar(256),
+              `password` varchar(256),
+              `email` varchar(256),
+              PRIMARY KEY (`user_id`),
+              INDEX(type),
+              INDEX(name)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS  game_data (
+              `game_id` int NOT NULL AUTO_INCREMENT,
+              `white_player` varchar(256),
+              `black_player` varchar(256),
+              `game_name` varchar(256),
+              `game` varchar(256),
+              `turn` varchar(256),
+              `moves` varchar(256),
+              PRIMARY KEY (`game_id`),
+              INDEX(type),
+              INDEX(name)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
+
+    public static void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()), 500);
+        }
+    }
+
 
 }

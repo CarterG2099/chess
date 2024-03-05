@@ -5,6 +5,7 @@ import dataAccess.*;
 import spark.Response;
 import spark.Spark;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 
 public class Server {
@@ -58,6 +59,11 @@ public class Server {
         authDAO = new MySqlAuthDAO();
         userDAO = new MySqlUserDAO();
         gameDAO = new MySqlGameDAO();
+        try{
+            DatabaseManager.configureDatabase();
+        } catch (DataAccessException e) {
+            translateExceptionToJson(e, null);
+        }
     }
 
 
