@@ -15,11 +15,6 @@ import static ui.EscapeSequences.*;
 public class ChessBoardUI {
 
     public static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_CHARS = 2;
-    private static final int LINE_WIDTH_IN_CHARS = 1;
-    private static final String X = " X ";
-    private static final String O = " O ";
-    private static final Random rand = new Random();
     private static final ChessBoard board = new ChessBoard();
 
     public enum Orientation {
@@ -48,7 +43,7 @@ public class ChessBoardUI {
         drawChessBoard(board, Orientation.BLACK);
     }
 
-    public static void drawChessBoardSpacer(PrintStream out) {
+    private static void drawChessBoardSpacer(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(NEW_LINE);
     }
@@ -172,11 +167,4 @@ public class ChessBoardUI {
             }
         }
     }
-
-    private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_BLACK);
-    }
-
-
 }

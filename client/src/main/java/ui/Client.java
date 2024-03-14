@@ -9,4 +9,5 @@ public class Client {
     }
 
     //Implement methods here for menu
+    //Calls UI.chessBoardUI when joining or observing game
 }
