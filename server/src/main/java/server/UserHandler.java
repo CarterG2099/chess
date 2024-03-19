@@ -6,6 +6,8 @@ import service.UserService;
 import spark.Request;
 import spark.Response;
 
+import static server.Serializer.*;
+
 public class UserHandler extends Server {
     private static final UserService userService = new UserService();
 
@@ -14,7 +16,7 @@ public class UserHandler extends Server {
             UserData userData = gson.fromJson(req.body(), UserData.class);
             return gson.toJson(userService.register(userData));
         } catch (DataAccessException ex) {
-            return translateExceptionToJson(ex, res);
+            return Serializer.translateExceptionToJson(ex, res);
         }
     }
 
@@ -23,7 +25,7 @@ public class UserHandler extends Server {
             UserData userData = gson.fromJson(req.body(), UserData.class);
             return gson.toJson(userService.login(userData));
         } catch (DataAccessException ex) {
-            return translateExceptionToJson(ex, res);
+            return Serializer.translateExceptionToJson(ex, res);
         }
     }
 

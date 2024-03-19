@@ -1,5 +1,7 @@
 package server;
 
+import chess.ChessGame;
+import chess.ChessPiece;
 import com.google.gson.Gson;
 import dataAccess.*;
 import spark.Response;
@@ -13,9 +15,13 @@ public class Server {
     public static AuthDAO authDAO;
     public static UserDAO userDAO;
     public static GameDAO gameDAO;
-    static final Gson gson = new Gson();
 
-    public int run(int desiredPort){
+    public static void main(String[] args) throws DataAccessException {
+        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        System.out.println("♕ 240 Chess Server: " + piece);
+        run(8080);
+    }
+    public static int run(int desiredPort){
         Spark.port(desiredPort);
 //        setMemoryDAOs();
         setMySqlDAOs();
@@ -33,21 +39,7 @@ public class Server {
         return Spark.port();
     }
 
-    static Object translateExceptionToJson(DataAccessException ex, Response res) {
-        if(res != null) {
-            res.status(ex.getStatusCode());
-            res.body(ex.getMessage());
-        }
-        StatusResponse statusResponse = new StatusResponse(ex.getMessage(), ex.getStatusCode(), null, null);
-        return gson.toJson(statusResponse);
-    }
 
-    static Object translateSuccessToJson(Response res) {
-        StatusResponse statusResponse = new StatusResponse("Success", 200, null, null);
-        res.status(200);
-        res.body("Success");
-        return gson.toJson(statusResponse);
-    }
 
     private static void setMemoryDAOs() {
         authDAO = new MemoryAuthDAO();
@@ -62,7 +54,7 @@ public class Server {
         try{
             DatabaseManager.configureDatabase();
         } catch (DataAccessException e) {
-            translateExceptionToJson(e, null);
+            Serializer.translateExceptionToJson(e, null);
         }
     }
 
