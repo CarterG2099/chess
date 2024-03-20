@@ -45,8 +45,7 @@ public class ServerFacadeTests {
     @Test
     void registerBad() throws DataAccessException {
         UserData registerRequestBad = new UserData(null, "password", "email");
-        serverFacade.register(registerRequestBad);
-        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.register(registerRequest));
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.register(registerRequestBad));
     }
 
     @Test
@@ -88,7 +87,7 @@ public class ServerFacadeTests {
 
     @Test
     void createGame() throws DataAccessException {
-        GameData createGameRequest = new GameData(null, null, null, "gameName", null, null, null);
+        GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
         registerResponse= serverFacade.register(registerRequest);
         GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
         assertEquals("gameName", createGameResponse.gameName());
@@ -96,7 +95,7 @@ public class ServerFacadeTests {
 
     @Test
     void createGameBad() throws DataAccessException {
-        GameData createGameRequest = new GameData(null, null, null, null, null, null, null);
+        GameData createGameRequest = new GameData(0, null, null, null, null, null, null);
         registerResponse = serverFacade.register(registerRequest);
         Assertions.assertThrows(DataAccessException.class, () -> serverFacade.createGame(createGameRequest, registerResponse.authToken()));
     }
