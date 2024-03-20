@@ -17,7 +17,7 @@ public class ClientCommunicator {
     //Use IO slides to read and write from stream
     //Translate Objects to JSON
 
-    public static int port;
+    public static int port = 8080;
 
     static <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws DataAccessException {
         try {
