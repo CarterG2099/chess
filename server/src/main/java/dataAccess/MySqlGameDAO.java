@@ -45,7 +45,7 @@ public class MySqlGameDAO implements GameDAO {
         String game_name = gameData.gameName();
         String white_username = gameData.whiteUsername();
         String black_username = gameData.blackUsername();
-        ArrayList<UserData> observer_list = new ArrayList<>();
+        ArrayList<UserData> observer_list = gameData.observerList();
         var statement = "INSERT INTO game_data (game_id, white_username, black_username, game_name, chess_game, player_color, observer_list) VALUES (?, ?, ?, ?, ?, ?, ?)";
         DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name, null, null, observer_list);
     }

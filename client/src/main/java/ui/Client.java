@@ -5,8 +5,8 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Scanner;
 import com.google.gson.Gson;
 
@@ -15,10 +15,11 @@ import static server.Serializer.*;
 //catch exception in eval
 public class Client {
 
-    private static ServerFacade server;
+    private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
+    private static String authToken;
     public static void main(String[] args) {
-        server = new ServerFacade();
+        serverFacade = new ServerFacade();
         run();
     }
 
@@ -32,14 +33,18 @@ public class Client {
             String line = scanner.nextLine();
             try{
                 result = (String) eval(line);
-                System.out.println(eval(line));
+                System.out.println(result);
             } catch (Exception e) {
+                if(e instanceof DataAccessException) {
+                    System.out.println(translateExceptionToJson((DataAccessException) e, null));
+                }
                 System.out.println(e.getMessage());
             }
         }
     }
 
     public static Object eval(String input) {
+        System.out.println("Press Enter for a list of commands");
         var tokens = input.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -57,13 +62,12 @@ public class Client {
 
     private static String loggedInMenu(String cmd, String ...params) throws DataAccessException {
         return switch (cmd) {
-            case "1" -> login(params);
-            case "2" -> register(params);
-            case "3" -> logout(params);
-            case "4" -> listGames(params);
-            case "5" -> createGame(params);
-            case "6" -> joinRequest(params);
-            case "7" -> quit();
+            case "1" -> logout();
+            case "2" -> joinRequest(params);
+            case "3" -> listGames();
+            case "4" -> createGame(params);
+            case "6" -> quit();
+            case "clear" -> {serverFacade.clearData(); yield "Data Cleared";}
             default -> help();
         };
     }
@@ -73,46 +77,70 @@ public class Client {
             case "1" -> login(params);
             case "2" -> register(params);
             case "4" -> quit();
+            case "clear" -> {serverFacade.clearData(); yield "Data Cleared";}
             default -> help();
         };
     }
     public static String login(String ...params) throws DataAccessException {
+        if (params.length < 2) {
+            throw new DataAccessException("Bad Request", 400);
+        }
         UserData loginRequest = new UserData(params[0], params[1], null);
-        AuthData loginResponse = server.login(loginRequest);
+        AuthData loginResponse = serverFacade.login(loginRequest);
         loggedIn = true;
-        return loginResponse.authToken();
+        authToken = loginResponse.authToken();
+        return "You have been logged in.";
     }
 
     public static String register(String ...params) throws DataAccessException {
+        if (params.length < 3) {
+            throw new DataAccessException("Bad Request", 400);
+        }
         UserData registerRequest = new UserData(params[0], params[1], params[2]);
-        AuthData registerResponse = server.register(registerRequest);
-        return registerResponse.authToken();
+        AuthData registerResponse = serverFacade.register(registerRequest);
+        authToken = registerResponse.authToken();
+        loggedIn = true;
+        return "You have been registered and logged in.";
     }
 
-    public static String logout(String ...params) throws DataAccessException {
-        AuthData logoutRequest = new AuthData(null, params[0]);
-        server.logout(logoutRequest);
+    public static String logout() throws DataAccessException {
+        serverFacade.logout(authToken);
         loggedIn = false;
         return "You have been logged out.";
     }
 
-    public static String listGames(String ...params) throws DataAccessException {
-        Gson gson = new Gson();
-        AuthData listGamesRequest = new AuthData(null, params[0]);
-        return gson.toJson(server.listGames(listGamesRequest));
+    public static String listGames() throws DataAccessException {
+        ArrayList<GameData> gameList = serverFacade.listGames(authToken).games();
+        String gameListString = "";
+        for (GameData game : gameList) {
+            gameListString += game.gameID() + " " + game.gameName() + "\n";
+        }
+        if(gameListString.isEmpty()) {
+            return "No games available";
+        }
+        return gameListString;
     }
 
     public static String createGame(String ...params) throws DataAccessException {
-        String createGameRequest = params[0];
-        GameData createGameResponse = server.createGame(createGameRequest);
+        if (params.length < 1) {
+            throw new DataAccessException("Bad Request", 400);
+        }
+        GameData createGameRequest = new GameData(0, null, null, params[0], null, null, null);
+        GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         return String.valueOf(createGameResponse.gameID());
     }
 
     public static String joinRequest(String ...params) throws DataAccessException {
+        if (params.length < 1) {
+            throw new DataAccessException("Bad Request", 400);
+        }
+        String playerColor = null;
+        if (params.length > 1) {
+            playerColor = params[1];
+        }
         int gameID = Integer.parseInt(params[0]);
-        GameData joinRequest = new GameData(gameID, null, null, null, null, params[0], null);
-        server.joinRequest(joinRequest);
-        return "Success";
+        GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
+        return serverFacade.joinRequest(joinRequest, authToken).message();
     }
 
     private static String help() {
@@ -128,19 +156,18 @@ public class Client {
     }
     public static String loggedInHelp() {
         return "Available commands:\n" +
-                "  1. Logout <username> <password>\n" +
-                "  2. Join <gameId>\n" +
-                "  3. Observe <gameId>\n" +
-                "  4. List Games\n" +
-                "  5. Create Game\n" +
-                "  6. Help\n" +
-                "  7. Quit\n";
+                "  1. Logout\n" +
+                "  2. Join <gameId> <Black?/White?>\n" +
+                "  3. List Games\n" +
+                "  4. Create Game <gameName>\n" +
+                "  5. Help\n" +
+                "  6. Quit\n";
     }
 
     public static String loggedOutHelp() {
         return "Available commands:\n" +
                 "  1. Login <username> <password>\n" +
-                "  2. Register <username> <password>\n" +
+                "  2. Register <username> <password> <email>\n" +
                 "  3. Help\n" +
                 "  4. Quit\n";
     }

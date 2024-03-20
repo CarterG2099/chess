@@ -4,6 +4,9 @@ import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import server.StatusResponse;
+
+import java.util.ArrayList;
 
 public class ServerFacade {
     //One method per endpoint - 7 total with 2-3 lines of code
@@ -13,31 +16,30 @@ public class ServerFacade {
 
 
     public void clearData() throws DataAccessException {
-        ClientCommunicator.makeRequest("POST", "/db", null, null);
+        ClientCommunicator.makeRequest("POST", "/db", null, null, null);
     }
 
     public AuthData register(UserData registerRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/user", registerRequest, AuthData.class);
+        return ClientCommunicator.makeRequest("POST", "/user", registerRequest, null, AuthData.class);
     }
 
     public AuthData login(UserData loginRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/session", loginRequest, AuthData.class);
+        return ClientCommunicator.makeRequest("POST", "/session", loginRequest, null, AuthData.class);
     }
 
-    public void logout(AuthData logoutRequest) throws DataAccessException {
-        ClientCommunicator.makeRequest("DELETE", "/session", logoutRequest, null);
+    public void logout(String authToken) throws DataAccessException {
+        ClientCommunicator.makeRequest("DELETE", "/session", null, authToken, null);
     }
 
-    public GameData listGames(AuthData listGamesRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("GET", "/game", listGamesRequest, GameData.class);
+    public StatusResponse listGames(String authToken) throws DataAccessException {
+        return ClientCommunicator.makeRequest("GET", "/game", null, authToken , StatusResponse.class);
     }
 
-    public GameData createGame(String createGameRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/game",createGameRequest, GameData.class);
+    public GameData createGame(GameData createGameRequest, String authToken) throws DataAccessException {
+        return ClientCommunicator.makeRequest("POST", "/game",createGameRequest, authToken, GameData.class);
     }
 
-    public Object joinRequest(GameData joinRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("PUT", "/game", null, null);
+    public StatusResponse joinRequest(GameData joinRequest, String authToken) throws DataAccessException {
+        return ClientCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, StatusResponse.class);
     }
-
 }

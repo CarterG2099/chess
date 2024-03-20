@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,23 +20,34 @@ public class ClientCommunicator {
     //Translate Objects to JSON
 
     private static String serverUrl = "http://localhost:8080";
-    static <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws DataAccessException {
+    static <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws DataAccessException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
+            writeHeaders(authToken, http);
             writeBody(request, http);
             http.connect();
-            throwIfNotSuccessful(http);
+            //throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new DataAccessException(ex.getMessage(), 500);
+            if (ex instanceof DataAccessException) {
+                throw (DataAccessException) ex;
+            }
+            else {
+                throw new DataAccessException( "Failure" + ex.getMessage(), 500);
+            }
         }
     }
 
 
+    private static void writeHeaders(String authToken, HttpURLConnection http) throws DataAccessException {
+        if (authToken != null) {
+            http.setRequestProperty("Authorization", authToken);
+        }
+    }
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
