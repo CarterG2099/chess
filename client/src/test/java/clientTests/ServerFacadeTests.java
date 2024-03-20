@@ -21,9 +21,9 @@ public class ServerFacadeTests {
 
     @BeforeAll
     public static void init() {
-        var port = Server.run(8080);
+        var port = Server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade(8080);
+        serverFacade = new ServerFacade(port);
     }
 
     @AfterAll
@@ -34,11 +34,6 @@ public class ServerFacadeTests {
     @BeforeEach
     void clearData() throws DataAccessException {
         serverFacade.clearData();
-    }
-
-    @Test
-    public void sampleTest() {
-        assertTrue(true);
     }
 
     @Test

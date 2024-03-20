@@ -14,7 +14,7 @@ public class ServerFacade {
         ClientCommunicator.port = port;
     }
     public void clearData() throws DataAccessException {
-        ClientCommunicator.makeRequest("POST", "/db", null, null, null);
+        ClientCommunicator.makeRequest("DELETE", "/db", null, null, null);
     }
 
     public AuthData register(UserData registerRequest) throws DataAccessException {
