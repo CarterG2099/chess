@@ -10,7 +10,9 @@ public class ServerFacade {
     //One method per endpoint - 7 total with 2-3 lines of code
     //Class to represent server and then uses client communicator to actually call server
 
-
+    public ServerFacade(int port) {
+        ClientCommunicator.port = port;
+    }
     public void clearData() throws DataAccessException {
         ClientCommunicator.makeRequest("POST", "/db", null, null, null);
     }

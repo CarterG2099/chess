@@ -23,7 +23,7 @@ public class ServerFacadeTests {
     public static void init() {
         var port = Server.run(8080);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(8080);
     }
 
     @AfterAll

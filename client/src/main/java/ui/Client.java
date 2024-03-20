@@ -21,7 +21,7 @@ public class Client {
     private static ArrayList<GameData> gameList = new ArrayList<>();
 
     public static void main(String[] args) {
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(8080);
         run();
     }
 

@@ -17,9 +17,11 @@ public class ClientCommunicator {
     //Use IO slides to read and write from stream
     //Translate Objects to JSON
 
+    public static int port;
+
     static <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws DataAccessException {
         try {
-            String serverUrl = "http://localhost:8080";
+            String serverUrl = "http://localhost:" + port;
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
