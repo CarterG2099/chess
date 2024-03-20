@@ -30,7 +30,7 @@ public class ClientCommunicator {
             writeHeaders(authToken, http);
             writeBody(request, http);
             http.connect();
-            //throwIfNotSuccessful(http);
+//            throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
             if (ex instanceof DataAccessException) {
@@ -60,6 +60,7 @@ public class ClientCommunicator {
 
     private static void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
         var status = http.getResponseCode();
+        var error = http.getErrorStream();
         if (!isSuccessful(status)) {
             throw new DataAccessException("failure: " + status, status);
         }

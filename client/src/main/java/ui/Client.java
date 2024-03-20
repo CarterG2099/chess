@@ -56,7 +56,7 @@ public class Client {
             }
         }
         catch (DataAccessException ex) {
-            return translateExceptionToJson(ex, null);
+            return ex.getMessage() + " " + ex.getStatusCode();
         }
     }
 
@@ -127,7 +127,8 @@ public class Client {
         }
         GameData createGameRequest = new GameData(0, null, null, params[0], null, null, null);
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
-        return String.valueOf(createGameResponse.gameID());
+        String gameID = String.valueOf(createGameResponse.gameID());
+        return "Game created with ID: " + gameID;
     }
 
     public static String joinRequest(String ...params) throws DataAccessException {
@@ -136,11 +137,21 @@ public class Client {
         }
         String playerColor = null;
         if (params.length > 1) {
-            playerColor = params[1];
+            playerColor = params[1].toUpperCase();
         }
         int gameID = Integer.parseInt(params[0]);
         GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
-        return serverFacade.joinRequest(joinRequest, authToken).message();
+        serverFacade.joinRequest(joinRequest, authToken);
+        if(playerColor == null) {
+            return "You have joined the game as an observer.";
+        }
+        if(playerColor.equals("BLACK")) {
+            return "You have joined the game as black.";
+        }
+        if(playerColor.equals("WHITE")) {
+            return "You have joined the game as white.";
+        }
+        return "Invalid color";
     }
 
     private static String help() {
