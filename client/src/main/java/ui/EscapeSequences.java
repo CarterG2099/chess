@@ -62,5 +62,7 @@ public class EscapeSequences {
     public static final String EMPTY = " \u2003 ";
     public static final String NEW_LINE = "\n";
 
-    public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
+    public static String moveCursorToLocation(int x, int y) {
+        return UNICODE_ESCAPE + "[" + y + ";" + x + "H";
+    }
 }

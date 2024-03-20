@@ -3,15 +3,13 @@ package ui;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class ClientCommunicator {
     //Use to actually contact server
@@ -20,6 +18,7 @@ public class ClientCommunicator {
     //Translate Objects to JSON
 
     private static String serverUrl = "http://localhost:8080";
+
     static <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws DataAccessException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
@@ -30,14 +29,12 @@ public class ClientCommunicator {
             writeHeaders(authToken, http);
             writeBody(request, http);
             http.connect();
-//            throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
             if (ex instanceof DataAccessException) {
                 throw (DataAccessException) ex;
-            }
-            else {
-                throw new DataAccessException( "Failure" + ex.getMessage(), 500);
+            } else {
+                throw new DataAccessException("Failure" + ex.getMessage(), 500);
             }
         }
     }
@@ -48,6 +45,7 @@ public class ClientCommunicator {
             http.setRequestProperty("Authorization", authToken);
         }
     }
+
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
             http.addRequestProperty("Content-Type", "application/json");
@@ -55,14 +53,6 @@ public class ClientCommunicator {
             try (OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
             }
-        }
-    }
-
-    private static void throwIfNotSuccessful(HttpURLConnection http) throws IOException, DataAccessException {
-        var status = http.getResponseCode();
-        var error = http.getErrorStream();
-        if (!isSuccessful(status)) {
-            throw new DataAccessException("failure: " + status, status);
         }
     }
 

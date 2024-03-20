@@ -2,11 +2,14 @@ package clientTests;
 
 import dataAccess.DataAccessException;
 import model.UserData;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import server.Server;
 import ui.ServerFacade;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ServerFacadeTests {
@@ -27,7 +30,8 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-    @BeforeEach void clearData() throws DataAccessException {
+    @BeforeEach
+    void clearData() throws DataAccessException {
         serverFacade.clearData();
     }
 

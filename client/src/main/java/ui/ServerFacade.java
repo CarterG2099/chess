@@ -6,13 +6,9 @@ import model.GameData;
 import model.UserData;
 import server.StatusResponse;
 
-import java.util.ArrayList;
-
 public class ServerFacade {
     //One method per endpoint - 7 total with 2-3 lines of code
     //Class to represent server and then uses client communicator to actually call server
-
-
 
 
     public void clearData() throws DataAccessException {
@@ -32,11 +28,11 @@ public class ServerFacade {
     }
 
     public StatusResponse listGames(String authToken) throws DataAccessException {
-        return ClientCommunicator.makeRequest("GET", "/game", null, authToken , StatusResponse.class);
+        return ClientCommunicator.makeRequest("GET", "/game", null, authToken, StatusResponse.class);
     }
 
     public GameData createGame(GameData createGameRequest, String authToken) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/game",createGameRequest, authToken, GameData.class);
+        return ClientCommunicator.makeRequest("POST", "/game", createGameRequest, authToken, GameData.class);
     }
 
     public StatusResponse joinRequest(GameData joinRequest, String authToken) throws DataAccessException {
