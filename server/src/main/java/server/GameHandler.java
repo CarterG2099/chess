@@ -47,7 +47,7 @@ public class GameHandler extends Server {
             UserData user = userService.getUser(authToken);
             GameData gameData = gson.fromJson(req.body(), GameData.class);
             gameService.joinGame(gameData, user);
-            return translateSuccessToJson(res);
+            return gameService.getGame(gameData.gameID());
         } catch (DataAccessException ex) {
             return translateExceptionToJson(ex, res);
         }

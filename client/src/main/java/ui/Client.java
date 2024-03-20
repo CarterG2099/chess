@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
@@ -7,6 +8,7 @@ import model.UserData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static server.Serializer.translateExceptionToJson;
@@ -17,6 +19,7 @@ public class Client {
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
     private static String authToken;
+    private static ArrayList<GameData> gameList = new ArrayList<>();
 
     public static void main(String[] args) {
         serverFacade = new ServerFacade();
@@ -116,13 +119,14 @@ public class Client {
     }
 
     public static String listGames() throws DataAccessException {
-        ArrayList<GameData> gameList = serverFacade.listGames(authToken).games();
+        gameList = serverFacade.listGames(authToken).games();
         String gameListString = "";
-        for (GameData game : gameList) {
-            gameListString += game.gameID() + " " + game.gameName() + "\n";
-        }
-        if (gameListString.isEmpty()) {
+        if(gameList.isEmpty()){
             return "No games available";
+        }
+        for (int i = 1; i <= gameList.size(); i++) {
+            GameData game = gameList.get(i);
+            gameListString += i + ". " + game.gameID() + " " + game.gameName() + "\n";
         }
         return gameListString;
     }
@@ -134,7 +138,8 @@ public class Client {
         GameData createGameRequest = new GameData(0, null, null, params[0], null, null, null);
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         String gameID = String.valueOf(createGameResponse.gameID());
-        return "Game created with ID: " + gameID;
+        gameList.add(createGameResponse);
+        return "Game " + params[0] + "created with ID: " + gameID;
     }
 
     public static String joinRequest(String... params) throws DataAccessException {
@@ -145,9 +150,12 @@ public class Client {
         if (params.length > 1) {
             playerColor = params[1].toUpperCase();
         }
-        int gameID = Integer.parseInt(params[0]);
+        GameData gameToJoin = gameList.get(Integer.parseInt(params[0]));
+        int gameID = gameToJoin.gameID();
         GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
-        serverFacade.joinRequest(joinRequest, authToken);
+        GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
+        ChessBoard chessBoard = gameData.chessGame().getBoard();
+        ChessBoardUI.drawChessBoards(chessBoard);
         if (playerColor == null) {
             return "You have joined the game as an observer.";
         }

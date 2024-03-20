@@ -15,6 +15,10 @@ public class GameService {
         return Server.gameDAO.getGameList();
     }
 
+    public GameData getGame(int gameID) throws DataAccessException {
+        return Server.gameDAO.getGame(gameID);
+    }
+
     public GameData createGame(GameData gameData) throws DataAccessException {
         if (gameData.gameName() == null) {
             throw new DataAccessException("Bad Request in GS:createGame", 400);
@@ -25,7 +29,7 @@ public class GameService {
         return newGame;
     }
 
-    public void joinGame(GameData gameData, UserData user) throws DataAccessException {
+    public GameData joinGame(GameData gameData, UserData user) throws DataAccessException {
         GameData oldGame = Server.gameDAO.getGame(gameData.gameID());
         String playerColor = null;
         if(gameData.playerColor() != null) {
@@ -56,5 +60,6 @@ public class GameService {
         Server.gameDAO.deleteGame(gameData);
         GameData newGame = new GameData(oldGame.gameID(), whiteUsername, blackUsername, oldGame.gameName(), oldGame.chessGame(), "", observerList);
         Server.gameDAO.addGame(newGame);
+        return newGame;
     }
 }

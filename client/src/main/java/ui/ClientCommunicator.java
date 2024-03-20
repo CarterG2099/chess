@@ -39,7 +39,6 @@ public class ClientCommunicator {
         }
     }
 
-
     private static void writeHeaders(String authToken, HttpURLConnection http) throws DataAccessException {
         if (authToken != null) {
             http.setRequestProperty("Authorization", authToken);
