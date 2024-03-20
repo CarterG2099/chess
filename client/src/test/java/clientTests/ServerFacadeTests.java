@@ -49,9 +49,7 @@ public class ServerFacadeTests {
 
     @Test
     void registerBad() {
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.register(registerRequest);
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.register(registerRequest));
     }
 
     @Test
@@ -65,9 +63,7 @@ public class ServerFacadeTests {
     void loginBad() throws DataAccessException {
         serverFacade.register(registerRequest);
         UserData loginRequest = new UserData("username", "password", null);
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.login(loginRequest);
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.login(loginRequest));
     }
 
     @Test
@@ -78,9 +74,7 @@ public class ServerFacadeTests {
 
     @Test
     void logoutBad() {
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.logout("badToken");
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.logout("badToken"));
     }
 
     @Test
@@ -92,9 +86,7 @@ public class ServerFacadeTests {
 
     @Test
     void listGamesBad() {
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.listGames("badToken");
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.listGames("badToken"));
     }
 
     @Test
@@ -109,9 +101,7 @@ public class ServerFacadeTests {
     void createGameBad() throws DataAccessException {
         GameData createGameRequest = new GameData(0, null, null, null, null, null, null);
         registerResponse = serverFacade.register(registerRequest);
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.createGame(createGameRequest, registerResponse.authToken());
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.createGame(createGameRequest, registerResponse.authToken()));
     }
 
     @Test
@@ -128,8 +118,6 @@ public class ServerFacadeTests {
     void joinRequestBad() throws DataAccessException {
         GameData joinRequest = new GameData(0, "white", null, null, null, null, null);
         registerResponse = serverFacade.register(registerRequest);
-        Assertions.assertThrows(DataAccessException.class, () -> {
-            serverFacade.joinRequest(joinRequest, registerResponse.authToken());
-        });
+        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.joinRequest(joinRequest, registerResponse.authToken()));
     }
 }

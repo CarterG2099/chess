@@ -145,24 +145,16 @@ public class ChessBoardUI {
     private static void drawChessPiece(PrintStream out, ChessPiece piece) {
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             out.print(SET_TEXT_COLOR_WHITE);
-            switch (piece.getPieceType()) {
-                case PAWN -> out.print(" P ");
-                case KNIGHT -> out.print(" N ");
-                case BISHOP -> out.print(" B ");
-                case ROOK -> out.print(" R ");
-                case QUEEN -> out.print(" Q ");
-                case KING -> out.print(" K ");
-            }
         } else {
             out.print(SET_TEXT_COLOR_BLACK);
-            switch (piece.getPieceType()) {
-                case PAWN -> out.print(" P ");
-                case KNIGHT -> out.print(" N ");
-                case BISHOP -> out.print(" B ");
-                case ROOK -> out.print(" R ");
-                case QUEEN -> out.print(" Q ");
-                case KING -> out.print(" K ");
-            }
+        }
+        switch (piece.getPieceType()) {
+            case PAWN -> out.print(" P ");
+            case KNIGHT -> out.print(" N ");
+            case BISHOP -> out.print(" B ");
+            case ROOK -> out.print(" R ");
+            case QUEEN -> out.print(" Q ");
+            case KING -> out.print(" K ");
         }
     }
 }

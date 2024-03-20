@@ -180,21 +180,25 @@ public class Client {
     }
 
     public static String loggedInHelp() {
-        return "Available commands:\n" +
-                "  1. Logout\n" +
-                "  2. Join <gameId> <Black?/White?>\n" +
-                "  3. List Games\n" +
-                "  4. Create Game <gameName>\n" +
-                "  5. Help\n" +
-                "  6. Quit\n";
+        return """
+                Available commands:
+                  1. Logout
+                  2. Join <gameId> <Black?/White?>
+                  3. List Games
+                  4. Create Game <gameName>
+                  5. Help
+                  6. Quit
+                """;
     }
 
     public static String loggedOutHelp() {
-        return "Available commands:\n" +
-                "  1. Login <username> <password>\n" +
-                "  2. Register <username> <password> <email>\n" +
-                "  3. Help\n" +
-                "  4. Quit\n";
+        return """
+                Available commands:
+                  1. Login <username> <password>
+                  2. Register <username> <password> <email>
+                  3. Help
+                  4. Quit
+                """;
     }
 
     //Implement methods here for menu

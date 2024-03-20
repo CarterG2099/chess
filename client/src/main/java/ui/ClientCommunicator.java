@@ -17,10 +17,9 @@ public class ClientCommunicator {
     //Use IO slides to read and write from stream
     //Translate Objects to JSON
 
-    private static String serverUrl = "http://localhost:8080";
-
     static <T> T makeRequest(String method, String path, Object request, String authToken, Class<T> responseClass) throws DataAccessException {
         try {
+            String serverUrl = "http://localhost:8080";
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
@@ -31,15 +30,11 @@ public class ClientCommunicator {
             http.connect();
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            if (ex instanceof DataAccessException) {
-                throw (DataAccessException) ex;
-            } else {
-                throw new DataAccessException("Failure" + ex.getMessage(), 500);
-            }
+            throw new DataAccessException("Failure" + ex.getMessage(), 500);
         }
     }
 
-    private static void writeHeaders(String authToken, HttpURLConnection http) throws DataAccessException {
+    private static void writeHeaders(String authToken, HttpURLConnection http) {
         if (authToken != null) {
             http.setRequestProperty("Authorization", authToken);
         }
@@ -66,10 +61,5 @@ public class ClientCommunicator {
             }
         }
         return response;
-    }
-
-
-    private static boolean isSuccessful(int status) {
-        return status / 100 == 2;
     }
 }
