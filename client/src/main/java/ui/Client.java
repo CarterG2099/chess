@@ -8,7 +8,6 @@ import model.UserData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import static server.Serializer.translateExceptionToJson;
@@ -121,7 +120,7 @@ public class Client {
     public static String listGames() throws DataAccessException {
         gameList = serverFacade.listGames(authToken).games();
         String gameListString = "";
-        if(gameList.isEmpty()){
+        if (gameList.isEmpty()) {
             return "No games available";
         }
         for (int i = 1; i <= gameList.size(); i++) {

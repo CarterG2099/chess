@@ -36,7 +36,6 @@ public class ServerFacadeTests {
         serverFacade.clearData();
     }
 
-
     @Test
     public void sampleTest() {
         assertTrue(true);
@@ -118,7 +117,7 @@ public class ServerFacadeTests {
     @Test
     void joinRequest() throws DataAccessException {
         GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
-        registerResponse= serverFacade.register(registerRequest);
+        registerResponse = serverFacade.register(registerRequest);
         GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
         GameData joinRequest = new GameData(createGameResponse.gameID(), "white", null, null, null, null, null);
         GameData joinResponse = serverFacade.joinRequest(joinRequest, registerResponse.authToken());
