@@ -123,9 +123,9 @@ public class Client {
         if (gameList.isEmpty()) {
             return "No games available";
         }
-        for (int i = 1; i <= gameList.size(); i++) {
+        for (int i = 0; i < gameList.size(); i++) {
             GameData game = gameList.get(i);
-            gameListString += i + ". " + game.gameID() + " " + game.gameName() + "\n";
+            gameListString += (i+1) + ". " + game.gameName() + "\n";
         }
         return gameListString;
     }
@@ -138,7 +138,7 @@ public class Client {
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         String gameID = String.valueOf(createGameResponse.gameID());
         gameList.add(createGameResponse);
-        return "Game " + params[0] + "created with ID: " + gameID;
+        return "Game " + params[0] + " created with ID: " + gameID;
     }
 
     public static String joinRequest(String... params) throws DataAccessException {
@@ -149,14 +149,14 @@ public class Client {
         if (params.length > 1) {
             playerColor = params[1].toUpperCase();
         }
-        GameData gameToJoin = gameList.get(Integer.parseInt(params[0]));
+        GameData gameToJoin = gameList.get(Integer.parseInt(params[0])-1);
         int gameID = gameToJoin.gameID();
         GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
         GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
         ChessBoard chessBoard = gameData.chessGame().getBoard();
         ChessBoardUI.drawChessBoards(chessBoard);
         if (playerColor == null) {
-            return "You have joined the game as an observer.";
+            return "You have joined " + gameList.get(Integer.parseInt(params[0])-1).gameName() + " as an observer.";
         }
         if (playerColor.equals("BLACK")) {
             return "You have joined the game as black.";

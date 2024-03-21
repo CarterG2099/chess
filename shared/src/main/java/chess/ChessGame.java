@@ -14,11 +14,11 @@ import java.util.Iterator;
  */
 public class ChessGame {
 
-    private ChessBoard board = new ChessBoard();
+    private ChessBoard board;
     private TeamColor teamTurn = TeamColor.WHITE;
 
     public ChessGame() {
-
+        board = new ChessBoard();
     }
 
     /**

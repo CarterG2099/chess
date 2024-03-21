@@ -13,7 +13,7 @@ public class ChessBoard implements Cloneable {
     private ChessPiece[][] board = new ChessPiece[8][8];
 
     public ChessBoard() {
-
+        this.resetBoard();
     }
 
     /**

@@ -33,12 +33,18 @@ public class ChessBoardUI {
         drawHeaders(out, orientation);
         drawBoardWithColumns(out, board, orientation);
         drawHeaders(out, orientation);
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
     }
 
     public static void drawChessBoards(ChessBoard board) {
+        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        out.print(ERASE_SCREEN);
         drawChessBoard(board, Orientation.WHITE);
-        drawChessBoardSpacer(System.out);
+        drawChessBoardSpacer(out);
         drawChessBoard(board, Orientation.BLACK);
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void drawChessBoardSpacer(PrintStream out) {
