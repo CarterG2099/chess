@@ -1,5 +1,7 @@
 package ui;
 
+import webSocketMessages.serverMessages.ServerMessage;
+
 /**
  * This class contains constants and functions relating to ANSI Escape Sequences that are useful in the Client display
  */
@@ -65,4 +67,6 @@ public class EscapeSequences {
     public static String moveCursorToLocation(int x, int y) {
         return UNICODE_ESCAPE + "[" + y + ";" + x + "H";
     }
+
+
 }

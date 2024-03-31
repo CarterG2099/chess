@@ -41,6 +41,19 @@ public class ChessBoard implements Cloneable {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    public ChessPosition findChessPiece(ChessGame.TeamColor color, String pieceTypeString) {
+        ChessPiece.PieceType piece = ChessPiece.PieceType.valueOf(pieceTypeString);
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition tempPosition = new ChessPosition(row, col);
+                ChessPiece tempPiece = getPiece(tempPosition);
+                if (tempPiece != null && tempPiece.getTeamColor() == color && tempPiece.getPieceType() == piece) {
+                    return tempPosition;
+                }
+            }
+        }
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)

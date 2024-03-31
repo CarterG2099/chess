@@ -1,12 +1,10 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
@@ -15,23 +13,23 @@ public class ChessBoardUI {
     public static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final ChessBoard board = new ChessBoard();
 
-    public enum Orientation {
-        WHITE,
-        BLACK
-    }
+//    public enum Orientation {
+//        WHITE,
+//        BLACK
+//    }
 
     public static void main(String[] args) {
         board.resetBoard();
-        drawChessBoard(board, Orientation.WHITE);
+        drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
         drawChessBoardSpacer(System.out);
-        drawChessBoard(board, Orientation.BLACK);
+        drawChessBoard(board, ChessGame.TeamColor.BLACK, null);
     }
 
-    public static void drawChessBoard(ChessBoard board, Orientation orientation) {
+    public static void drawChessBoard(ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         drawHeaders(out, orientation);
-        drawBoardWithColumns(out, board, orientation);
+        drawBoardWithColumns(out, board, orientation, highlightedPositions);
         drawHeaders(out, orientation);
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
@@ -40,9 +38,9 @@ public class ChessBoardUI {
     public static void drawChessBoards(ChessBoard board) {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
-        drawChessBoard(board, Orientation.WHITE);
+        drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
         drawChessBoardSpacer(out);
-        drawChessBoard(board, Orientation.BLACK);
+        drawChessBoard(board, ChessGame.TeamColor.BLACK, null);
         out.print(SET_BG_COLOR_DARK_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
     }
@@ -52,12 +50,12 @@ public class ChessBoardUI {
         out.print(NEW_LINE);
     }
 
-    private static void drawHeaders(PrintStream out, Orientation orientation) {
+    private static void drawHeaders(PrintStream out, ChessGame.TeamColor orientation) {
         out.print(SET_BG_COLOR_DARK_GREY);
 
         String[] headers = {" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "};
         drawEmptyHeader(out);
-        if (orientation == Orientation.WHITE) {
+        if (orientation == ChessGame.TeamColor.WHITE) {
             for (int boardCol = 0; boardCol < BOARD_SIZE_IN_SQUARES; ++boardCol) {
                 drawHeader(out, headers[boardCol]);
             }
@@ -82,13 +80,13 @@ public class ChessBoardUI {
         out.print("   ");
     }
 
-    private static void drawBoardWithColumns(PrintStream out, ChessBoard board, Orientation orientation) {
+    private static void drawBoardWithColumns(PrintStream out, ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
         String[] columns = {" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
-        if (orientation == Orientation.WHITE) {
+        if (orientation == ChessGame.TeamColor.WHITE) {
             for (int boardRow = BOARD_SIZE_IN_SQUARES; boardRow > 0; boardRow--) {
                 out.print(SET_BG_COLOR_LIGHT_GREY);
                 drawColumn(out, columns[boardRow - 1]);
-                drawBoardRow(out, boardRow, board, orientation);
+                drawBoardRow(out, boardRow, board, orientation, highlightedPositions);
                 drawColumn(out, columns[boardRow - 1]);
                 out.print(SET_BG_COLOR_BLACK);
                 out.print(NEW_LINE);
@@ -98,7 +96,7 @@ public class ChessBoardUI {
             for (int boardRow = 1; boardRow <= BOARD_SIZE_IN_SQUARES; boardRow++) {
                 out.print(SET_BG_COLOR_LIGHT_GREY);
                 drawColumn(out, columns[boardRow - 1]);
-                drawBoardRow(out, boardRow, board, orientation);
+                drawBoardRow(out, boardRow, board, orientation, highlightedPositions);
                 drawColumn(out, columns[boardRow - 1]);
                 out.print(SET_BG_COLOR_BLACK);
                 out.print(NEW_LINE);
@@ -113,17 +111,17 @@ public class ChessBoardUI {
         out.print(colText);
     }
 
-    private static void drawBoardRow(PrintStream out, int boardRow, ChessBoard board, Orientation orientation) {
-        if (orientation == Orientation.WHITE) {
+    private static void drawBoardRow(PrintStream out, int boardRow, ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
+        if (orientation == ChessGame.TeamColor.WHITE) {
             for (int boardCol = 1; boardCol <= BOARD_SIZE_IN_SQUARES; boardCol++) {
-                int tileToInt = getTileColor(boardRow, boardCol);
+                int tileToInt = getTileColor(boardRow, boardCol, highlightedPositions);
                 ChessPosition position = new ChessPosition(boardRow, boardCol);
                 ChessPiece piece = board.getPiece(position);
                 drawTile(out, piece, tileToInt);
             }
         } else {
             for (int boardCol = BOARD_SIZE_IN_SQUARES; boardCol > 0; boardCol--) {
-                int tileToInt = getTileColor(boardRow, boardCol);
+                int tileToInt = getTileColor(boardRow, boardCol, highlightedPositions);
                 ChessPosition position = new ChessPosition(boardRow, boardCol);
                 ChessPiece piece = board.getPiece(position);
                 drawTile(out, piece, tileToInt);
@@ -131,12 +129,22 @@ public class ChessBoardUI {
         }
     }
 
-    private static int getTileColor(int boardRow, int boardCol) {
+    private static int getTileColor(int boardRow, int boardCol, Collection<ChessMove> highlightedPositions) {
+        if(highlightedPositions != null) {
+            for (ChessMove move : highlightedPositions) {
+                if (move.getEndPosition().getRow() == boardRow && move.getEndPosition().getColumn() == boardCol) {
+                    return 2;
+                }
+            }
+        }
         return (boardRow + boardCol) % 2;
     }
 
     private static void drawTile(PrintStream out, ChessPiece piece, int tileToInt) {
-        if (tileToInt == 0) {
+        if (tileToInt == 2) {
+            out.print(SET_BG_COLOR_YELLOW);
+        }
+        else if (tileToInt == 0) {
             out.print(SET_BG_COLOR_LIGHT_GREY);
         } else {
             out.print(SET_BG_COLOR_BLUE);

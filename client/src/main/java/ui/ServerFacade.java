@@ -11,33 +11,34 @@ public class ServerFacade {
     //Class to represent server and then uses client communicator to actually call server
 
     public ServerFacade(int port) {
-        ClientCommunicator.port = port;
+        HttpCommunicator.port = port;
     }
     public void clearData() throws DataAccessException {
-        ClientCommunicator.makeRequest("DELETE", "/db", null, null, null);
+        HttpCommunicator.makeRequest("DELETE", "/db", null, null, null);
     }
 
     public AuthData register(UserData registerRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/user", registerRequest, null, AuthData.class);
+        return HttpCommunicator.makeRequest("POST", "/user", registerRequest, null, AuthData.class);
     }
 
     public AuthData login(UserData loginRequest) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/session", loginRequest, null, AuthData.class);
+        return HttpCommunicator.makeRequest("POST", "/session", loginRequest, null, AuthData.class);
     }
 
     public void logout(String authToken) throws DataAccessException {
-        ClientCommunicator.makeRequest("DELETE", "/session", null, authToken, null);
+        HttpCommunicator.makeRequest("DELETE", "/session", null, authToken, null);
     }
 
     public StatusResponse listGames(String authToken) throws DataAccessException {
-        return ClientCommunicator.makeRequest("GET", "/game", null, authToken, StatusResponse.class);
+        return HttpCommunicator.makeRequest("GET", "/game", null, authToken, StatusResponse.class);
     }
 
     public GameData createGame(GameData createGameRequest, String authToken) throws DataAccessException {
-        return ClientCommunicator.makeRequest("POST", "/game", createGameRequest, authToken, GameData.class);
+        return HttpCommunicator.makeRequest("POST", "/game", createGameRequest, authToken, GameData.class);
     }
 
     public GameData joinRequest(GameData joinRequest, String authToken) throws DataAccessException {
-        return ClientCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
+        return HttpCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
     }
+
 }

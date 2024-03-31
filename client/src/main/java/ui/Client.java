@@ -1,28 +1,56 @@
 package ui;
 
-import chess.ChessBoard;
+import chess.*;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import webSocketMessages.serverMessages.ServerMessage;
 
+import javax.websocket.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
 
 import static server.Serializer.translateExceptionToJson;
 
 //catch exception in eval
-public class Client {
+public class Client extends Endpoint implements EscapeSequences.ServerMessageObserver {
 
+    private Session session;
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
     private static String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
 
+    private static ChessGame currentGame;
+
+    private static ChessGame.TeamColor playerColor;
+
     public static void main(String[] args) {
         serverFacade = new ServerFacade(8080);
         run();
+    }
+
+    public Client() throws Exception {
+        URI uri = new URI("ws://localhost:8080/connect");
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        this.session = container.connectToServer(this, uri);
+
+        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            public void onMessage(String message) {
+                System.out.println(message);
+            }
+        });
+    }
+
+    public void send(String msg) throws Exception {
+        this.session.getBasicRemote().sendText(msg);
+    }
+
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
     public static void run() {
@@ -61,19 +89,43 @@ public class Client {
         }
     }
 
+    public void notify(ServerMessage message) {
+        System.out.println(message);
+    }
+
     private static String loggedInMenu(String cmd, String... params) throws DataAccessException {
         return switch (cmd) {
             case "1" -> logout();
             case "2" -> joinRequest(params);
             case "3" -> listGames();
             case "4" -> createGame(params);
-            case "6" -> quit();
+            case "5" -> "Redraw Chess Board";
+            case "6" -> "Leave";
+            case "7" -> "Resign";
+            case "8" -> "Highlight Legal Moves";
+            case "10" -> quit();
             case "clear" -> {
                 serverFacade.clearData();
                 yield "Data Cleared";
             }
             default -> help();
         };
+    }
+
+    public static String loggedInHelp() {
+        return """
+                Available commands:
+                  1. Logout
+                  2. Join <gameId> <Black?/White?>
+                  3. List Games
+                  4. Create Game <gameName>
+                  5. Redraw Chess Board
+                  6. Leave
+                  7. Resign
+                  8. Highlight Legal Moves
+                  9. Help
+                  10. Quit
+                """;
     }
 
     private static String loggedOutMenu(String cmd, String... params) throws DataAccessException {
@@ -88,6 +140,17 @@ public class Client {
             default -> help();
         };
     }
+
+    public static String highlightLegalMoves(String... params) {
+        if (params.length < 1) {
+            return "Please specify a piece to highlight legal moves for.";
+        }
+        ChessPosition position = currentGame.getBoard().findChessPiece(playerColor, params[0].toUpperCase());
+        Collection<ChessMove> legalMoves = currentGame.validMoves(position);
+        ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, legalMoves);
+        return "Highlight Legal Moves";
+    }
+
 
     public static String login(String... params) throws DataAccessException {
         if (params.length < 2) {
@@ -125,7 +188,7 @@ public class Client {
         }
         for (int i = 0; i < gameList.size(); i++) {
             GameData game = gameList.get(i);
-            gameListString += (i+1) + ". " + game.gameName() + "\n";
+            gameListString += (i + 1) + ". " + game.gameName() + "\n";
         }
         return gameListString;
     }
@@ -138,6 +201,7 @@ public class Client {
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         String gameID = String.valueOf(createGameResponse.gameID());
         gameList.add(createGameResponse);
+        currentGame = createGameResponse.chessGame();
         return "Game " + params[0] + " created with ID: " + gameID;
     }
 
@@ -149,14 +213,15 @@ public class Client {
         if (params.length > 1) {
             playerColor = params[1].toUpperCase();
         }
-        GameData gameToJoin = gameList.get(Integer.parseInt(params[0])-1);
+        GameData gameToJoin = gameList.get(Integer.parseInt(params[0]) - 1);
         int gameID = gameToJoin.gameID();
         GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
         GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
         ChessBoard chessBoard = gameData.chessGame().getBoard();
         ChessBoardUI.drawChessBoards(chessBoard);
+        currentGame = gameData.chessGame();
         if (playerColor == null) {
-            return "You have joined " + gameList.get(Integer.parseInt(params[0])-1).gameName() + " as an observer.";
+            return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
         }
         if (playerColor.equals("BLACK")) {
             return "You have joined the game as black.";
@@ -179,17 +244,6 @@ public class Client {
         return "quit";
     }
 
-    public static String loggedInHelp() {
-        return """
-                Available commands:
-                  1. Logout
-                  2. Join <gameId> <Black?/White?>
-                  3. List Games
-                  4. Create Game <gameName>
-                  5. Help
-                  6. Quit
-                """;
-    }
 
     public static String loggedOutHelp() {
         return """

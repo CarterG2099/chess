@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 
-public class ClientCommunicator {
+public class HttpCommunicator {
     //Use to actually contact server
     //Code from slides goes here - use them as a guide
     //Use IO slides to read and write from stream
