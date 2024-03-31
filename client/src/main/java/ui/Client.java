@@ -6,6 +6,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 import webSocketMessages.serverMessages.ServerMessage;
+import websocket.WebSocketCommunicator;
 
 import javax.websocket.*;
 import java.net.URI;
@@ -28,6 +29,8 @@ public class Client extends Endpoint implements ServerMessageObserver {
     private static ChessGame currentGame;
 
     private static ChessGame.TeamColor playerColor;
+
+    private WebSocketCommunicator ws;
 
     public static void main(String[] args) {
         serverFacade = new ServerFacade(8080);
@@ -99,7 +102,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
             case "2" -> joinRequest(params);
             case "3" -> listGames();
             case "4" -> createGame(params);
-            case "5" -> "Redraw Chess Board";
+            case "5" -> redrawChessBoard();
             case "6" -> "Leave";
             case "7" -> "Resign";
             case "8" -> highlightLegalMoves(params);
@@ -139,6 +142,10 @@ public class Client extends Endpoint implements ServerMessageObserver {
             }
             default -> help();
         };
+    }
+
+    public static void redrawChessBoard() {
+        ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, null);
     }
 
     public static String highlightLegalMoves(String... params) {
