@@ -17,7 +17,7 @@ import java.util.Scanner;
 import static server.Serializer.translateExceptionToJson;
 
 //catch exception in eval
-public class Client extends Endpoint implements EscapeSequences.ServerMessageObserver {
+public class Client extends Endpoint implements ServerMessageObserver {
 
     private Session session;
     private static ServerFacade serverFacade;
@@ -102,7 +102,7 @@ public class Client extends Endpoint implements EscapeSequences.ServerMessageObs
             case "5" -> "Redraw Chess Board";
             case "6" -> "Leave";
             case "7" -> "Resign";
-            case "8" -> "Highlight Legal Moves";
+            case "8" -> highlightLegalMoves(params);
             case "10" -> quit();
             case "clear" -> {
                 serverFacade.clearData();
@@ -143,12 +143,23 @@ public class Client extends Endpoint implements EscapeSequences.ServerMessageObs
 
     public static String highlightLegalMoves(String... params) {
         if (params.length < 1) {
-            return "Please specify a piece to highlight legal moves for.";
+            return "Please specify a position to highlight legal moves for.";
         }
-        ChessPosition position = currentGame.getBoard().findChessPiece(playerColor, params[0].toUpperCase());
+        if (playerColor == null) {
+            return "Please join a game as a player first";
+        }
+        //ChessPosition position = currentGame.getBoard().findChessPiece(playerColor, params[0].toUpperCase());
+        ChessPosition position = parsePosition(params);
         Collection<ChessMove> legalMoves = currentGame.validMoves(position);
         ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, legalMoves);
-        return "Highlight Legal Moves";
+        return "Legal moves for " + params[0].toUpperCase() + " highlighted.";
+    }
+
+    public static ChessPosition parsePosition(String... params ) {
+        char firstChar = params[0].charAt(0);
+        int y = firstChar - 'a' + 1; // Convert alphabet to numeric value
+        int x = Integer.parseInt(params[0].substring(1)); // Extract the numeric part of the string
+        return new ChessPosition(x, y);
     }
 
 
@@ -224,9 +235,11 @@ public class Client extends Endpoint implements EscapeSequences.ServerMessageObs
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
         }
         if (playerColor.equals("BLACK")) {
+            Client.playerColor = ChessGame.TeamColor.BLACK;
             return "You have joined the game as black.";
         }
         if (playerColor.equals("WHITE")) {
+            Client.playerColor = ChessGame.TeamColor.WHITE;
             return "You have joined the game as white.";
         }
         return "Invalid color";

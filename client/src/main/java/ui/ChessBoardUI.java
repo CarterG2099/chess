@@ -5,6 +5,7 @@ import chess.*;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Objects;
 
 import static ui.EscapeSequences.*;
 
@@ -132,6 +133,9 @@ public class ChessBoardUI {
     private static int getTileColor(int boardRow, int boardCol, Collection<ChessMove> highlightedPositions) {
         if(highlightedPositions != null) {
             for (ChessMove move : highlightedPositions) {
+                if(move.getStartPosition().getRow() == boardRow && move.getStartPosition().getColumn() == boardCol) {
+                    return 3;
+                }
                 if (move.getEndPosition().getRow() == boardRow && move.getEndPosition().getColumn() == boardCol) {
                     return 2;
                 }
@@ -141,26 +145,33 @@ public class ChessBoardUI {
     }
 
     private static void drawTile(PrintStream out, ChessPiece piece, int tileToInt) {
-        if (tileToInt == 2) {
+        String textColor = null;
+        if (tileToInt == 3) {
             out.print(SET_BG_COLOR_YELLOW);
+            textColor = SET_TEXT_COLOR_BLUE;
+        }
+        else if (tileToInt == 2) {
+            out.print(SET_BG_COLOR_GREEN);
+            textColor = SET_TEXT_COLOR_RED;
         }
         else if (tileToInt == 0) {
             out.print(SET_BG_COLOR_LIGHT_GREY);
         } else {
             out.print(SET_BG_COLOR_BLUE);
         }
+
         if (piece == null) {
             out.print("   ");
         } else {
-            drawChessPiece(out, piece);
+            drawChessPiece(out, piece, textColor);
         }
     }
 
-    private static void drawChessPiece(PrintStream out, ChessPiece piece) {
+    private static void drawChessPiece(PrintStream out, ChessPiece piece, String textColor) {
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-            out.print(SET_TEXT_COLOR_WHITE);
+            out.print(Objects.requireNonNullElse(textColor, SET_TEXT_COLOR_WHITE));
         } else {
-            out.print(SET_TEXT_COLOR_BLACK);
+            out.print(Objects.requireNonNullElse(textColor, SET_TEXT_COLOR_BLACK));
         }
         switch (piece.getPieceType()) {
             case PAWN -> out.print(" P ");

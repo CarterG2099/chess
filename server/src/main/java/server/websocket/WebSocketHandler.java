@@ -4,15 +4,9 @@ import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import webSocketMessages.serverMessages.ServerMessage;
 
 import java.io.IOException;
-import java.util.Timer;
-
-import static java.lang.System.exit;
-import static webSocketMessages.serverMessages.ServerMessage.ServerMessageType.*;
-
 
 @WebSocket
 public class WebSocketHandler {
@@ -23,8 +17,8 @@ public class WebSocketHandler {
     public void onMessage(Session session, String message) throws IOException {
         ServerMessage action = new Gson().fromJson(message, ServerMessage.class);
         switch (action.getServerMessageType()) {
-            case LOAD_GAME -> System.out.println("Game loaded");
             case NOTIFICATION -> System.out.println("Notification received");
+            case LOAD_GAME -> System.out.println("Game loaded");
             case ERROR -> System.out.println("Error received");
         }
     }
