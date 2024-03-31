@@ -10,6 +10,7 @@ import websocket.WebSocketCommunicator;
 
 import javax.websocket.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +21,7 @@ import static server.Serializer.translateExceptionToJson;
 //catch exception in eval
 public class Client extends Endpoint implements ServerMessageObserver {
 
-    private Session session;
+    private static Session session;
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
     private static String authToken;
@@ -30,27 +31,33 @@ public class Client extends Endpoint implements ServerMessageObserver {
 
     private static ChessGame.TeamColor playerColor;
 
-    private WebSocketCommunicator ws;
+    private static WebSocketCommunicator ws;
+    private static final String serverUrl;
+    private static final ServerMessageObserver serverMessageObserver;
 
-    public static void main(String[] args) {
-        serverFacade = new ServerFacade(8080);
-        run();
+    private State state = State.SIGNEDOUT;
+
+    public enum State {
+        SIGNEDOUT,
+        SIGNEDIN
     }
 
-    public Client() throws Exception {
+    public static void main(String[] args) throws URISyntaxException {
+        serverFacade = new ServerFacade(8080);
         URI uri = new URI("ws://localhost:8080/connect");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        this.session = container.connectToServer(this, uri);
+        Client.session = container.connectToServer(this, uri);
 
-        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+        Client.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
                 System.out.println(message);
             }
         });
+        run();
     }
 
     public void send(String msg) throws Exception {
-        this.session.getBasicRemote().sendText(msg);
+        Client.session.getBasicRemote().sendText(msg);
     }
 
     public void onOpen(Session session, EndpointConfig endpointConfig) {
@@ -103,7 +110,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
             case "3" -> listGames();
             case "4" -> createGame(params);
             case "5" -> redrawChessBoard();
-            case "6" -> "Leave";
+            case "6" -> leave();
             case "7" -> "Resign";
             case "8" -> highlightLegalMoves(params);
             case "10" -> quit();
@@ -144,8 +151,14 @@ public class Client extends Endpoint implements ServerMessageObserver {
         };
     }
 
-    public static void redrawChessBoard() {
+    public static String leave() throws DataAccessException {
+        ws = new WebSocketCommunicator(serverUrl, serverMessageObserver);
+        return "You have left the game";
+    }
+
+    public static String redrawChessBoard() {
         ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, null);
+        return "";
     }
 
     public static String highlightLegalMoves(String... params) {
@@ -184,6 +197,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
         AuthData loginResponse = serverFacade.login(loginRequest);
         loggedIn = true;
         authToken = loginResponse.authToken();
+        System.out.println(loggedInHelp());
         return "You have been logged in.";
     }
 
@@ -201,6 +215,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
     public static String logout() throws DataAccessException {
         serverFacade.logout(authToken);
         loggedIn = false;
+        System.out.println(loggedOutHelp());
         return "You have been logged out.";
     }
 
