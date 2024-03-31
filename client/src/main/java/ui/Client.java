@@ -148,8 +148,14 @@ public class Client extends Endpoint implements ServerMessageObserver {
         if (playerColor == null) {
             return "Please join a game as a player first";
         }
-        //ChessPosition position = currentGame.getBoard().findChessPiece(playerColor, params[0].toUpperCase());
         ChessPosition position = parsePosition(params);
+        ChessPiece piece = currentGame.getBoard().getPiece(position);
+        if (piece == null) {
+            return "No piece at position " + params[0].toUpperCase();
+        }
+        else if (piece.getTeamColor() != playerColor) {
+            return "You can only highlight legal moves for your own pieces.";
+        }
         Collection<ChessMove> legalMoves = currentGame.validMoves(position);
         ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, legalMoves);
         return "Legal moves for " + params[0].toUpperCase() + " highlighted.";
