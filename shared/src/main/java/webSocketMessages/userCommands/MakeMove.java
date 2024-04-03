@@ -7,6 +7,6 @@ public class MakeMove extends UserGameCommand {
     ChessMove move;
     CommandType commandType = CommandType.MAKE_MOVE;
     public MakeMove(String authToken) {
-        super(authToken);
+        super(authToken, CommandType.LEAVE);
     }
 }

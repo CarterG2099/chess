@@ -1,16 +1,14 @@
 package ui;
 
+import ServerClientCommunication.*;
 import chess.*;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import webSocketMessages.serverMessages.ServerMessage;
-import websocket.WebSocketCommunicator;
 
 import javax.websocket.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,52 +16,38 @@ import java.util.Scanner;
 
 import static server.Serializer.translateExceptionToJson;
 
-//catch exception in eval
-public class Client extends Endpoint implements ServerMessageObserver {
+public class Client implements ServerMessageObserver {
 
-    private static Session session;
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
     private static String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
-
     private static ChessGame currentGame;
-
     private static ChessGame.TeamColor playerColor;
-
     private static WebSocketCommunicator ws;
-    private static final String serverUrl;
-    private static final ServerMessageObserver serverMessageObserver;
+    private final String serverUrl;
 
-    private State state = State.SIGNEDOUT;
-
-    public enum State {
-        SIGNEDOUT,
-        SIGNEDIN
+    public static void main(String[] args) {
+        new Client("http://localhost:8080");
     }
 
-    public static void main(String[] args) throws URISyntaxException {
+    public Client(String serverUrl) {
+        this.serverUrl = serverUrl;
         serverFacade = new ServerFacade(8080);
-        URI uri = new URI("ws://localhost:8080/connect");
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        Client.session = container.connectToServer(this, uri);
-
-        Client.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            public void onMessage(String message) {
-                System.out.println(message);
-            }
-        });
         run();
     }
 
-    public void send(String msg) throws Exception {
-        Client.session.getBasicRemote().sendText(msg);
+    @Override
+    public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
+            case NOTIFICATION -> System.out.println("Notification received");
+            case LOAD_GAME -> System.out.println("Game loaded");
+            case ERROR -> System.out.println("Error received");
+        }
+        System.out.println(message);
     }
 
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
-    }
-
-    public static void run() {
+    public void run() {
         System.out.println("Welcome to 240Chess!");
         System.out.print(loggedOutHelp());
 
@@ -83,7 +67,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
         }
     }
 
-    public static Object eval(String input) {
+    public Object eval(String input) {
         System.out.println("Press Enter for a list of commands");
         var tokens = input.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
@@ -99,11 +83,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
         }
     }
 
-    public void notify(ServerMessage message) {
-        System.out.println(message);
-    }
-
-    private static String loggedInMenu(String cmd, String... params) throws DataAccessException {
+    private String loggedInMenu(String cmd, String... params) throws DataAccessException {
         return switch (cmd) {
             case "1" -> logout();
             case "2" -> joinRequest(params);
@@ -151,8 +131,9 @@ public class Client extends Endpoint implements ServerMessageObserver {
         };
     }
 
-    public static String leave() throws DataAccessException {
-        ws = new WebSocketCommunicator(serverUrl, serverMessageObserver);
+    public String leave() throws DataAccessException {
+        ws = new WebSocketCommunicator(this.serverUrl, this);
+        ws.leave(authToken);
         return "You have left the game";
     }
 
@@ -244,7 +225,7 @@ public class Client extends Endpoint implements ServerMessageObserver {
         return "Game " + params[0] + " created with ID: " + gameID;
     }
 
-    public static String joinRequest(String... params) throws DataAccessException {
+    public String joinRequest(String... params) throws DataAccessException {
         if (params.length < 1) {
             throw new DataAccessException("Bad Request", 400);
         }
@@ -260,17 +241,25 @@ public class Client extends Endpoint implements ServerMessageObserver {
         ChessBoardUI.drawChessBoards(chessBoard);
         currentGame = gameData.chessGame();
         if (playerColor == null) {
+            webSocketJoinRequest(false);
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
         }
-        if (playerColor.equals("BLACK")) {
+        else if (playerColor.equals("BLACK")) {
+            webSocketJoinRequest(true);
             Client.playerColor = ChessGame.TeamColor.BLACK;
             return "You have joined the game as black.";
         }
-        if (playerColor.equals("WHITE")) {
+        else if (playerColor.equals("WHITE")) {
+            webSocketJoinRequest(true);
             Client.playerColor = ChessGame.TeamColor.WHITE;
             return "You have joined the game as white.";
         }
         return "Invalid color";
+    }
+
+    public void webSocketJoinRequest(Boolean joinAsPlayer) throws DataAccessException {
+        ws = new WebSocketCommunicator(this.serverUrl, this);
+        ws.joinRequest(authToken, joinAsPlayer);
     }
 
     private static String help() {
