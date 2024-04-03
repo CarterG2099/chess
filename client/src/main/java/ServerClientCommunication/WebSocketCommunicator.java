@@ -3,6 +3,7 @@ package ServerClientCommunication;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.Leave;
 import webSocketMessages.userCommands.UserGameCommand;
 
 import javax.websocket.*;
@@ -42,10 +43,11 @@ public class WebSocketCommunicator extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    public void leave(String authToken) throws DataAccessException {
+    public void leave(String authToken, int gameID) throws DataAccessException {
         try {
-            var command = new UserGameCommand(authToken, UserGameCommand.CommandType.LEAVE);
-            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+            var leaveCommand = new Leave(authToken, gameID);
+//            var command = new UserGameCommand(authToken, Leave.CommandType.LEAVE);
+            this.session.getBasicRemote().sendText(new Gson().toJson(leaveCommand));
         } catch (IOException ex) {
             throw new DataAccessException(ex.getMessage(), 500);
         }

@@ -2,8 +2,8 @@ package webSocketMessages.userCommands;
 
 public class Leave extends UserGameCommand {
     int gameID;
-    CommandType commandType = CommandType.LEAVE;
-    public Leave(String authToken) {
+    public Leave(String authToken, int gameID) {
         super(authToken, CommandType.LEAVE);
+        this.gameID = gameID;
     }
 }

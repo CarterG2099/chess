@@ -22,7 +22,7 @@ public class Client implements ServerMessageObserver {
     private static boolean loggedIn = false;
     private static String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
-    private static ChessGame currentGame;
+    private static GameData currentGame;
     private static ChessGame.TeamColor playerColor;
     private static WebSocketCommunicator ws;
     private final String serverUrl;
@@ -83,62 +83,15 @@ public class Client implements ServerMessageObserver {
         }
     }
 
-    private String loggedInMenu(String cmd, String... params) throws DataAccessException {
-        return switch (cmd) {
-            case "1" -> logout();
-            case "2" -> joinRequest(params);
-            case "3" -> listGames();
-            case "4" -> createGame(params);
-            case "5" -> redrawChessBoard();
-            case "6" -> leave();
-            case "7" -> "Resign";
-            case "8" -> highlightLegalMoves(params);
-            case "10" -> quit();
-            case "clear" -> {
-                serverFacade.clearData();
-                yield "Data Cleared";
-            }
-            default -> help();
-        };
-    }
-
-    public static String loggedInHelp() {
-        return """
-                Available commands:
-                  1. Logout
-                  2. Join <gameId> <Black?/White?>
-                  3. List Games
-                  4. Create Game <gameName>
-                  5. Redraw Chess Board
-                  6. Leave
-                  7. Resign
-                  8. Highlight Legal Moves
-                  9. Help
-                  10. Quit
-                """;
-    }
-
-    private static String loggedOutMenu(String cmd, String... params) throws DataAccessException {
-        return switch (cmd) {
-            case "1" -> login(params);
-            case "2" -> register(params);
-            case "4" -> quit();
-            case "clear" -> {
-                serverFacade.clearData();
-                yield "Data Cleared";
-            }
-            default -> help();
-        };
-    }
-
     public String leave() throws DataAccessException {
+
         ws = new WebSocketCommunicator(this.serverUrl, this);
-        ws.leave(authToken);
+        ws.leave(authToken, currentGame.gameID());
         return "You have left the game";
     }
 
     public static String redrawChessBoard() {
-        ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, null);
+        ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, null);
         return "";
     }
 
@@ -150,15 +103,15 @@ public class Client implements ServerMessageObserver {
             return "Please join a game as a player first";
         }
         ChessPosition position = parsePosition(params);
-        ChessPiece piece = currentGame.getBoard().getPiece(position);
+        ChessPiece piece = currentGame.chessGame().getBoard().getPiece(position);
         if (piece == null) {
             return "No piece at position " + params[0].toUpperCase();
         }
         else if (piece.getTeamColor() != playerColor) {
             return "You can only highlight legal moves for your own pieces.";
         }
-        Collection<ChessMove> legalMoves = currentGame.validMoves(position);
-        ChessBoardUI.drawChessBoard(currentGame.getBoard(), playerColor, legalMoves);
+        Collection<ChessMove> legalMoves = currentGame.chessGame().validMoves(position);
+        ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, legalMoves);
         return "Legal moves for " + params[0].toUpperCase() + " highlighted.";
     }
 
@@ -168,7 +121,6 @@ public class Client implements ServerMessageObserver {
         int x = Integer.parseInt(params[0].substring(1)); // Extract the numeric part of the string
         return new ChessPosition(x, y);
     }
-
 
     public static String login(String... params) throws DataAccessException {
         if (params.length < 2) {
@@ -221,7 +173,7 @@ public class Client implements ServerMessageObserver {
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         String gameID = String.valueOf(createGameResponse.gameID());
         gameList.add(createGameResponse);
-        currentGame = createGameResponse.chessGame();
+        currentGame = createGameResponse;
         return "Game " + params[0] + " created with ID: " + gameID;
     }
 
@@ -239,7 +191,7 @@ public class Client implements ServerMessageObserver {
         GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
         ChessBoard chessBoard = gameData.chessGame().getBoard();
         ChessBoardUI.drawChessBoards(chessBoard);
-        currentGame = gameData.chessGame();
+        currentGame = gameData;
         if (playerColor == null) {
             webSocketJoinRequest(false);
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
@@ -261,6 +213,52 @@ public class Client implements ServerMessageObserver {
         ws = new WebSocketCommunicator(this.serverUrl, this);
         ws.joinRequest(authToken, joinAsPlayer);
     }
+    private String loggedInMenu(String cmd, String... params) throws DataAccessException {
+        return switch (cmd) {
+            case "1" -> logout();
+            case "2" -> joinRequest(params);
+            case "3" -> listGames();
+            case "4" -> createGame(params);
+            case "5" -> redrawChessBoard();
+            case "6" -> leave();
+            case "7" -> "Resign";
+            case "8" -> highlightLegalMoves(params);
+            case "10" -> quit();
+            case "clear" -> {
+                serverFacade.clearData();
+                yield "Data Cleared";
+            }
+            default -> help();
+        };
+    }
+    public static String loggedInHelp() {
+        return """
+                Available commands:
+                  1. Logout
+                  2. Join <gameId> <Black?/White?>
+                  3. List Games
+                  4. Create Game <gameName>
+                  5. Redraw Chess Board
+                  6. Leave
+                  7. Resign
+                  8. Highlight Legal Moves
+                  9. Help
+                  10. Quit
+                """;
+    }
+
+    private static String loggedOutMenu(String cmd, String... params) throws DataAccessException {
+        return switch (cmd) {
+            case "1" -> login(params);
+            case "2" -> register(params);
+            case "4" -> quit();
+            case "clear" -> {
+                serverFacade.clearData();
+                yield "Data Cleared";
+            }
+            default -> help();
+        };
+    }
 
     private static String help() {
         if (loggedIn) {
@@ -269,11 +267,6 @@ public class Client implements ServerMessageObserver {
             return loggedOutHelp();
         }
     }
-
-    private static String quit() {
-        return "quit";
-    }
-
 
     public static String loggedOutHelp() {
         return """
@@ -285,7 +278,10 @@ public class Client implements ServerMessageObserver {
                 """;
     }
 
-    //Implement methods here for menu
-    //Calls UI.chessBoardUI when joining or observing game
-    //Creates login request and register request...
+    private static String quit() {
+        return "quit";
+    }
+
+
+
 }
