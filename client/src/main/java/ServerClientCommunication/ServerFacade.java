@@ -1,5 +1,6 @@
-package ui;
+package ServerClientCommunication;
 
+import ServerClientCommunication.HttpCommunicator;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;

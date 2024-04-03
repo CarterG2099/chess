@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.UserGameCommand;
 
 import java.io.IOException;
 
@@ -15,11 +17,31 @@ public class WebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
-        ServerMessage action = new Gson().fromJson(message, ServerMessage.class);
-        switch (action.getServerMessageType()) {
-            case NOTIFICATION -> System.out.println("Notification received");
-            case LOAD_GAME -> System.out.println("Game loaded");
-            case ERROR -> System.out.println("Error received");
+        UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+        switch (command.getCommandType()) {
+            case JOIN_PLAYER -> {
+                connections.add(command.getAuthToken(), session);
+                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " joined the game");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            case JOIN_OBSERVER -> {
+                connections.add(command.getAuthToken(), session);
+                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " joined the game as an observer");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            case LEAVE -> {
+                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " left the game");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            case MAKE_MOVE -> {
+                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " made a move");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            case RESIGN -> {
+                connections.remove(command.getAuthToken());
+                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " resigned");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
         }
     }
 

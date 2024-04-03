@@ -1,4 +1,4 @@
-package ui;
+package ServerClientCommunication;
 
 import webSocketMessages.serverMessages.ServerMessage;
 

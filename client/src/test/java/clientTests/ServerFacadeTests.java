@@ -7,7 +7,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.StatusResponse;
-import ui.ServerFacade;
+import ServerClientCommunication.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

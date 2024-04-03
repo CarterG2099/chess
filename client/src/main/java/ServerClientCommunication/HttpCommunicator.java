@@ -1,4 +1,4 @@
-package ui;
+package ServerClientCommunication;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;

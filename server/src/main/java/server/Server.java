@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
 import dataAccess.*;
+import server.websocket.WebSocketHandler;
 import spark.Response;
 import spark.Spark;
 
@@ -27,6 +28,7 @@ public class Server {
         setMySqlDAOs();
 
         Spark.staticFiles.location("web");
+        Spark.webSocket("/connect", WebSocketHandler.class);
         Spark.post("/user", UserHandler::register);
         Spark.delete("/db", DbHandler::clearData);
         Spark.post("/session", UserHandler::login);
