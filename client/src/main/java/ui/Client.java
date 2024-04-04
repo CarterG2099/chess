@@ -37,16 +37,25 @@ public class Client implements ServerMessageObserver {
 
     @Override
     public void notify(ServerMessage message) {
+        System.out.println("ENTERED NOTIFY");
         switch (message.getServerMessageType()) {
             case NOTIFICATION:
-//                Serializer
+                // Handle notification messages here
+//                System.out.println("Notification: " + message.message());
+                break;
             case LOAD_GAME:
-                currentGame = ((LoadGame) message).gameData();
+                // Handle load game messages here
+                LoadGame loadGameMessage = (LoadGame) message;
+//                currentGame = loadGameMessage.getGameData();
                 ChessBoardUI.drawChessBoards(currentGame.chessGame().getBoard());
-//            case ERROR -> System.out.println(message.errorMessage());
+                break;
+            // Add more cases for other message types if needed
+            default:
+                // Handle other message types if necessary
+                break;
         }
-        System.out.println(message);
     }
+
 
     public void run() {
         System.out.println("Welcome to 240Chess!");

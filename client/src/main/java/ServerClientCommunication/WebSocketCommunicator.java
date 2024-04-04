@@ -13,10 +13,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class WebSocketCommunicator extends Endpoint {
-
     Session session;
     ServerMessageObserver serverMessageHandler;
-
     public WebSocketCommunicator(String url, ServerMessageObserver serverMessageHandler) throws DataAccessException {
         try {
             url = url.replace("http", "ws");

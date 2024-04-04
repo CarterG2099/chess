@@ -77,7 +77,9 @@ public class WebSocketHandler {
     private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
         try {
             gameService.makeMove(command.gameID(), command.move());
+            var game = new LoadGame(gameService.getGame(command.gameID()));
             var notification = new Notification(username + " made a move");
+            connections.broadcast(command.getAuthToken(), game);
             connections.broadcast(command.getAuthToken(), notification);
         }
         catch (InvalidMoveException e) {
