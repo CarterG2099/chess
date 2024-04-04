@@ -77,6 +77,22 @@ public class MySqlGameDAO implements GameDAO {
 
     }
 
+    @Override
+    public void leaveGame(GameData gameData, UserData user, String player) throws DataAccessException {
+        if(player.equals("white")) {
+            var statement = "UPDATE game_data SET white_username = NULL WHERE game_id = ?";
+            DatabaseManager.executeUpdate(statement, gameData.gameID());
+        }
+        else if(player.equals("black")) {
+            var statement = "UPDATE game_data SET black_username = NULL WHERE game_id = ?";
+            DatabaseManager.executeUpdate(statement, gameData.gameID());
+        } else {
+            var statement = "UPDATE game_data SET observer_list = JSON_REMOVE(observer_list, JSON_UNQUOTE(JSON_SEARCH(observer_list, 'one', ?))) WHERE game_id = ?";
+            DatabaseManager.executeUpdate(statement, user.username(), gameData.gameID());
+
+        }
+    }
+
     private GameData readGameData(ResultSet rs) throws DataAccessException, SQLException {
         Gson gson = new Gson();
         var game_id = rs.getInt("game_id");

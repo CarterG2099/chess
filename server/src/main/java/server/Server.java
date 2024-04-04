@@ -36,6 +36,7 @@ public class Server {
         Spark.get("/game", GameHandler::listGames);
         Spark.post("/game", GameHandler::createGame);
         Spark.put("/game", GameHandler::joinRequest);
+        Spark.delete("/game", GameHandler::leave);
 
         Spark.awaitInitialization();
         return Spark.port();

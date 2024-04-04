@@ -6,13 +6,11 @@ import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import server.Serializer;
+import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.ServerMessage;
 
-import javax.websocket.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 import static server.Serializer.translateExceptionToJson;
 
@@ -20,12 +18,12 @@ public class Client implements ServerMessageObserver {
 
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
-    private static String authToken;
+    public static String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
-    private static GameData currentGame;
-    private static ChessGame.TeamColor playerColor;
-    private static WebSocketCommunicator ws;
-    private final String serverUrl;
+    public static GameData currentGame;
+    public ChessGame.TeamColor playerColor;
+    public final String serverUrl;
+    private String username;
 
     public static void main(String[] args) {
         new Client("http://localhost:8080");
@@ -40,9 +38,12 @@ public class Client implements ServerMessageObserver {
     @Override
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
-            case NOTIFICATION -> System.out.println("Notification received");
-            case LOAD_GAME -> System.out.println("Game loaded");
-            case ERROR -> System.out.println("Error received");
+            case NOTIFICATION:
+//                Serializer
+            case LOAD_GAME:
+                currentGame = ((LoadGame) message).gameData();
+                ChessBoardUI.drawChessBoards(currentGame.chessGame().getBoard());
+//            case ERROR -> System.out.println(message.errorMessage());
         }
         System.out.println(message);
     }
@@ -84,18 +85,48 @@ public class Client implements ServerMessageObserver {
     }
 
     public String leave() throws DataAccessException {
+        if(currentGame == null) {
+            return "You are not currently in a game";
+        }
 
-        ws = new WebSocketCommunicator(this.serverUrl, this);
-        ws.leave(authToken, currentGame.gameID());
+        currentGame = serverFacade.leave(this, currentGame, String.valueOf(playerColor));
+
+//        if(Objects.equals(currentGame.whiteUsername(), username)) {
+//            currentGame = new GameData(currentGame.gameID(), null, currentGame.blackUsername(), currentGame.gameName(), currentGame.chessGame(), null, currentGame.observerList());
+//        }
+//        else if(Objects.equals(currentGame.blackUsername(), username)) {
+//            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), null, currentGame.gameName(), currentGame.chessGame(), null, currentGame.observerList());
+//        }
+//        else {
+//            ArrayList<UserData> newObserverList = new ArrayList<>(currentGame.observerList());
+//            newObserverList.removeIf(user -> user.username().equals(username));
+//            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), currentGame.blackUsername(), currentGame.gameName(), currentGame.chessGame(), null, newObserverList);
+//        }
         return "You have left the game";
     }
 
-    public static String redrawChessBoard() {
+    public String resign() throws DataAccessException {
+        currentGame = null;
+        serverFacade.resign(this);
+        return "You have resigned";
+    }
+
+    public String makeMove(String ...params) throws DataAccessException {
+        if (params.length < 2) {
+            return "Invalid Move Command";
+        }
+        ChessPosition fromPosition = parsePosition(params[0]);
+        ChessPosition toPosition = parsePosition(params[1]);
+        ChessMove move = new ChessMove(fromPosition, toPosition, null);
+        serverFacade.makeMove(this, move);
+        return "Move made";
+    }
+    public String redrawChessBoard() {
         ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, null);
         return "";
     }
 
-    public static String highlightLegalMoves(String... params) {
+    public String highlightLegalMoves(String... params) {
         if (params.length < 1) {
             return "Please specify a position to highlight legal moves for.";
         }
@@ -122,7 +153,7 @@ public class Client implements ServerMessageObserver {
         return new ChessPosition(x, y);
     }
 
-    public static String login(String... params) throws DataAccessException {
+    public String login(String... params) throws DataAccessException {
         if (params.length < 2) {
             throw new DataAccessException("Bad Request", 400);
         }
@@ -130,11 +161,12 @@ public class Client implements ServerMessageObserver {
         AuthData loginResponse = serverFacade.login(loginRequest);
         loggedIn = true;
         authToken = loginResponse.authToken();
+        this.username = loginResponse.username();
         System.out.println(loggedInHelp());
         return "You have been logged in.";
     }
 
-    public static String register(String... params) throws DataAccessException {
+    public String register(String... params) throws DataAccessException {
         if (params.length < 3) {
             throw new DataAccessException("Bad Request", 400);
         }
@@ -142,6 +174,7 @@ public class Client implements ServerMessageObserver {
         AuthData registerResponse = serverFacade.register(registerRequest);
         authToken = registerResponse.authToken();
         loggedIn = true;
+        this.username = registerResponse.username();
         return "You have been registered and logged in.";
     }
 
@@ -181,38 +214,34 @@ public class Client implements ServerMessageObserver {
         if (params.length < 1) {
             throw new DataAccessException("Bad Request", 400);
         }
-        String playerColor = null;
+        String color = null;
         if (params.length > 1) {
-            playerColor = params[1].toUpperCase();
+            color = params[1].toUpperCase();
         }
         GameData gameToJoin = gameList.get(Integer.parseInt(params[0]) - 1);
         int gameID = gameToJoin.gameID();
-        GameData joinRequest = new GameData(gameID, null, null, null, null, playerColor, null);
+        GameData joinRequest = new GameData(gameID, null, null, null, null, color, null);
         GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
         ChessBoard chessBoard = gameData.chessGame().getBoard();
         ChessBoardUI.drawChessBoards(chessBoard);
         currentGame = gameData;
-        if (playerColor == null) {
-            webSocketJoinRequest(false);
+        if (color == null) {
+            serverFacade.webSocketJoinRequest(this, false);
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
         }
-        else if (playerColor.equals("BLACK")) {
-            webSocketJoinRequest(true);
-            Client.playerColor = ChessGame.TeamColor.BLACK;
+        else if (color.equals("BLACK")) {
+            playerColor = ChessGame.TeamColor.BLACK;
+            serverFacade.webSocketJoinRequest(this, true);
             return "You have joined the game as black.";
         }
-        else if (playerColor.equals("WHITE")) {
-            webSocketJoinRequest(true);
-            Client.playerColor = ChessGame.TeamColor.WHITE;
+        else if (color.equals("WHITE")) {
+            playerColor = ChessGame.TeamColor.WHITE;
+            serverFacade.webSocketJoinRequest(this, true);
             return "You have joined the game as white.";
         }
         return "Invalid color";
     }
 
-    public void webSocketJoinRequest(Boolean joinAsPlayer) throws DataAccessException {
-        ws = new WebSocketCommunicator(this.serverUrl, this);
-        ws.joinRequest(authToken, joinAsPlayer);
-    }
     private String loggedInMenu(String cmd, String... params) throws DataAccessException {
         return switch (cmd) {
             case "1" -> logout();
@@ -221,9 +250,10 @@ public class Client implements ServerMessageObserver {
             case "4" -> createGame(params);
             case "5" -> redrawChessBoard();
             case "6" -> leave();
-            case "7" -> "Resign";
+            case "7" -> resign();
             case "8" -> highlightLegalMoves(params);
-            case "10" -> quit();
+            case "9" -> makeMove();
+            case "11" -> quit();
             case "clear" -> {
                 serverFacade.clearData();
                 yield "Data Cleared";
@@ -242,12 +272,13 @@ public class Client implements ServerMessageObserver {
                   6. Leave
                   7. Resign
                   8. Highlight Legal Moves
-                  9. Help
-                  10. Quit
+                  9. Make Move <position> <position>
+                  10. Help
+                  11. Quit
                 """;
     }
 
-    private static String loggedOutMenu(String cmd, String... params) throws DataAccessException {
+    private String loggedOutMenu(String cmd, String... params) throws DataAccessException {
         return switch (cmd) {
             case "1" -> login(params);
             case "2" -> register(params);

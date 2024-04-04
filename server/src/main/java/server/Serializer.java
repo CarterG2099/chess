@@ -3,6 +3,8 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import spark.Response;
+import webSocketMessages.serverMessages.*;
+import webSocketMessages.serverMessages.Error;
 import webSocketMessages.userCommands.*;
 
 import static server.Server.gameDAO;
@@ -25,6 +27,19 @@ public class Serializer {
         res.status(200);
         res.body("Success");
         return gson.toJson(statusResponse);
+    }
+
+    public static Object interpretServerMessage(String message) {
+        ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
+        switch (serverMessage.getServerMessageType()) {
+            case ERROR:
+                return gson.fromJson(message, Error.class);
+            case NOTIFICATION:
+                return gson.fromJson(message, Notification.class);
+            case LOAD_GAME:
+                return gson.fromJson(message, LoadGame.class);
+            default: return null;
+        }
     }
 
     public static Object interpretUserGameCommand(String message) {

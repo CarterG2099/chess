@@ -1,6 +1,7 @@
 package dataAccess;
 
 import model.GameData;
+import model.UserData;
 
 import java.util.ArrayList;
 
@@ -14,4 +15,6 @@ public interface GameDAO {
     GameData getGame(int gameId) throws DataAccessException;
 
     void deleteGame(GameData game) throws DataAccessException;
+
+    void leaveGame(GameData gameData, UserData user, String white) throws DataAccessException;
 }

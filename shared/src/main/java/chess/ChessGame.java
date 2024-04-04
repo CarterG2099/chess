@@ -174,7 +174,7 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
+    public ChessBoard makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
@@ -235,6 +235,7 @@ public class ChessGame {
         else setTeamTurn(TeamColor.WHITE);
         //Mark the piece as having moved
         pieceToMove.pieceMoved();
+        return board;
     }
 
     /*

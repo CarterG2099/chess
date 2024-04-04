@@ -1,12 +1,16 @@
 package service;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import dataAccess.DataAccessException;
+import dataAccess.GameDAO;
 import model.GameData;
 import model.UserData;
 import server.Server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 public class GameService {
@@ -61,5 +65,36 @@ public class GameService {
         GameData newGame = new GameData(oldGame.gameID(), whiteUsername, blackUsername, oldGame.gameName(), oldGame.chessGame(), "", observerList);
         Server.gameDAO.addGame(newGame);
         return newGame;
+    }
+
+//    public void leaveGame(GameData gameData, UserData user, String playerColor) throws DataAccessException {
+//        GameData newGame = null;
+//        if(playerColor.isEmpty()) {
+//            ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
+//            newObserverList.removeIf(observer -> observer.username().equals(user.username()));
+//            newGame = new GameData(gameData.gameID(), null, null, gameData.gameName(), gameData.chessGame(), "", newObserverList);
+//            Server.gameDAO.leaveGame(gameData, user, "observer");
+//        }
+//        else if (playerColor.toUpperCase() == "WHITE") {
+//            newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
+//
+//        } else if (playerColor.toUpperCase() == "BLACK") {
+//            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
+//        }
+//        Server.gameDAO.deleteGame(gameData);
+//        Server.gameDAO.addGame(newGame);
+//    }
+
+    public void makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
+        GameData gameData = Server.gameDAO.getGame(gameID);
+        Collection<ChessMove> legalMoves = gameData.chessGame().validMoves(move.getStartPosition());
+        if(!legalMoves.contains(move)) {
+            throw new InvalidMoveException("Invalid move");
+        }
+        else {
+            gameData.chessGame().setBoard(gameData.chessGame().makeMove(move));
+            Server.gameDAO.deleteGame(gameData);
+            Server.gameDAO.addGame(gameData);
+        }
     }
 }

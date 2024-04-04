@@ -1,15 +1,19 @@
 package ServerClientCommunication;
 
 import ServerClientCommunication.HttpCommunicator;
+import chess.ChessMove;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import server.StatusResponse;
+import ui.Client;
+
 
 public class ServerFacade {
     //One method per endpoint - 7 total with 2-3 lines of code
     //Class to represent server and then uses client communicator to actually call server
+    private static WebSocketCommunicator ws;
 
     public ServerFacade(int port) {
         HttpCommunicator.port = port;
@@ -40,6 +44,28 @@ public class ServerFacade {
 
     public GameData joinRequest(GameData joinRequest, String authToken) throws DataAccessException {
         return HttpCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
+    }
+
+    public void webSocketJoinRequest(Client client, Boolean joinAsPlayer) throws DataAccessException {
+        ws = new WebSocketCommunicator(client.serverUrl, client);
+        ws.joinRequest(client.authToken, client.currentGame.gameID(), client.playerColor, joinAsPlayer);
+    }
+
+    public GameData leave(Client client, GameData leaveRequest, String playerColor) throws DataAccessException {
+        GameData leaveResponse = HttpCommunicator.makeRequest("UPDATE", "/game", leaveRequest, client.authToken, GameData.class);
+        ws = new WebSocketCommunicator(client.serverUrl, client);
+        ws.leave(client.authToken, client.currentGame.gameID(), playerColor);
+        return leaveResponse;
+    }
+
+    public void resign(Client client) throws DataAccessException {
+        ws = new WebSocketCommunicator(client.serverUrl, client);
+        ws.resign(client.authToken, client.currentGame.gameID());
+    }
+
+    public void makeMove(Client client, ChessMove move) throws DataAccessException {
+        ws = new WebSocketCommunicator(client.serverUrl, client);
+        ws.makeMove(client.authToken, client.currentGame.gameID(), move);
     }
 
 }

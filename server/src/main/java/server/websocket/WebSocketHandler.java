@@ -1,13 +1,19 @@
 package server.websocket;
 
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
+import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.UserGameCommand;
+import server.UserHandler;
+import service.GameService;
+import service.UserService;
+import webSocketMessages.serverMessages.*;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
 
@@ -17,59 +23,72 @@ import static server.Serializer.interpretUserGameCommand;
 public class WebSocketHandler {
 
     private final ConnectionManager connections = new ConnectionManager();
+    private final UserService userService = new UserService();
+    private final GameService gameService = new GameService();
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws IOException, DataAccessException {
         UserGameCommand command = (UserGameCommand) interpretUserGameCommand(message);
-//        UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+        userService.validAuthToken(command.getAuthToken());
+        UserData user = userService.getUser(command.getAuthToken());
+        String username = user.username();
         switch (command.getCommandType()) {
             case JOIN_PLAYER -> {
-                connections.add(command.getAuthToken(), session);
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " joined the game");
-                connections.broadcast(command.getAuthToken(), notification);
+                joinPlayer((JoinPlayer) command, username, session);
             }
             case JOIN_OBSERVER -> {
-                connections.add(command.getAuthToken(), session);
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " joined the game as an observer");
-                connections.broadcast(command.getAuthToken(), notification);
+                joinObserver((JoinObserver) command, username, session);
             }
             case LEAVE -> {
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " left the game");
-                connections.broadcast(command.getAuthToken(), notification);
+                leave((Leave) command, username);
             }
             case MAKE_MOVE -> {
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " made a move");
-                connections.broadcast(command.getAuthToken(), notification);
+                makeMove((MakeMove) command, username);
             }
             case RESIGN -> {
-                connections.remove(command.getAuthToken());
-                var notification = new Notification(ServerMessage.ServerMessageType.NOTIFICATION, command.getAuthToken() + " resigned");
-                connections.broadcast(command.getAuthToken(), notification);
+                resign((Resign) command, username);
             }
+            default -> connections.broadcast(command.getAuthToken(), new Error("Invalid command type"));
         }
     }
 
-//    private void enter(String visitorName, Session session) throws IOException {
-//        connections.add(visitorName, session);
-//        var message = String.format("%s is in the shop", visitorName);
-//        var notification = new Notification(Notification.Type.ARRIVAL, message);
-//        connections.broadcast(visitorName, notification);
-//    }
-//
-//    private void exit(String visitorName) throws IOException {
-//        connections.remove(visitorName);
-//        var message = String.format("%s left the shop", visitorName);
-//        var notification = new Notification(Notification.Type.DEPARTURE, message);
-//        connections.broadcast(visitorName, notification);
-//    }
-//
-//    public void makeNoise(String petName, String sound) throws ResponseException {
-//        try {
-//            var message = String.format("%s says %s", petName, sound);
-//            var notification = new Notification(Notification.Type.NOISE, message);
-//            connections.broadcast("", notification);
-//        } catch (Exception ex) {
-//            throw new ResponseException(500, ex.getMessage());
-//        }
-//    }
+    private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException, DataAccessException {
+        connections.add(command.getAuthToken(), session);
+        var game = new LoadGame(gameService.getGame(command.gameID()));
+        var notification = new Notification(username + " joined the game");
+        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), game);
+    }
+
+    private void joinObserver(JoinObserver command, String username, Session session) throws IOException, DataAccessException {
+        connections.add(command.getAuthToken(), session);
+        var notification = new Notification(username + " joined the game as an observer");
+        var game = new LoadGame(gameService.getGame(command.gameID()));
+        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), game);
+    }
+
+    private void leave(Leave command, String username) throws IOException {
+        connections.remove(command.getAuthToken());
+        var notification = new Notification(username + " left the game");
+        connections.broadcast(command.getAuthToken(), notification);
+    }
+
+    private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
+        try {
+            gameService.makeMove(command.gameID(), command.move());
+            var notification = new Notification(username + " made a move");
+            connections.broadcast(command.getAuthToken(), notification);
+        }
+        catch (InvalidMoveException e) {
+            var error = new Error("Invalid move: " + e.getMessage());
+            connections.broadcast(command.getAuthToken(), error);
+        }
+    }
+
+    private void resign(Resign command, String username) throws IOException {
+        connections.remove(command.getAuthToken());
+        var notification = new Notification(username + " resigned");
+        connections.broadcast(command.getAuthToken(), notification);
+    }
 }
