@@ -31,8 +31,6 @@ public class Client implements ServerMessageObserver {
     public final String serverUrl;
     static final Gson gson = new Gson();
 
-    private String username;
-
     public static void main(String[] args) {
         new Client("http://localhost:8080");
     }
@@ -74,7 +72,6 @@ public class Client implements ServerMessageObserver {
                 break;
         }
     }
-
 
     public void run() {
         System.out.println("Welcome to 240Chess!");
@@ -187,7 +184,6 @@ public class Client implements ServerMessageObserver {
         AuthData loginResponse = serverFacade.login(loginRequest);
         loggedIn = true;
         authToken = loginResponse.authToken();
-        this.username = loginResponse.username();
         System.out.println(loggedInHelp());
         return "You have been logged in.";
     }
@@ -200,7 +196,6 @@ public class Client implements ServerMessageObserver {
         AuthData registerResponse = serverFacade.register(registerRequest);
         authToken = registerResponse.authToken();
         loggedIn = true;
-        this.username = registerResponse.username();
         return "You have been registered and logged in.";
     }
 
