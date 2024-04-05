@@ -51,11 +51,9 @@ public class ServerFacade {
         ws.joinRequest(client.authToken, client.currentGame.gameID(), client.playerColor, joinAsPlayer);
     }
 
-    public GameData leave(Client client, GameData leaveRequest, String playerColor) throws DataAccessException {
-        GameData leaveResponse = HttpCommunicator.makeRequest("UPDATE", "/game", leaveRequest, client.authToken, GameData.class);
+    public void leave(Client client, String playerColor) throws DataAccessException {
         ws = new WebSocketCommunicator(client.serverUrl, client);
         ws.leave(client.authToken, client.currentGame.gameID(), playerColor);
-        return leaveResponse;
     }
 
     public void resign(Client client) throws DataAccessException {

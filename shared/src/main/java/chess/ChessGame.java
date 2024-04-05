@@ -174,7 +174,7 @@ public class ChessGame {
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
      */
-    public ChessBoard makeMove(ChessMove move) throws InvalidMoveException {
+    public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
         //Clone the board in case the move is invalid
         ChessBoard tempBoard = (ChessBoard) board.clone();
@@ -194,11 +194,10 @@ public class ChessGame {
             board.addPiece(move.getEndPosition(), new ChessPiece(pieceToMove.getTeamColor(), move.getPromotionPiece()));
         else board.addPiece(move.getEndPosition(), pieceToMove);
 
-        InvalidMoveException ex = new InvalidMoveException();
         //Make sure it is the right teams turn
         if (pieceToMove != null && pieceToMove.getTeamColor() != getTeamTurn()) {
             board = tempBoard;
-            throw ex;
+            throw new InvalidMoveException("Not your turn");
         }
         //Check to make sure move is even part of their moves
         Collection<ChessMove> possibleMoves = new ArrayList<>();
@@ -228,14 +227,14 @@ public class ChessGame {
         }
         if (!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
             board = tempBoard;
-            throw ex;
+            throw new InvalidMoveException("Invalid move");
         }
         //After making the move, change the teams turn
         if (getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
         else setTeamTurn(TeamColor.WHITE);
         //Mark the piece as having moved
         pieceToMove.pieceMoved();
-        return board;
+//        return this;
     }
 
     /*

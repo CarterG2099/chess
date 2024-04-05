@@ -85,16 +85,19 @@ public class GameService {
 //        Server.gameDAO.addGame(newGame);
 //    }
 
-    public void makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
+    public GameData makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
         GameData gameData = Server.gameDAO.getGame(gameID);
         Collection<ChessMove> legalMoves = gameData.chessGame().validMoves(move.getStartPosition());
         if(!legalMoves.contains(move)) {
             throw new InvalidMoveException("Invalid move");
         }
         else {
-            gameData.chessGame().setBoard(gameData.chessGame().makeMove(move));
+            gameData.chessGame().makeMove(move);
+//            ChessGame newGame = gameData.chessGame().makeMove(move);
+//            GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), newGame, "", gameData.observerList());
             Server.gameDAO.deleteGame(gameData);
             Server.gameDAO.addGame(gameData);
+            return gameData;
         }
     }
 }

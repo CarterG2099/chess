@@ -32,8 +32,8 @@ public class ChessBoardUI {
         drawHeaders(out, orientation);
         drawBoardWithColumns(out, board, orientation, highlightedPositions);
         drawHeaders(out, orientation);
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
     public static void drawChessBoards(ChessBoard board) {
