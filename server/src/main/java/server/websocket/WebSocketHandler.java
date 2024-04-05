@@ -3,19 +3,17 @@ package server.websocket;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.InvalidMoveException;
-import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import server.UserHandler;
 import service.GameService;
 import service.UserService;
-import webSocketMessages.serverMessages.*;
 import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.userCommands.*;
 
 import java.io.IOException;
@@ -88,21 +86,17 @@ public class WebSocketHandler {
             if (newGameData.chessGame().isInCheckmate(nextPlayerColor)) {
                 var notification = new Notification("Checkmate! " + username + " won the game");
                 connections.broadcast(command.getAuthToken(), notification);
-            }
-            else if (newGameData.chessGame().isInCheck(nextPlayerColor)) {
+            } else if (newGameData.chessGame().isInCheck(nextPlayerColor)) {
                 var notification = new Notification(username + " moved their " + movedPiece + " and now your king is in check!");
                 connections.broadcast(command.getAuthToken(), notification);
-            }
-            else if (newGameData.chessGame().isInStalemate(nextPlayerColor)) {
+            } else if (newGameData.chessGame().isInStalemate(nextPlayerColor)) {
                 var notification = new Notification("The game ended in a draw");
                 connections.broadcast(command.getAuthToken(), notification);
-            }
-            else {
+            } else {
                 var notification = new Notification(username + " moved their " + movedPiece);
                 connections.broadcast(command.getAuthToken(), notification);
             }
-        }
-        catch (InvalidMoveException e) {
+        } catch (InvalidMoveException e) {
             var error = new Error("Invalid move: " + e.getMessage());
             connections.broadcast(command.getAuthToken(), error);
         }
