@@ -2,13 +2,16 @@ package ui;
 
 import ServerClientCommunication.*;
 import chess.*;
+import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
 import server.Serializer;
 import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.serverMessages.Error;
 
 import java.util.*;
 
@@ -20,9 +23,11 @@ public class Client implements ServerMessageObserver {
     private static boolean loggedIn = false;
     public static String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
-    public static GameData currentGame;
+    public GameData currentGame;
     public ChessGame.TeamColor playerColor;
     public final String serverUrl;
+    static final Gson gson = new Gson();
+
     private String username;
 
     public static void main(String[] args) {
@@ -36,20 +41,31 @@ public class Client implements ServerMessageObserver {
     }
 
     @Override
-    public void notify(ServerMessage message) {
-        System.out.println("ENTERED NOTIFY");
-        switch (message.getServerMessageType()) {
+    public void notify(String message) {
+//        ServerMessage serverMessage = (ServerMessage) Serializer.interpretServerMessage(message);
+        ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
+        switch (serverMessage.getServerMessageType()) {
             case NOTIFICATION:
-                // Handle notification messages here
-//                System.out.println("Notification: " + message.message());
+                Notification notification = gson.fromJson(message, Notification.class);
+                System.out.println(notification.message());
                 break;
             case LOAD_GAME:
+                LoadGame loadGame = gson.fromJson(message, LoadGame.class);
                 // Handle load game messages here
-                LoadGame loadGameMessage = (LoadGame) message;
-//                currentGame = loadGameMessage.getGameData();
-                ChessBoardUI.drawChessBoards(currentGame.chessGame().getBoard());
+//                LoadGame loadGameMessage = (LoadGame) serverMessage;
+//                try {
+//                    currentGame = loadGameMessage.gameData();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+                ChessBoardUI.drawChessBoard(loadGame.game().getBoard(), playerColor, null);
+                currentGame = loadGame.gameData();
                 break;
-            // Add more cases for other message types if needed
+            case ERROR:
+                Error error = gson.fromJson(message, Error.class);
+//                Error error = (Error) serverMessage;
+                System.out.println("Error: " + error.errorMessage());
+                break;
             default:
                 // Handle other message types if necessary
                 break;
@@ -97,28 +113,25 @@ public class Client implements ServerMessageObserver {
         if(currentGame == null) {
             return "You are not currently in a game";
         }
-
-        currentGame = serverFacade.leave(this, currentGame, String.valueOf(playerColor));
-
-//        if(Objects.equals(currentGame.whiteUsername(), username)) {
-//            currentGame = new GameData(currentGame.gameID(), null, currentGame.blackUsername(), currentGame.gameName(), currentGame.chessGame(), null, currentGame.observerList());
-//        }
-//        else if(Objects.equals(currentGame.blackUsername(), username)) {
-//            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), null, currentGame.gameName(), currentGame.chessGame(), null, currentGame.observerList());
-//        }
-//        else {
-//            ArrayList<UserData> newObserverList = new ArrayList<>(currentGame.observerList());
-//            newObserverList.removeIf(user -> user.username().equals(username));
-//            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), currentGame.blackUsername(), currentGame.gameName(), currentGame.chessGame(), null, newObserverList);
-//        }
-        return "You have left the game";
+        serverFacade.leave(this, String.valueOf(playerColor));
+        return "";
     }
 
     public String resign() throws DataAccessException {
-        currentGame = null;
-        serverFacade.resign(this);
-        return "You have resigned";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you sure you want to resign? (y/n)");
+        String confirmation = scanner.nextLine().trim().toLowerCase();
+        if (confirmation.equals("y")) {
+            currentGame = null;
+            serverFacade.resign(this);
+            return "";
+        } else if (confirmation.equals("n")) {
+            return "Resignation canceled.";
+        } else {
+            return "Invalid input. Please enter 'y' or 'n'.";
+        }
     }
+
 
     public String makeMove(String ...params) throws DataAccessException {
         if (params.length < 2) {
@@ -128,7 +141,7 @@ public class Client implements ServerMessageObserver {
         ChessPosition toPosition = parsePosition(params[1]);
         ChessMove move = new ChessMove(fromPosition, toPosition, null);
         serverFacade.makeMove(this, move);
-        return "Move made";
+        return "";
     }
     public String redrawChessBoard() {
         ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, null);
@@ -207,7 +220,7 @@ public class Client implements ServerMessageObserver {
         return gameListString;
     }
 
-    public static String createGame(String... params) throws DataAccessException {
+    public String createGame(String... params) throws DataAccessException {
         if (params.length < 1) {
             throw new DataAccessException("Bad Request", 400);
         }
@@ -215,7 +228,7 @@ public class Client implements ServerMessageObserver {
         GameData createGameResponse = serverFacade.createGame(createGameRequest, authToken);
         String gameID = String.valueOf(createGameResponse.gameID());
         gameList.add(createGameResponse);
-        currentGame = createGameResponse;
+        this.currentGame = createGameResponse;
         return "Game " + params[0] + " created with ID: " + gameID;
     }
 
@@ -261,7 +274,7 @@ public class Client implements ServerMessageObserver {
             case "6" -> leave();
             case "7" -> resign();
             case "8" -> highlightLegalMoves(params);
-            case "9" -> makeMove();
+            case "9" -> makeMove(params);
             case "11" -> quit();
             case "clear" -> {
                 serverFacade.clearData();
