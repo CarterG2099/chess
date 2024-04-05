@@ -43,7 +43,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void registerBad() throws DataAccessException {
+    void registerBad() {
         UserData registerRequestBad = new UserData(null, "password", "email");
         Assertions.assertThrows(DataAccessException.class, () -> serverFacade.register(registerRequestBad));
     }

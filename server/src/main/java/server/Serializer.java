@@ -30,34 +30,23 @@ public class Serializer {
 
     public static Object interpretServerMessage(String message) {
         ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
-        switch (serverMessage.getServerMessageType()) {
-            case ERROR:
-                return gson.fromJson(message, Error.class);
-            case NOTIFICATION:
-                return gson.fromJson(message, Notification.class);
-            case LOAD_GAME:
-                return gson.fromJson(message, LoadGame.class);
-            default:
-                return null;
-        }
+        return switch (serverMessage.getServerMessageType()) {
+            case ERROR -> gson.fromJson(message, Error.class);
+            case NOTIFICATION -> gson.fromJson(message, Notification.class);
+            case LOAD_GAME -> gson.fromJson(message, LoadGame.class);
+            default -> null;
+        };
     }
 
     public static Object interpretUserGameCommand(String message) {
         UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
-        switch (command.getCommandType()) {
-            case JOIN_PLAYER:
-                return interpretJoinPlayer(message);
-            case JOIN_OBSERVER:
-                return interpretJoinObserver(message);
-            case LEAVE:
-                return interpretLeave(message);
-            case MAKE_MOVE:
-                return interpretMakeMove(message);
-            case RESIGN:
-                return interpretResign(message);
-            default:
-                return null;
-        }
+        return switch (command.getCommandType()) {
+            case JOIN_PLAYER -> interpretJoinPlayer(message);
+            case JOIN_OBSERVER -> interpretJoinObserver(message);
+            case LEAVE -> interpretLeave(message);
+            case MAKE_MOVE -> interpretMakeMove(message);
+            case RESIGN -> interpretResign(message);
+        };
     }
 
     private static Leave interpretLeave(String message) {

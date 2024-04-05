@@ -38,7 +38,7 @@ public class MySqlUserDAO implements UserDAO {
 
     }
 
-    private UserData readUserData(ResultSet rs) throws DataAccessException, SQLException {
+    private UserData readUserData(ResultSet rs) throws SQLException {
         var username = rs.getString("username");
         var password = rs.getString("password");
         var email = rs.getString("email");

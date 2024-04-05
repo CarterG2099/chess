@@ -48,10 +48,9 @@ public class MySqlAuthDAO implements AuthDAO {
         }
     }
 
-    private AuthData readAuthData(ResultSet rs) throws DataAccessException, SQLException {
+    private AuthData readAuthData(ResultSet rs) throws SQLException {
         var authToken = rs.getString("auth_token");
         var username = rs.getString("username");
-        var authData = new AuthData(username, authToken);
-        return authData;
+        return new AuthData(username, authToken);
     }
 }

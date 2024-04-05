@@ -317,8 +317,7 @@ public class ChessGame {
             }
         }
         setTeamTurn(original);
-        if (validMoves.isEmpty()) return true;
-        return false;
+        return validMoves.isEmpty();
     }
 
     /**

@@ -24,7 +24,7 @@ public class Client implements ServerMessageObserver {
 
     private static ServerFacade serverFacade;
     private static boolean loggedIn = false;
-    public static String authToken;
+    public String authToken;
     private static ArrayList<GameData> gameList = new ArrayList<>();
     public GameData currentGame;
     public ChessGame.TeamColor playerColor;
@@ -199,15 +199,15 @@ public class Client implements ServerMessageObserver {
         return "You have been registered and logged in.";
     }
 
-    public static String logout() throws DataAccessException {
-        serverFacade.logout(authToken);
+    public String logout() throws DataAccessException {
+        serverFacade.logout(this.authToken);
         loggedIn = false;
         System.out.println(loggedOutHelp());
         return "You have been logged out.";
     }
 
-    public static String listGames() throws DataAccessException {
-        gameList = serverFacade.listGames(authToken).games();
+    public String listGames() throws DataAccessException {
+        gameList = serverFacade.listGames(this.authToken).games();
         String gameListString = "";
         if (gameList.isEmpty()) {
             return "No games available";
