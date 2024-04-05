@@ -2,6 +2,7 @@ package ServerClientCommunication;
 
 import ServerClientCommunication.HttpCommunicator;
 import chess.ChessMove;
+import chess.ChessPiece;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;

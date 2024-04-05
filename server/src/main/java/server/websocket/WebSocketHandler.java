@@ -1,5 +1,7 @@
 package server.websocket;
 
+import chess.ChessGame;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
@@ -56,7 +58,7 @@ public class WebSocketHandler {
     private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), session);
         var game = new LoadGame(gameService.getGame(command.gameID()));
-        var notification = new Notification(username + " joined the game");
+        var notification = new Notification(username + " joined the game as " + command.playerColor() + " player");
         connections.broadcast(command.getAuthToken(), notification);
         connections.broadcast(command.getAuthToken(), game);
     }
@@ -78,10 +80,26 @@ public class WebSocketHandler {
     private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
         try {
             GameData newGameData = gameService.makeMove(command.gameID(), command.move());
+            ChessGame.TeamColor nextPlayerColor = newGameData.chessGame().getTeamTurn();
+            ChessPiece.PieceType movedPiece = newGameData.chessGame().getBoard().getPiece(command.move().getEndPosition()).getPieceType();
+            if (newGameData.chessGame().isInCheckmate(nextPlayerColor)) {
+                var notification = new Notification(username + " won the game");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            else if (newGameData.chessGame().isInCheck(nextPlayerColor)) {
+                var notification = new Notification(username + " moved their " + movedPiece + " and now your king is in check!");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            else if (newGameData.chessGame().isInStalemate(nextPlayerColor)) {
+                var notification = new Notification("The game ended in a draw");
+                connections.broadcast(command.getAuthToken(), notification);
+            }
+            else {
+                var notification = new Notification(username + " moved their " + movedPiece);
+                connections.broadcast(command.getAuthToken(), notification);
+            }
             var game = new LoadGame(newGameData);
-            var notification = new Notification(username + " made a move");
             connections.broadcast(command.getAuthToken(), game);
-            connections.broadcast(command.getAuthToken(), notification);
         }
         catch (InvalidMoveException e) {
             var error = new Error("Invalid move: " + e.getMessage());
