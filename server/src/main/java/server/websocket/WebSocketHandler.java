@@ -58,17 +58,17 @@ public class WebSocketHandler {
     private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), session);
         var game = new LoadGame(gameService.getGame(command.gameID()));
+        connections.broadcast(command.getAuthToken(), game);
         var notification = new Notification(username + " joined the game as " + command.playerColor() + " player");
         connections.broadcast(command.getAuthToken(), notification);
-        connections.broadcast(command.getAuthToken(), game);
     }
 
     private void joinObserver(JoinObserver command, String username, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), session);
-        var notification = new Notification(username + " joined the game as an observer");
         var game = new LoadGame(gameService.getGame(command.gameID()));
-        connections.broadcast(command.getAuthToken(), notification);
         connections.broadcast(command.getAuthToken(), game);
+        var notification = new Notification(username + " joined the game as an observer");
+        connections.broadcast(command.getAuthToken(), notification);
     }
 
     private void leave(Leave command, String username) throws IOException {
@@ -80,10 +80,13 @@ public class WebSocketHandler {
     private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
         try {
             GameData newGameData = gameService.makeMove(command.gameID(), command.move());
+            var game = new LoadGame(newGameData);
+            connections.broadcast(command.getAuthToken(), game);
+
             ChessGame.TeamColor nextPlayerColor = newGameData.chessGame().getTeamTurn();
             ChessPiece.PieceType movedPiece = newGameData.chessGame().getBoard().getPiece(command.move().getEndPosition()).getPieceType();
             if (newGameData.chessGame().isInCheckmate(nextPlayerColor)) {
-                var notification = new Notification(username + " won the game");
+                var notification = new Notification("Checkmate! " + username + " won the game");
                 connections.broadcast(command.getAuthToken(), notification);
             }
             else if (newGameData.chessGame().isInCheck(nextPlayerColor)) {
@@ -98,8 +101,6 @@ public class WebSocketHandler {
                 var notification = new Notification(username + " moved their " + movedPiece);
                 connections.broadcast(command.getAuthToken(), notification);
             }
-            var game = new LoadGame(newGameData);
-            connections.broadcast(command.getAuthToken(), game);
         }
         catch (InvalidMoveException e) {
             var error = new Error("Invalid move: " + e.getMessage());
