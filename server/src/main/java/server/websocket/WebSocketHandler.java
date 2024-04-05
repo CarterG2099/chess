@@ -3,6 +3,7 @@ package server.websocket;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
+import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.websocket.api.Session;
@@ -76,8 +77,8 @@ public class WebSocketHandler {
 
     private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
         try {
-            gameService.makeMove(command.gameID(), command.move());
-            var game = new LoadGame(gameService.getGame(command.gameID()));
+            GameData newGameData = gameService.makeMove(command.gameID(), command.move());
+            var game = new LoadGame(newGameData);
             var notification = new Notification(username + " made a move");
             connections.broadcast(command.getAuthToken(), game);
             connections.broadcast(command.getAuthToken(), notification);
