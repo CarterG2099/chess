@@ -8,7 +8,8 @@ import service.UserService;
 import spark.Request;
 import spark.Response;
 
-import static server.Serializer.*;
+import static server.Serializer.gson;
+import static server.Serializer.translateExceptionToJson;
 
 public class GameHandler extends Server {
     private static final GameService gameService = new GameService();

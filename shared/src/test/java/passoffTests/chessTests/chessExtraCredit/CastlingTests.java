@@ -60,9 +60,9 @@ public class CastlingTests {
 
         //check that with nothing in way, king can castle
         ChessMove queenSide = TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 3), null);
+                TestFactory.getNewPosition(1, 3), null);
         ChessMove kingSide = TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 7), null);
+                TestFactory.getNewPosition(1, 7), null);
 
         Assertions.assertTrue(game.validMoves(position).contains(queenSide),
                 "ChessGame validMoves did not contain valid queen-side castle move");
@@ -274,13 +274,13 @@ public class CastlingTests {
 
         //make sure king cannot castle
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 3), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 3), null)),
                 "ChessGame validMoves contained an invalid castling move");
 
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 7), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 7), null)),
                 "ChessGame validMoves contained an invalid castling move");
     }
 
@@ -329,13 +329,13 @@ public class CastlingTests {
 
         //make sure king cannot castle on either side
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(8, 5),
-                        TestFactory.getNewPosition(8, 3), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(8, 5),
+                                TestFactory.getNewPosition(8, 3), null)),
                 "ChessGame validMoves contained an invalid castling move");
 
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(8, 5),
-                        TestFactory.getNewPosition(8, 7), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(8, 5),
+                                TestFactory.getNewPosition(8, 7), null)),
                 "ChessGame validMoves contained an invalid castling move");
     }
 
@@ -407,13 +407,13 @@ public class CastlingTests {
 
         //make sure king can't castle towards moved rook, but still can to unmoved rook
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 3), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 3), null)),
                 "ChessGame validMoves contained an invalid castling move");
 
         Assertions.assertTrue(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 7), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 7), null)),
                 "ChessGame validMoves contained an invalid castling move");
 
         //move king
@@ -448,13 +448,13 @@ public class CastlingTests {
 
         //make sure king can't castle anymore
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 3), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 3), null)),
                 "ChessGame validMoves contained an invalid castling move");
 
         Assertions.assertFalse(game.validMoves(position).contains(
-                TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
-                        TestFactory.getNewPosition(1, 7), null)),
+                        TestFactory.getNewMove(TestFactory.getNewPosition(1, 5),
+                                TestFactory.getNewPosition(1, 7), null)),
                 "ChessGame validMoves contained an invalid castling move");
     }
 

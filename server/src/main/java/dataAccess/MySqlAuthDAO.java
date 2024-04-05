@@ -1,6 +1,5 @@
 package dataAccess;
 
-import com.google.gson.Gson;
 import model.AuthData;
 
 import java.sql.ResultSet;

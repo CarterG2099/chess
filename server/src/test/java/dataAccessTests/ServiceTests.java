@@ -145,7 +145,7 @@ public class ServiceTests {
 
     @Test
     public void createGameSuccess() throws DataAccessException {
-        GameData gameToAdd = new GameData(0, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        GameData gameToAdd = new GameData(0, "white", "black", "testGame", new ChessGame(), "Color", new ArrayList<>());
         GameData game = gameService.createGame(gameToAdd);
         Assertions.assertEquals(gameToAdd.gameName(), game.gameName());
 
@@ -153,7 +153,7 @@ public class ServiceTests {
 
     @Test
     public void createGameNoName() {
-        GameData gameToAdd = new GameData(0, "white", "black", null, new ChessGame(), "Color",  new ArrayList<>());
+        GameData gameToAdd = new GameData(0, "white", "black", null, new ChessGame(), "Color", new ArrayList<>());
         Assertions.assertThrows(DataAccessException.class, () -> {
             gameService.createGame(gameToAdd);
         });
@@ -161,7 +161,7 @@ public class ServiceTests {
 
     @Test
     public void getGamesSuccess() throws DataAccessException {
-        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color", new ArrayList<>());
         gameService.createGame(gameToAdd);
         ArrayList<GameData> gameList = gameService.getGames();
         Assertions.assertEquals(gameToAdd.gameName(), gameList.get(0).gameName());
@@ -175,7 +175,7 @@ public class ServiceTests {
 
     @Test
     public void deleteGameSuccess() throws DataAccessException {
-        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color", new ArrayList<>());
         Server.gameDAO.addGame(gameToAdd);
         Server.gameDAO.deleteGame(gameToAdd);
         ArrayList<GameData> gameList = gameService.getGames();
@@ -184,7 +184,7 @@ public class ServiceTests {
 
     @Test
     public void deleteGameNoGame() {
-        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color",  new ArrayList<>());
+        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "Color", new ArrayList<>());
         Assertions.assertThrows(DataAccessException.class, () -> {
             Server.gameDAO.deleteGame(gameToAdd);
         });

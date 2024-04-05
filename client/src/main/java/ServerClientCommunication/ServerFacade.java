@@ -1,8 +1,6 @@
 package ServerClientCommunication;
 
-import ServerClientCommunication.HttpCommunicator;
 import chess.ChessMove;
-import chess.ChessPiece;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
@@ -19,6 +17,7 @@ public class ServerFacade {
     public ServerFacade(int port) {
         HttpCommunicator.port = port;
     }
+
     public void clearData() throws DataAccessException {
         HttpCommunicator.makeRequest("DELETE", "/db", null, null, null);
     }

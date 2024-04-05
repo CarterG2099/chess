@@ -131,9 +131,9 @@ public class ChessBoardUI {
     }
 
     private static int getTileColor(int boardRow, int boardCol, Collection<ChessMove> highlightedPositions) {
-        if(highlightedPositions != null) {
+        if (highlightedPositions != null) {
             for (ChessMove move : highlightedPositions) {
-                if(move.getStartPosition().getRow() == boardRow && move.getStartPosition().getColumn() == boardCol) {
+                if (move.getStartPosition().getRow() == boardRow && move.getStartPosition().getColumn() == boardCol) {
                     return 3;
                 }
                 if (move.getEndPosition().getRow() == boardRow && move.getEndPosition().getColumn() == boardCol) {
@@ -149,12 +149,10 @@ public class ChessBoardUI {
         if (tileToInt == 3) {
             out.print(SET_BG_COLOR_YELLOW);
             textColor = SET_TEXT_COLOR_BLUE;
-        }
-        else if (tileToInt == 2) {
+        } else if (tileToInt == 2) {
             out.print(SET_BG_COLOR_GREEN);
             textColor = SET_TEXT_COLOR_RED;
-        }
-        else if (tileToInt == 0) {
+        } else if (tileToInt == 0) {
             out.print(SET_BG_COLOR_LIGHT_GREY);
         } else {
             out.print(SET_BG_COLOR_BLUE);

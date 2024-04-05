@@ -1,9 +1,10 @@
 package dataAccess;
 
-import chess.ChessGame;
 import com.google.gson.Gson;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -41,17 +42,17 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-        private static void createDatabase() throws DataAccessException {
-            try {
-                var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
-                var conn = DriverManager.getConnection(connectionUrl, user, password);
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            } catch (SQLException e) {
-                throw new DataAccessException(e.getMessage(), 500);
+    private static void createDatabase() throws DataAccessException {
+        try {
+            var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
+            var conn = DriverManager.getConnection(connectionUrl, user, password);
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
             }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage(), 500);
         }
+    }
 
     /**
      * Create a connection to the database and sets the catalog based upon the
@@ -103,6 +104,7 @@ public class DatabaseManager {
             throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()), 500);
         }
     }
+
     private static final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth_data (

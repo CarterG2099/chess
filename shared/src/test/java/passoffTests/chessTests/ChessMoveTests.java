@@ -19,6 +19,7 @@ public class ChessMoveTests {
     private ChessMove startDifferent;
     private ChessMove endDifferent;
     private ChessMove promoteDifferent;
+
     @BeforeEach
     public void setUp() {
         original = getNewMove(getNewPosition(2, 6), getNewPosition(1, 5), null);

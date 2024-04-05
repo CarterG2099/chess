@@ -1,19 +1,22 @@
 package ui;
 
-import ServerClientCommunication.*;
+import ServerClientCommunication.ServerFacade;
+import ServerClientCommunication.ServerMessageObserver;
 import chess.*;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import server.Serializer;
+import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.serverMessages.Error;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Scanner;
 
 import static server.Serializer.translateExceptionToJson;
 
@@ -110,7 +113,7 @@ public class Client implements ServerMessageObserver {
     }
 
     public String leave() throws DataAccessException {
-        if(currentGame == null) {
+        if (currentGame == null) {
             return "You are not currently in a game";
         }
         serverFacade.leave(this, String.valueOf(playerColor));
@@ -134,7 +137,7 @@ public class Client implements ServerMessageObserver {
     }
 
 
-    public String makeMove(String ...params) throws DataAccessException {
+    public String makeMove(String... params) throws DataAccessException {
         if (params.length < 2) {
             return "Invalid Move Command";
         }
@@ -144,6 +147,7 @@ public class Client implements ServerMessageObserver {
         serverFacade.makeMove(this, move);
         return "";
     }
+
     public String redrawChessBoard() {
         ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, null);
         return "";
@@ -160,8 +164,7 @@ public class Client implements ServerMessageObserver {
         ChessPiece piece = currentGame.chessGame().getBoard().getPiece(position);
         if (piece == null) {
             return "No piece at position " + params[0].toUpperCase();
-        }
-        else if (piece.getTeamColor() != playerColor) {
+        } else if (piece.getTeamColor() != playerColor) {
             return "You can only highlight legal moves for your own pieces.";
         }
         Collection<ChessMove> legalMoves = currentGame.chessGame().validMoves(position);
@@ -169,7 +172,7 @@ public class Client implements ServerMessageObserver {
         return "Legal moves for " + params[0].toUpperCase() + " highlighted.";
     }
 
-    public static ChessPosition parsePosition(String... params ) {
+    public static ChessPosition parsePosition(String... params) {
         char firstChar = params[0].charAt(0);
         int y = firstChar - 'a' + 1; // Convert alphabet to numeric value
         int x = Integer.parseInt(params[0].substring(1)); // Extract the numeric part of the string
@@ -251,13 +254,11 @@ public class Client implements ServerMessageObserver {
         if (color == null) {
             serverFacade.webSocketJoinRequest(this, false);
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
-        }
-        else if (color.equals("BLACK")) {
+        } else if (color.equals("BLACK")) {
             playerColor = ChessGame.TeamColor.BLACK;
             serverFacade.webSocketJoinRequest(this, true);
             return "You have joined the game as black.";
-        }
-        else if (color.equals("WHITE")) {
+        } else if (color.equals("WHITE")) {
             playerColor = ChessGame.TeamColor.WHITE;
             serverFacade.webSocketJoinRequest(this, true);
             return "You have joined the game as white.";
@@ -284,6 +285,7 @@ public class Client implements ServerMessageObserver {
             default -> help();
         };
     }
+
     public static String loggedInHelp() {
         return """
                 Available commands:
@@ -335,7 +337,6 @@ public class Client implements ServerMessageObserver {
     private static String quit() {
         return "quit";
     }
-
 
 
 }

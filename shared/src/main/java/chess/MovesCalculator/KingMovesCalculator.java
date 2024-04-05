@@ -16,7 +16,7 @@ public class KingMovesCalculator implements PieceMovesCalculator {
 
     }
 
-    public Collection<ChessMove> moveAllDirections(int[][] directions, ChessBoard board, ChessPosition position, ChessGame.TeamColor color){
+    public Collection<ChessMove> moveAllDirections(int[][] directions, ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
         for (int[] move : directions) {
             int row = position.getRow() + move[0];
             int col = position.getColumn() + move[1];
@@ -30,6 +30,7 @@ public class KingMovesCalculator implements PieceMovesCalculator {
         }
         return chessMoveCollection;
     }
+
     public void castling(ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
         //Add a check to pass tests that start king somewhere other than og
         if (position.getColumn() != 5) return;

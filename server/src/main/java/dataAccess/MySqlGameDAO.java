@@ -3,12 +3,9 @@ package dataAccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 
-import javax.xml.crypto.Data;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,11 +76,10 @@ public class MySqlGameDAO implements GameDAO {
 
     @Override
     public void leaveGame(GameData gameData, UserData user, String player) throws DataAccessException {
-        if(player.equals("white")) {
+        if (player.equals("white")) {
             var statement = "UPDATE game_data SET white_username = NULL WHERE game_id = ?";
             DatabaseManager.executeUpdate(statement, gameData.gameID());
-        }
-        else if(player.equals("black")) {
+        } else if (player.equals("black")) {
             var statement = "UPDATE game_data SET black_username = NULL WHERE game_id = ?";
             DatabaseManager.executeUpdate(statement, gameData.gameID());
         } else {

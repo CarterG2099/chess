@@ -1,5 +1,6 @@
 package clientTests;
 
+import ServerClientCommunication.ServerFacade;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
@@ -7,7 +8,6 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.StatusResponse;
-import ServerClientCommunication.ServerFacade;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,7 +88,7 @@ public class ServerFacadeTests {
     @Test
     void createGame() throws DataAccessException {
         GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
-        registerResponse= serverFacade.register(registerRequest);
+        registerResponse = serverFacade.register(registerRequest);
         GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
         assertEquals("gameName", createGameResponse.gameName());
     }

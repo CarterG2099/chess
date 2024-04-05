@@ -151,6 +151,7 @@ public class ChessGame {
         }
         return opponentMoves;
     }
+
     /**
      * Determines if rook is in danger in order to validate castling move
      *

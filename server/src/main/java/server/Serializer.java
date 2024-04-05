@@ -3,18 +3,17 @@ package server;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import spark.Response;
-import webSocketMessages.serverMessages.*;
 import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
+import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
-
-import static server.Server.gameDAO;
-import static webSocketMessages.userCommands.UserGameCommand.CommandType.*;
 
 public class Serializer {
     static final Gson gson = new Gson();
 
     public static Object translateExceptionToJson(DataAccessException ex, Response res) {
-        if(res != null) {
+        if (res != null) {
             res.status(ex.getStatusCode());
             res.body(ex.getMessage());
         }
@@ -38,7 +37,8 @@ public class Serializer {
                 return gson.fromJson(message, Notification.class);
             case LOAD_GAME:
                 return gson.fromJson(message, LoadGame.class);
-            default: return null;
+            default:
+                return null;
         }
     }
 
@@ -55,7 +55,8 @@ public class Serializer {
                 return interpretMakeMove(message);
             case RESIGN:
                 return interpretResign(message);
-            default: return null;
+            default:
+                return null;
         }
     }
 

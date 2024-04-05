@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.InvalidMoveException;
 import dataAccess.DataAccessException;
-import dataAccess.GameDAO;
 import model.GameData;
 import model.UserData;
 import server.Server;
@@ -36,7 +35,7 @@ public class GameService {
     public GameData joinGame(GameData gameData, UserData user) throws DataAccessException {
         GameData oldGame = Server.gameDAO.getGame(gameData.gameID());
         String playerColor = null;
-        if(gameData.playerColor() != null) {
+        if (gameData.playerColor() != null) {
             playerColor = gameData.playerColor().toUpperCase();
         }
         String blackUsername = oldGame.blackUsername();
@@ -88,10 +87,9 @@ public class GameService {
     public GameData makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
         GameData gameData = Server.gameDAO.getGame(gameID);
         Collection<ChessMove> legalMoves = gameData.chessGame().validMoves(move.getStartPosition());
-        if(!legalMoves.contains(move)) {
+        if (!legalMoves.contains(move)) {
             throw new InvalidMoveException("Invalid move");
-        }
-        else {
+        } else {
             gameData.chessGame().makeMove(move);
 //            ChessGame newGame = gameData.chessGame().makeMove(move);
 //            GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), newGame, "", gameData.observerList());

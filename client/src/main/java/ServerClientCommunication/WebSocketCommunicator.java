@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 public class WebSocketCommunicator extends Endpoint {
     Session session;
     ServerMessageObserver serverMessageHandler;
+
     public WebSocketCommunicator(String url, ServerMessageObserver serverMessageHandler) throws DataAccessException {
         try {
             url = url.replace("http", "ws");
@@ -53,11 +54,11 @@ public class WebSocketCommunicator extends Endpoint {
     public void joinRequest(String authToken, int gameID, ChessGame.TeamColor color, Boolean joinAsPlayer) throws DataAccessException {
         try {
             if (joinAsPlayer) {
-                var joinCommand = new JoinPlayer(authToken,gameID, color);
+                var joinCommand = new JoinPlayer(authToken, gameID, color);
 //                var command = new UserGameCommand(authToken, UserGameCommand.CommandType.JOIN_PLAYER);
                 this.session.getBasicRemote().sendText(new Gson().toJson(joinCommand));
             } else {
-                var joinCommand = new JoinObserver(authToken,gameID);
+                var joinCommand = new JoinObserver(authToken, gameID);
 //                var command = new UserGameCommand(authToken, UserGameCommand.CommandType.JOIN_OBSERVER);
                 this.session.getBasicRemote().sendText(new Gson().toJson(joinCommand));
             }

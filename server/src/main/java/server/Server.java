@@ -2,14 +2,9 @@ package server;
 
 import chess.ChessGame;
 import chess.ChessPiece;
-import com.google.gson.Gson;
 import dataAccess.*;
 import server.websocket.WebSocketHandler;
-import spark.Response;
 import spark.Spark;
-
-import javax.xml.crypto.Data;
-import java.sql.Connection;
 
 public class Server {
 
@@ -22,7 +17,8 @@ public class Server {
         System.out.println("♕ 240 Chess Server: " + piece);
         run(8080);
     }
-    public static int run(int desiredPort){
+
+    public static int run(int desiredPort) {
         Spark.port(desiredPort);
 //        setMemoryDAOs();
         setMySqlDAOs();
@@ -42,7 +38,6 @@ public class Server {
     }
 
 
-
     private static void setMemoryDAOs() {
         authDAO = new MemoryAuthDAO();
         userDAO = new MemoryUserDAO();
@@ -53,7 +48,7 @@ public class Server {
         authDAO = new MySqlAuthDAO();
         userDAO = new MySqlUserDAO();
         gameDAO = new MySqlGameDAO();
-        try{
+        try {
             DatabaseManager.configureDatabase();
         } catch (DataAccessException e) {
             Serializer.translateExceptionToJson(e, null);
