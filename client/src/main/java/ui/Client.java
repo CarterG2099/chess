@@ -114,6 +114,7 @@ public class Client implements ServerMessageObserver {
             return "You are not currently in a game";
         }
         serverFacade.leave(this, String.valueOf(playerColor));
+        System.out.println(loggedInHelp());
         return "";
     }
 
@@ -124,7 +125,7 @@ public class Client implements ServerMessageObserver {
         if (confirmation.equals("y")) {
             currentGame = null;
             serverFacade.resign(this);
-            return "";
+            return "You have forfeited the game.";
         } else if (confirmation.equals("n")) {
             return "Resignation canceled.";
         } else {
