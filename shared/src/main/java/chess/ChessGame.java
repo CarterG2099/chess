@@ -226,9 +226,13 @@ public class ChessGame {
                 possibleMoves.addAll(new PawnMovesCalculaor().pieceMoves(tempBoard, move.getStartPosition(), pieceToMove.getTeamColor()));
                 break;
         }
-        if (!possibleMoves.contains(move) || isInCheck(pieceToMove.getTeamColor())) {
+        if (!possibleMoves.contains(move)) {
             board = tempBoard;
-            throw new InvalidMoveException("Invalid move");
+            throw new InvalidMoveException("Move not possible");
+        }
+        if (isInCheck(pieceToMove.getTeamColor())) {
+            board = tempBoard;
+            throw new InvalidMoveException("Move puts you in check");
         }
         //After making the move, change the teams turn
         if (getTeamTurn() == TeamColor.WHITE) setTeamTurn(TeamColor.BLACK);
@@ -284,7 +288,10 @@ public class ChessGame {
                         Collection<ChessMove> kingPossibleMoves = new KingMovesCalculator().pieceMoves(board, kingPosition, teamColor);
                         for (ChessMove move : kingPossibleMoves) {
                             try {
+                                ChessBoard tempBoard = (ChessBoard) board.clone();
                                 makeMove(move);
+                                board = tempBoard;
+                                return false;
                             } catch (InvalidMoveException ex) {
                                 inCheck = true;
                             }

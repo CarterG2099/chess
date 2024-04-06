@@ -96,7 +96,7 @@ public class WebSocketHandler {
                 var notification = new Notification(username + " moved their " + movedPiece);
                 connections.broadcast(command.getAuthToken(), notification, true);
             }
-        } catch (InvalidMoveException e) {
+        } catch (Exception e) {
             var error = new Error("Invalid move: " + e.getMessage());
             connections.broadcast(command.getAuthToken(), error, false);
         }

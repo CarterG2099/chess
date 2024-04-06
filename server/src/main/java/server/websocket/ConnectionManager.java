@@ -24,12 +24,15 @@ public class ConnectionManager {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
+                //Only send error message to sender
+                if(notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR && !c.authToken.equals(excludeCurrentAuthToken)){
+                    continue;
+                }
+                //Only send notifications to other users
                 if (excludeSender && c.authToken.equals(excludeCurrentAuthToken)) {
-                    c.send(new Gson().toJson(notification));
+                    continue;
                 }
-                else {
-                    c.send(new Gson().toJson(notification));
-                }
+                c.send(new Gson().toJson(notification));
             } else {
                 removeList.add(c);
             }
