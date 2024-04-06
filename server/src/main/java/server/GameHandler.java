@@ -53,18 +53,4 @@ public class GameHandler extends Server {
             return translateExceptionToJson(ex, res);
         }
     }
-
-//    public static Object leave(Request request, Response response) {
-//        try {
-//            String authToken = request.headers("Authorization");
-//            userService.validAuthToken(authToken);
-//            UserData user = userService.getUser(authToken);
-//            GameData gameData = gson.fromJson(request.body(), GameData.class);
-//            gameService.leaveGame(gameData, user, );
-//            return translateSuccessToJson(response);
-//        }
-//        catch (DataAccessException ex) {
-//            return translateExceptionToJson(ex, response);
-//        }
-//    }
 }

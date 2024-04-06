@@ -49,62 +49,62 @@ public class WebSocketHandler {
             case RESIGN -> {
                 resign((Resign) command, username);
             }
-            default -> connections.broadcast(command.getAuthToken(), new Error("Invalid command type"));
+            default -> connections.broadcast(command.getAuthToken(), new Error("Invalid command type"), false);
         }
     }
 
     private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), session);
         var game = new LoadGame(gameService.getGame(command.gameID()));
-        connections.broadcast(command.getAuthToken(), game);
+        connections.broadcast(command.getAuthToken(), game, false);
         var notification = new Notification(username + " joined the game as " + command.playerColor() + " player");
-        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), notification, true);
     }
 
     private void joinObserver(JoinObserver command, String username, Session session) throws IOException, DataAccessException {
         connections.add(command.getAuthToken(), session);
         var game = new LoadGame(gameService.getGame(command.gameID()));
-        connections.broadcast(command.getAuthToken(), game);
+        connections.broadcast(command.getAuthToken(), game, false);
         var notification = new Notification(username + " joined the game as an observer");
-        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), notification, true);
     }
 
     private void leave(Leave command, String username) throws IOException {
         connections.remove(command.getAuthToken());
         var notification = new Notification(username + " left the game");
-        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), notification, true);
     }
 
     private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
         try {
             GameData newGameData = gameService.makeMove(command.gameID(), command.move());
             var game = new LoadGame(newGameData);
-            connections.broadcast(command.getAuthToken(), game);
+            connections.broadcast(command.getAuthToken(), game, false);
 
             ChessGame.TeamColor nextPlayerColor = newGameData.chessGame().getTeamTurn();
             ChessPiece.PieceType movedPiece = newGameData.chessGame().getBoard().getPiece(command.move().getEndPosition()).getPieceType();
             if (newGameData.chessGame().isInCheckmate(nextPlayerColor)) {
                 var notification = new Notification("Checkmate! " + username + " won the game");
-                connections.broadcast(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), notification, true);
             } else if (newGameData.chessGame().isInCheck(nextPlayerColor)) {
                 var notification = new Notification(username + " moved their " + movedPiece + " and now your king is in check!");
-                connections.broadcast(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), notification, true);
             } else if (newGameData.chessGame().isInStalemate(nextPlayerColor)) {
                 var notification = new Notification("The game ended in a draw");
-                connections.broadcast(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), notification, true);
             } else {
                 var notification = new Notification(username + " moved their " + movedPiece);
-                connections.broadcast(command.getAuthToken(), notification);
+                connections.broadcast(command.getAuthToken(), notification, true);
             }
         } catch (InvalidMoveException e) {
             var error = new Error("Invalid move: " + e.getMessage());
-            connections.broadcast(command.getAuthToken(), error);
+            connections.broadcast(command.getAuthToken(), error, false);
         }
     }
 
     private void resign(Resign command, String username) throws IOException {
         connections.remove(command.getAuthToken());
         var notification = new Notification(username + " resigned");
-        connections.broadcast(command.getAuthToken(), notification);
+        connections.broadcast(command.getAuthToken(), notification, true);
     }
 }

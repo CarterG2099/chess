@@ -48,9 +48,4 @@ public class MemoryGameDAO implements GameDAO {
         }
         throw new DataAccessException("Bad Request in GDAO:deleteGame", 400);
     }
-
-    @Override
-    public void leaveGame(GameData gameData, UserData user, String white) throws DataAccessException {
-        //Return something
-    }
 }

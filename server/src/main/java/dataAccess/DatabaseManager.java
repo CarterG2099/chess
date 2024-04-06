@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 
 import java.sql.Connection;
@@ -91,6 +92,7 @@ public class DatabaseManager {
                         }
                         case Integer p -> ps.setInt(i + 1, p);
                         case ArrayList<?> objects -> ps.setString(i + 1, new Gson().toJson(param));
+                        case ChessGame p -> ps.setString(i + 1, new Gson().toJson(param));
                         case null -> ps.setNull(i + 1, NULL);
                         default -> {
                         }

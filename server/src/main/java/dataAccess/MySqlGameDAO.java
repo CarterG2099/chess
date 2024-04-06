@@ -43,8 +43,9 @@ public class MySqlGameDAO implements GameDAO {
         String white_username = gameData.whiteUsername();
         String black_username = gameData.blackUsername();
         ArrayList<UserData> observer_list = gameData.observerList();
+        ChessGame chess_game = gameData.chessGame();
         var statement = "INSERT INTO game_data (game_id, white_username, black_username, game_name, chess_game, player_color, observer_list) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name, null, null, observer_list);
+        DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name, chess_game, null, observer_list);
     }
 
     @Override
@@ -74,21 +75,6 @@ public class MySqlGameDAO implements GameDAO {
 
     }
 
-    @Override
-    public void leaveGame(GameData gameData, UserData user, String player) throws DataAccessException {
-        if (player.equals("white")) {
-            var statement = "UPDATE game_data SET white_username = NULL WHERE game_id = ?";
-            DatabaseManager.executeUpdate(statement, gameData.gameID());
-        } else if (player.equals("black")) {
-            var statement = "UPDATE game_data SET black_username = NULL WHERE game_id = ?";
-            DatabaseManager.executeUpdate(statement, gameData.gameID());
-        } else {
-            var statement = "UPDATE game_data SET observer_list = JSON_REMOVE(observer_list, JSON_UNQUOTE(JSON_SEARCH(observer_list, 'one', ?))) WHERE game_id = ?";
-            DatabaseManager.executeUpdate(statement, user.username(), gameData.gameID());
-
-        }
-    }
-
     private GameData readGameData(ResultSet rs) throws DataAccessException, SQLException {
         Gson gson = new Gson();
         var game_id = rs.getInt("game_id");
@@ -96,9 +82,12 @@ public class MySqlGameDAO implements GameDAO {
         var black_username = rs.getString("black_username");
         var game_name = rs.getString("game_name");
         var chess_game_var = rs.getString("chess_game");
-        ChessGame chess_game = new ChessGame();
+        ChessGame chess_game;
         if (chess_game_var != null) {
             chess_game = gson.fromJson(chess_game_var, ChessGame.class);
+        }
+        else {
+            chess_game = new ChessGame();
         }
         var player_color = rs.getString("player_color");
         var observer_var = rs.getString("observer_list");

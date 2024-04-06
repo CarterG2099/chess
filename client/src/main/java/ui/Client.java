@@ -52,23 +52,15 @@ public class Client implements ServerMessageObserver {
                 break;
             case LOAD_GAME:
                 LoadGame loadGame = gson.fromJson(message, LoadGame.class);
-                // Handle load game messages here
-//                LoadGame loadGameMessage = (LoadGame) serverMessage;
-//                try {
-//                    currentGame = loadGameMessage.gameData();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                ChessBoardUI.drawChessBoard(loadGame.game().getBoard(), playerColor, null);
-                currentGame = loadGame.gameData();
+                GameData gameData = loadGame.gameData();
+                ChessBoardUI.drawChessBoard(gameData.chessGame().getBoard(), playerColor, null);
+                currentGame = gameData;
                 break;
             case ERROR:
                 Error error = gson.fromJson(message, Error.class);
-//                Error error = (Error) serverMessage;
                 System.out.println("Error: " + error.errorMessage());
                 break;
             default:
-                // Handle other message types if necessary
                 break;
         }
     }
@@ -142,7 +134,7 @@ public class Client implements ServerMessageObserver {
         ChessPosition toPosition = parsePosition(params[1]);
         ChessMove move = new ChessMove(fromPosition, toPosition, null);
         serverFacade.makeMove(this, move);
-        return "";
+        return "Move made from " + params[0].toUpperCase() + " to " + params[1].toUpperCase() + ".";
     }
 
     public String redrawChessBoard() {

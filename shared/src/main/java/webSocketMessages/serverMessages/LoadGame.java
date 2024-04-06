@@ -12,7 +12,7 @@ public class LoadGame extends ServerMessage {
     }
 
     public GameData gameData() {
-        return gameData();
+        return gameData;
     }
 
     public ChessGame game() {
