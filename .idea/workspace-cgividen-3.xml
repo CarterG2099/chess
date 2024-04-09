@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e2127a23-f6c5-4361-9314-19f7fd19bf87" name="Changes" comment="Websocket connection is successful">
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/ServerClientCommunication/WebSocketCommunicator.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/ServerClientCommunication/WebSocketCommunicator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/ui/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/ui/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/Serializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/Serializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/websocket/ConnectionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/websocket/ConnectionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/websocket/WebSocketHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/websocket/WebSocketHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/JoinObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/JoinObserver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/JoinPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/JoinPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/Leave.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/Leave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/MakeMove.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/MakeMove.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/Resign.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/Resign.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/UserGameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/main/java/webSocketMessages/userCommands/UserGameCommand.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2ZP9VHLQjGHSyHX8qfVHnxNwmtW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.ChessBoardUI.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Client.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Server.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JUnit.BishopMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.CastlingTests.castleBlack.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.CastlingTests.castlingBlockedByEnemy.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.CastlingTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessBoardTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessGameTests$ValidMoveTests.moveIntoCheck.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessGameTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessGameTests.invalidMoves.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessGameTests.makeValidMoves.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessGameTests.whiteTeamCheckmate.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ChessPositionTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.KingMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.KnightMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.PawnMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.PersistenceTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.QueenMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.RookMoveTests.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ServerFacadeTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ServiceTests.createGameSuccess.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ServiceTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ServiceTests.getGamesSuccess.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ServiceTests.joinGameSuccess.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.ServiceTests.logoutBadToken.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.StandardAPITests.clearData.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.goodCreate.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.StandardAPITests.goodWatch.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.loginInvalidUser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.successLogin.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.successLogout.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.StandardAPITests.uniqueAuthorizationTokens.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.passoffTests in shared.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.passoffTests.chessTests in shared.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.passoffTests.chessTests.chessPieceTests in shared.executor&quot;: &quot;Debug&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gividenc/WebstormProjects/aim&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="webSocketMessages.serverMessages" />
+      <recent name="webSocketMessages.userCommands" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/lib" />
+      <recent name="$PROJECT_DIR$/shared/src/test/java/passoffTests/chessTests" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\smart\OneDrive - Brigham Young University\Desktop\CS 240\chess\server\src\test\java\passoffTests" />
+      <recent name="C:\Users\smart\OneDrive - Brigham Young University\Desktop\CS 240\chess\server\src\test\java" />
+      <recent name="C:\Users\smart\OneDrive - Brigham Young University\Desktop\CS 240\chess\server\src\test" />
+      <recent name="C:\Users\smart\OneDrive - Brigham Young University\Desktop\CS 240\chess\server\src\test\java\passoffTests\serverTests\serverTests" />
+      <recent name="C:\Users\smart\OneDrive - Brigham Young University\Desktop\CS 240\chess\server\src\test\java\passoffTests\serverTests" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chess" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Compound.Server&amp;Client">
+    <configuration name="ChessBoardUI" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="ui.ChessBoardUI" />
+      <module name="client" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="ui.Client" />
+      <module name="client" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="server.Server" />
+      <module name="server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server&amp;Client" type="CompoundRunConfigurationType">
+      <toRun name="Client" type="Application" />
+      <toRun name="Server" type="Application" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unnamed" type="CompoundRunConfigurationType">
+      <method v="2" />
+    </configuration>
+    <configuration name="ServerFacadeTests" type="JUnit" factoryName="JUnit">
+      <module name="client" />
+      <option name="PACKAGE_NAME" value="clientTests" />
+      <option name="MAIN_CLASS_NAME" value="clientTests.ServerFacadeTests" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceTests" type="JUnit" factoryName="JUnit">
+      <module name="server" />
+      <option name="PACKAGE_NAME" value="serviceTests" />
+      <option name="MAIN_CLASS_NAME" value="dataAccessTests.ServiceTests" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceTests.createGameSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dataAccessTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="serviceTests" />
+      <option name="MAIN_CLASS_NAME" value="dataAccessTests.ServiceTests" />
+      <option name="METHOD_NAME" value="createGameSuccess" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceTests.getGamesSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dataAccessTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="serviceTests" />
+      <option name="MAIN_CLASS_NAME" value="dataAccessTests.ServiceTests" />
+      <option name="METHOD_NAME" value="getGamesSuccess" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServiceTests.logoutBadToken" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dataAccessTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="serviceTests" />
+      <option name="MAIN_CLASS_NAME" value="dataAccessTests.ServiceTests" />
+      <option name="METHOD_NAME" value="logoutBadToken" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StandardAPITests.uniqueAuthorizationTokens" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="dataAccessTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="dataAccessTests" />
+      <option name="MAIN_CLASS_NAME" value="dataAccessTests.StandardAPITests" />
+      <option name="METHOD_NAME" value="uniqueAuthorizationTokens" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.ChessBoardUI" />
+      <item itemvalue="Application.Client" />
+      <item itemvalue="Application.Server" />
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Compound.Server&amp;Client" />
+      <item itemvalue="Compound.Unnamed" />
+      <item itemvalue="JUnit.ServerFacadeTests" />
+      <item itemvalue="JUnit.ServiceTests" />
+      <item itemvalue="JUnit.ServiceTests.createGameSuccess" />
+      <item itemvalue="JUnit.ServiceTests.getGamesSuccess" />
+      <item itemvalue="JUnit.ServiceTests.logoutBadToken" />
+      <item itemvalue="JUnit.StandardAPITests.uniqueAuthorizationTokens" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.ServiceTests.getGamesSuccess" />
+        <item itemvalue="JUnit.ServiceTests.createGameSuccess" />
+        <item itemvalue="JUnit.ServiceTests.logoutBadToken" />
+        <item itemvalue="JUnit.ServiceTests" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.1-temurin-21.0.1-f644763e9732-a3c558b9" />
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e2127a23-f6c5-4361-9314-19f7fd19bf87" name="Changes" comment="" />
+      <created>1702312869025</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1702312869025</updated>
+    </task>
+    <task id="LOCAL-00062" summary="added GetUser tests">
+      <option name="closed" value="true" />
+      <created>1708729077150</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1708729077150</updated>
+    </task>
+    <task id="LOCAL-00063" summary="added gameService tests">
+      <option name="closed" value="true" />
+      <created>1708729795555</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1708729795555</updated>
+    </task>
+    <task id="LOCAL-00064" summary="added starter code">
+      <option name="closed" value="true" />
+      <created>1709244115606</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1709244115606</updated>
+    </task>
+    <task id="LOCAL-00065" summary="added starter code">
+      <option name="closed" value="true" />
+      <created>1709244124512</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1709244124512</updated>
+    </task>
+    <task id="LOCAL-00066" summary="added starter code">
+      <option name="closed" value="true" />
+      <created>1709318214871</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1709318214871</updated>
+    </task>
+    <task id="LOCAL-00067" summary="added SQL classes">
+      <option name="closed" value="true" />
+      <created>1709319019412</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1709319019412</updated>
+    </task>
+    <task id="LOCAL-00068" summary="dependencies">
+      <option name="closed" value="true" />
+      <created>1709319036896</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1709319036896</updated>
+    </task>
+    <task id="LOCAL-00069" summary="implemented all classes">
+      <option name="closed" value="true" />
+      <created>1709610606641</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1709610606642</updated>
+    </task>
+    <task id="LOCAL-00070" summary="updated tests source">
+      <option name="closed" value="true" />
+      <created>1709610786023</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1709610786023</updated>
+    </task>
+    <task id="LOCAL-00071" summary="corrected Persistence tests">
+      <option name="closed" value="true" />
+      <created>1709613553025</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1709613553026</updated>
+    </task>
+    <task id="LOCAL-00072" summary="fixed get game list">
+      <option name="closed" value="true" />
+      <created>1709613926458</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1709613926458</updated>
+    </task>
+    <task id="LOCAL-00073" summary="reorganized test directories">
+      <option name="closed" value="true" />
+      <created>1709660987571</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1709660987573</updated>
+    </task>
+    <task id="LOCAL-00074" summary="readded tests">
+      <option name="closed" value="true" />
+      <created>1709667776592</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1709667776592</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Added code to create tables">
+      <option name="closed" value="true" />
+      <created>1709668938767</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1709668938767</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Fixed to code to create databse correctly">
+      <option name="closed" value="true" />
+      <created>1709670843049</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1709670843049</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Added more unit tests">
+      <option name="closed" value="true" />
+      <created>1709673833134</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1709673833135</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Added more unit tests">
+      <option name="closed" value="true" />
+      <created>1709674204908</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1709674204908</updated>
+    </task>
+    <task id="LOCAL-00079" summary="added db.properties to .gitignore">
+      <option name="closed" value="true" />
+      <created>1709674697794</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1709674697795</updated>
+    </task>
+    <task id="LOCAL-00080" summary="added db.properties to .gitignore">
+      <option name="closed" value="true" />
+      <created>1709674854284</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1709674854284</updated>
+    </task>
+    <task id="LOCAL-00081" summary="added db.properties to .gitignore">
+      <option name="closed" value="true" />
+      <created>1709674863838</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1709674863838</updated>
+    </task>
+    <task id="LOCAL-00082" summary="added starter code">
+      <option name="closed" value="true" />
+      <created>1710274926143</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1710274926144</updated>
+    </task>
+    <task id="LOCAL-00083" summary="added necesary classes">
+      <option name="closed" value="true" />
+      <created>1710344040480</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1710344040480</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Chess board outline is complete">
+      <option name="closed" value="true" />
+      <created>1710376759299</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1710376759299</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Chess board prints correctly">
+      <option name="closed" value="true" />
+      <created>1710446283307</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1710446283308</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Reformat">
+      <option name="closed" value="true" />
+      <created>1710446344403</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1710446344403</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Added the required classes">
+      <option name="closed" value="true" />
+      <created>1710447975686</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1710447975686</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Connection is setup">
+      <option name="closed" value="true" />
+      <created>1710892642836</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1710892642838</updated>
+    </task>
+    <task id="LOCAL-00089" summary="everything works">
+      <option name="closed" value="true" />
+      <created>1710949628165</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1710949628166</updated>
+    </task>
+    <task id="LOCAL-00090" summary="errors look better">
+      <option name="closed" value="true" />
+      <created>1710951469550</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1710951469550</updated>
+    </task>
+    <task id="LOCAL-00091" summary="reformar code">
+      <option name="closed" value="true" />
+      <created>1710951535967</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1710951535967</updated>
+    </task>
+    <task id="LOCAL-00092" summary="Updated list and join game to be a numbered list">
+      <option name="closed" value="true" />
+      <created>1710956232534</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1710956232534</updated>
+    </task>
+    <task id="LOCAL-00093" summary="ServerFacadeTests">
+      <option name="closed" value="true" />
+      <created>1710957125626</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1710957125626</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Reformat code">
+      <option name="closed" value="true" />
+      <created>1710957648154</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1710957648155</updated>
+    </task>
+    <task id="LOCAL-00095" summary="Fixed warnings">
+      <option name="closed" value="true" />
+      <created>1710957817276</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1710957817276</updated>
+    </task>
+    <task id="LOCAL-00096" summary="added dynamic port for server facade and ClientCommunicator">
+      <option name="closed" value="true" />
+      <created>1710958583170</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1710958583170</updated>
+    </task>
+    <task id="LOCAL-00097" summary="added dynamic port for server facade and ClientCommunicator">
+      <option name="closed" value="true" />
+      <created>1710958594505</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1710958594506</updated>
+    </task>
+    <task id="LOCAL-00098" summary="Fixed clearData method">
+      <option name="closed" value="true" />
+      <created>1710962799893</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1710962799893</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Fixed tests">
+      <option name="closed" value="true" />
+      <created>1710963189963</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1710963189963</updated>
+    </task>
+    <task id="LOCAL-00100" summary="Fixed tests">
+      <option name="closed" value="true" />
+      <created>1710963576922</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1710963576922</updated>
+    </task>
+    <task id="LOCAL-00101" summary="Fixed UI color">
+      <option name="closed" value="true" />
+      <created>1711041370225</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1711041370225</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Starter Code">
+      <option name="closed" value="true" />
+      <created>1711483936592</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1711483936592</updated>
+    </task>
+    <task id="LOCAL-00103" summary="dependencies">
+      <option name="closed" value="true" />
+      <created>1711484081857</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1711484081857</updated>
+    </task>
+    <task id="LOCAL-00104" summary="Webocket and highlighted moves first draft">
+      <option name="closed" value="true" />
+      <created>1711853719163</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1711853719163</updated>
+    </task>
+    <task id="LOCAL-00105" summary="Highlighted colors is done">
+      <option name="closed" value="true" />
+      <created>1711858558965</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1711858558965</updated>
+    </task>
+    <task id="LOCAL-00106" summary="Highlighted colors is done">
+      <option name="closed" value="true" />
+      <created>1711858654954</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1711858654954</updated>
+    </task>
+    <task id="LOCAL-00107" summary="redraw chessboard">
+      <option name="closed" value="true" />
+      <created>1711858935870</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1711858935870</updated>
+    </task>
+    <task id="LOCAL-00108" summary="Static client">
+      <option name="closed" value="true" />
+      <created>1711859645944</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1711859645944</updated>
+    </task>
+    <task id="LOCAL-00109" summary="Redraw and Highlight moves">
+      <option name="closed" value="true" />
+      <created>1712115482866</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1712115482867</updated>
+    </task>
+    <task id="LOCAL-00110" summary="Websocket connection is successful">
+      <option name="closed" value="true" />
+      <created>1712115495129</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1712115495129</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added necesary classes" />
+    <MESSAGE value="Chess board outline is complete" />
+    <MESSAGE value="Chess board prints correctly" />
+    <MESSAGE value="Reformat" />
+    <MESSAGE value="Added the required classes" />
+    <MESSAGE value="Connection is setup" />
+    <MESSAGE value="everything works" />
+    <MESSAGE value="errors look better" />
+    <MESSAGE value="reformar code" />
+    <MESSAGE value="Updated list and join game to be a numbered list" />
+    <MESSAGE value="ServerFacadeTests" />
+    <MESSAGE value="Reformat code" />
+    <MESSAGE value="Fixed warnings" />
+    <MESSAGE value="added dynamic port for server facade and ClientCommunicator" />
+    <MESSAGE value="Fixed clearData method" />
+    <MESSAGE value="Fixed tests" />
+    <MESSAGE value="Fixed UI color" />
+    <MESSAGE value="Starter Code" />
+    <MESSAGE value="dependencies" />
+    <MESSAGE value="Webocket and highlighted moves first draft" />
+    <MESSAGE value="Highlighted colors is done" />
+    <MESSAGE value="redraw chessboard" />
+    <MESSAGE value="Static client" />
+    <MESSAGE value="Redraw and Highlight moves" />
+    <MESSAGE value="Websocket connection is successful" />
+    <option name="LAST_COMMIT_MESSAGE" value="Websocket connection is successful" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/StandardAPITests.java</url>
+          <line>435</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/main/java/dataAccess/MemoryGameDAO.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/StandardAPITests.java</url>
+          <line>356</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/StandardAPITests.java</url>
+          <line>731</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/StandardAPITests.java</url>
+          <line>724</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/PersistenceTests.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/test/java/dataAccessTests/ServiceTests.java</url>
+          <line>197</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/client/src/main/java/ServerClientCommunication/WebSocketCommunicator.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/server/src/main/java/server/websocket/ConnectionManager.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="spark.http.matching.RequestWrapper" memberName="headers" />
+        <PinnedItemInfo parentTag="dataAccess.MemoryGameDAO" memberName="gameDataArrayList" />
+      </pinned-members>
+    </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="JUnit">
+        <watch expression="ClientCommunicator.port = port" />
+      </configuration>
+      <configuration name="Application">
+        <watch expression="loggedIn" language="JAVA" />
+      </configuration>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/shared/src/main/java/chess/MovesCalculator/KnightMovesCalculator.java" line="12">
+        <watch expression="row" language="JAVA" />
+      </inline-watch>
+      <inline-watch fileUrl="file://$PROJECT_DIR$/client/src/test/java/clientTests/ServerFacadeTests.java" line="25">
+        <watch expression="serverFacade" />
+      </inline-watch>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/chess$PersistenceTests.ic" NAME="PersistenceTests Coverage Results" MODIFIED="1709421757555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>passoffTests.serverTests.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/chess$StandardAPITests.ic" NAME="StandardAPITests Coverage Results" MODIFIED="1708716118806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>
