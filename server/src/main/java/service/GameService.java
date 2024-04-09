@@ -76,7 +76,7 @@ public class GameService {
         } else {
             ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
             newObserverList.removeIf(observer -> observer.username().equals(playerColor));
-            newGame = new GameData(gameData.gameID(), null, null, gameData.gameName(), gameData.chessGame(), "", newObserverList);
+            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", newObserverList);
         }
         Server.gameDAO.deleteGame(gameData);
         Server.gameDAO.addGame(newGame);

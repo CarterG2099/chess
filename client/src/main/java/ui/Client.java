@@ -44,7 +44,6 @@ public class Client implements ServerMessageObserver {
 
     @Override
     public void notify(String message) {
-//        ServerMessage serverMessage = (ServerMessage) Serializer.interpretServerMessage(message);
         ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
         switch (serverMessage.getServerMessageType()) {
             case NOTIFICATION:
