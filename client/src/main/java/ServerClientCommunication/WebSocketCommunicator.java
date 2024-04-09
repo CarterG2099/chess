@@ -1,8 +1,8 @@
 package ServerClientCommunication;
 
+import DataAccessException.DataAccessException;
 import chess.ChessMove;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
 import model.GameData;
 import webSocketMessages.userCommands.*;
 

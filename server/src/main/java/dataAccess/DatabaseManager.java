@@ -1,6 +1,7 @@
 package dataAccess;
 
 import chess.ChessGame;
+import DataAccessException.DataAccessException;
 import com.google.gson.Gson;
 
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 package clientTests;
 
+import DataAccessException.DataAccessException;
 import ServerClientCommunication.ServerFacade;
-import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -101,7 +101,7 @@ public class ServerFacadeTests {
     }
 
 //    @Test
-//    void joinRequest() throws DataAccessException {
+//    void joinRequest() throws DataAccessException.DataAccessException {
 //        GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
 //        registerResponse = serverFacade.register(registerRequest);
 //        GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
@@ -111,9 +111,9 @@ public class ServerFacadeTests {
 //    }
 //
 //    @Test
-//    void joinRequestBad() throws DataAccessException {
+//    void joinRequestBad() throws DataAccessException.DataAccessException {
 //        GameData joinRequest = new GameData(0, "white", null, null, null, null, null);
 //        registerResponse = serverFacade.register(registerRequest);
-//        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.joinRequest(joinRequest, registerResponse.authToken()));
+//        Assertions.assertThrows(DataAccessException.DataAccessException.class, () -> serverFacade.joinRequest(joinRequest, registerResponse.authToken()));
 //    }
 }

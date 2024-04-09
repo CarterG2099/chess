@@ -1,7 +1,7 @@
 package ServerClientCommunication;
 
+import DataAccessException.DataAccessException;
 import chess.ChessMove;
-import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;

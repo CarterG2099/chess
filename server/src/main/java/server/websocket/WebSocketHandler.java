@@ -2,7 +2,7 @@ package server.websocket;
 
 import chess.ChessGame;
 import chess.ChessPiece;
-import dataAccess.DataAccessException;
+import DataAccessException.DataAccessException;
 import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.websocket.api.Session;

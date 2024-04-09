@@ -1,5 +1,6 @@
 package server;
 
+import DataAccessException.DataAccessException;
 import chess.ChessGame;
 import chess.ChessPiece;
 import dataAccess.*;

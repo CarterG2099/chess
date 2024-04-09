@@ -1,7 +1,7 @@
 package dataAccessTests;
 
+import DataAccessException.DataAccessException;
 import chess.ChessGame;
-import dataAccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -191,7 +191,7 @@ public class ServiceTests {
     }
 
 //    @Test
-//    public void joinGameSuccess() throws DataAccessException {
+//    public void joinGameSuccess() throws DataAccessException.DataAccessException {
 //        GameData gameToAdd = new GameData(1234, "white", "black", "testGame", new ChessGame(), "WHITE",  new ArrayList<>());
 //        Server.gameDAO.addGame(gameToAdd);
 //        gameService.joinGame(gameToAdd, existingUser);

@@ -1,7 +1,7 @@
 package ServerClientCommunication;
 
+import DataAccessException.DataAccessException;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
 
 import java.io.IOException;
 import java.io.InputStream;

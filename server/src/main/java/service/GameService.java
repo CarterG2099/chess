@@ -1,9 +1,9 @@
 package service;
 
+import DataAccessException.DataAccessException;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.InvalidMoveException;
-import dataAccess.DataAccessException;
 import model.GameData;
 import model.UserData;
 import server.Server;
@@ -83,7 +83,7 @@ public class GameService {
 
     }
 
-//    public void leaveGame(GameData gameData, UserData user) throws DataAccessException {
+//    public void leaveGame(GameData gameData, UserData user) throws DataAccessException.DataAccessException {
 //        GameData newGame = null;
 //        if(playerColor.isEmpty()) {
 //            ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());

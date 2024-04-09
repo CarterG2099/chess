@@ -1,7 +1,7 @@
 //package ServerClientCommunication;
 //
 //import com.google.gson.Gson;
-//import dataAccess.DataAccessException;
+//import DataAccessException.DataAccessException;
 //import webSocketMessages.serverMessages.ServerMessage;
 //import webSocketMessages.userCommands.UserGameCommand;
 //
@@ -17,7 +17,7 @@
 //    ServerMessageObserver serverMessageHandler;
 //
 //
-//    public WebSocketCommunicator(String url, ServerMessageObserver serverMessageHandler) throws DataAccessException {
+//    public WebSocketCommunicator(String url, ServerMessageObserver serverMessageHandler) throws DataAccessException.DataAccessException {
 //        try {
 //            url = url.replace("http", "ws");
 //            URI socketURI = new URI(url + "/connect");
@@ -36,7 +36,7 @@
 //                }
 //            });
 //        } catch (DeploymentException | IOException | URISyntaxException ex) {
-//            throw new DataAccessException(ex.getMessage(), 500);
+//            throw new DataAccessException.DataAccessException(ex.getMessage(), 500);
 //        }
 //    }
 //
@@ -45,12 +45,12 @@
 //    public void onOpen(Session session, EndpointConfig endpointConfig) {
 //    }
 //
-//    public void leave() throws DataAccessException {
+//    public void leave() throws DataAccessException.DataAccessException {
 //        try {
 //            var command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, UserGameCommand.CommandType.LEAVE);
 //            this.session.getBasicRemote().sendText(new Gson().toJson(command));
 //        } catch (IOException ex) {
-//            throw new DataAccessException(ex.getMessage(), 500);
+//            throw new DataAccessException.DataAccessException(ex.getMessage(), 500);
 //        }
 //    }
 //}
@@ -60,7 +60,7 @@
 //        var command = new UserGameCommand(serverMessage.authToken, UserGameCommand.CommandType.LEAVE);
 //        this.session.getBasicRemote().sendText(new Gson().toJson(command));
 //    } catch (IOException ex) {
-//        throw new DataAccessException(ex.getMessage(), 500);
+//        throw new DataAccessException.DataAccessException(ex.getMessage(), 500);
 //    }
 //}
 //

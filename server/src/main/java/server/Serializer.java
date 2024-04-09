@@ -1,7 +1,7 @@
 package server;
 
+import DataAccessException.DataAccessException;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
 import spark.Response;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;

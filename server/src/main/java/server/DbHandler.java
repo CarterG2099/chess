@@ -1,6 +1,6 @@
 package server;
 
-import dataAccess.DataAccessException;
+import DataAccessException.DataAccessException;
 import service.DbService;
 import spark.Request;
 import spark.Response;
