@@ -79,26 +79,24 @@ public class ChessBoardUI {
     private static void drawBoardWithColumns(PrintStream out, ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
         String[] columns = {" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
         if (orientation == ChessGame.TeamColor.WHITE) {
-            for (int boardRow = BOARD_SIZE_IN_SQUARES; boardRow > 0; boardRow--) {
-                out.print(SET_BG_COLOR_LIGHT_GREY);
-                drawColumn(out, columns[boardRow - 1]);
-                drawBoardRow(out, boardRow, board, orientation, highlightedPositions);
-                drawColumn(out, columns[boardRow - 1]);
-                out.print(SET_BG_COLOR_BLACK);
-                out.print(NEW_LINE);
-            }
-
+            drawBoardWithOrientation(out, board, columns, orientation, highlightedPositions, BOARD_SIZE_IN_SQUARES, -1, 0);
         } else {
-            for (int boardRow = 1; boardRow <= BOARD_SIZE_IN_SQUARES; boardRow++) {
-                out.print(SET_BG_COLOR_LIGHT_GREY);
-                drawColumn(out, columns[boardRow - 1]);
-                drawBoardRow(out, boardRow, board, orientation, highlightedPositions);
-                drawColumn(out, columns[boardRow - 1]);
-                out.print(SET_BG_COLOR_BLACK);
-                out.print(NEW_LINE);
-            }
+            drawBoardWithOrientation(out, board, columns, orientation, highlightedPositions, 1, BOARD_SIZE_IN_SQUARES + 1, 1);
         }
     }
+
+    private static void drawBoardWithOrientation(PrintStream out, ChessBoard board, String[] columns, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions, int start, int end, int step) {
+        for (int boardRow = start; boardRow != end; boardRow += step) {
+            out.print(SET_BG_COLOR_LIGHT_GREY);
+            drawColumn(out, columns[boardRow - 1]);
+            drawBoardRow(out, boardRow, board, orientation, highlightedPositions);
+            drawColumn(out, columns[boardRow - 1]);
+            out.print(SET_BG_COLOR_BLACK);
+            out.print(NEW_LINE);
+        }
+    }
+
+
 
     private static void drawColumn(PrintStream out, String colText) {
         out.print(SET_TEXT_BOLD);
