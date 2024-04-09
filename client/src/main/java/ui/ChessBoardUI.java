@@ -69,7 +69,7 @@ public class ChessBoardUI {
     private static void drawBoardWithColumns(PrintStream out, ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
         String[] columns = {" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 "};
         if (orientation == ChessGame.TeamColor.WHITE) {
-            drawBoardWithOrientation(out, board, columns, orientation, highlightedPositions, BOARD_SIZE_IN_SQUARES, -1, 0);
+            drawBoardWithOrientation(out, board, columns, orientation, highlightedPositions, BOARD_SIZE_IN_SQUARES, 0, -1);
         } else {
             drawBoardWithOrientation(out, board, columns, orientation, highlightedPositions, 1, BOARD_SIZE_IN_SQUARES + 1, 1);
         }
@@ -85,6 +85,7 @@ public class ChessBoardUI {
             out.print(NEW_LINE);
         }
     }
+
 
     private static void drawColumn(PrintStream out, String colText) {
         out.print(SET_TEXT_BOLD);

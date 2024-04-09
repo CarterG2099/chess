@@ -68,7 +68,7 @@ public class GameService {
 
     public void leaveGame(String playerColor, int gameID) throws DataAccessException {
         GameData gameData = Server.gameDAO.getGame(gameID);
-        GameData newGame = null;
+        GameData newGame;
         if (playerColor.equalsIgnoreCase("WHITE")) {
             newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
         } else if (playerColor.equalsIgnoreCase("BLACK")) {

@@ -126,7 +126,6 @@ public class Client implements ServerMessageObserver {
         }
     }
 
-
     public String makeMove(String... params) throws DataAccessException {
         if (params.length < 2) {
             return "Invalid Move Command";

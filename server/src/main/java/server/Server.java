@@ -21,7 +21,6 @@ public class Server {
 
     public static int run(int desiredPort) {
         Spark.port(desiredPort);
-//        setMemoryDAOs();
         setMySqlDAOs();
 
         Spark.staticFiles.location("web");
@@ -48,7 +47,6 @@ public class Server {
             Serializer.translateExceptionToJson(e, null);
         }
     }
-
 
     public static void stop() {
         Spark.stop();
