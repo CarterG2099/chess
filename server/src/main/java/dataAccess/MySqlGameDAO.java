@@ -39,14 +39,14 @@ public class MySqlGameDAO implements GameDAO {
 
     @Override
     public void addGame(GameData gameData) throws DataAccessException {
-        int game_id = gameData.gameID();
-        String game_name = gameData.gameName();
-        String white_username = gameData.whiteUsername();
-        String black_username = gameData.blackUsername();
-        ArrayList<UserData> observer_list = gameData.observerList();
+        int gameID = gameData.gameID();
+        String gameName = gameData.gameName();
+        String whiteUsername = gameData.whiteUsername();
+        String blackUsername = gameData.blackUsername();
+        ArrayList<UserData> observerList = gameData.observerList();
         ChessGame chess_game = gameData.chessGame();
         var statement = "INSERT INTO game_data (game_id, white_username, black_username, game_name, chess_game, player_color, observer_list) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        DatabaseManager.executeUpdate(statement, game_id, white_username, black_username, game_name, chess_game, null, observer_list);
+        DatabaseManager.executeUpdate(statement, gameID, whiteUsername, blackUsername, gameName, chess_game, null, observerList);
     }
 
     @Override

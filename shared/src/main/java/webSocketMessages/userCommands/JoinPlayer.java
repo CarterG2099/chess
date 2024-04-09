@@ -1,17 +1,18 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
 import model.GameData;
 
 public class JoinPlayer extends UserGameCommand {
     int gameID;
-    String playerColor;
+    ChessGame.TeamColor playerColor;
 
     GameData gameData;
 
     public JoinPlayer(String authToken, GameData gameData) {
         super(authToken, CommandType.JOIN_PLAYER);
         this.gameID = gameData.gameID();
-        this.playerColor = gameData.playerColor();
+        this.playerColor = ChessGame.TeamColor.valueOf(String.valueOf(gameData.playerColor()));
         this.gameData = gameData;
     }
 
@@ -19,7 +20,7 @@ public class JoinPlayer extends UserGameCommand {
         return gameID;
     }
 
-    public String playerColor() {
+    public ChessGame.TeamColor playerColor() {
         return playerColor;
     }
 

@@ -39,11 +39,11 @@ public class Server {
     }
 
 
-    private static void setMemoryDAOs() {
-        authDAO = new MemoryAuthDAO();
-        userDAO = new MemoryUserDAO();
-        gameDAO = new MemoryGameDAO();
-    }
+//    private static void setMemoryDAOs() {
+//        authDAO = new MemoryAuthDAO();
+//        userDAO = new MemoryUserDAO();
+//        gameDAO = new MemoryGameDAO();
+//    }
 
     public static void setMySqlDAOs() {
         authDAO = new MySqlAuthDAO();
