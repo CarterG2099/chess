@@ -4,7 +4,6 @@ import model.GameData;
 
 public class JoinObserver extends UserGameCommand {
     int gameID;
-
     GameData gameData;
 
     public JoinObserver(String authToken, GameData gameData) {

@@ -53,7 +53,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException, DataAccessException {
+    private void joinPlayer(JoinPlayer command, String username, Session session) throws IOException {
         try {
             userService.validAuthToken(command.getAuthToken());
             UserData user = userService.getUser(command.getAuthToken());
@@ -69,7 +69,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void joinObserver(JoinObserver command, String username, Session session) throws IOException, DataAccessException {
+    private void joinObserver(JoinObserver command, String username, Session session) throws IOException {
         try {
             userService.validAuthToken(command.getAuthToken());
             UserData user = userService.getUser(command.getAuthToken());
@@ -85,7 +85,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void leave(Leave command, String username) throws IOException, DataAccessException {
+    private void leave(Leave command, String username) throws IOException {
         try {
             userService.validAuthToken(command.getAuthToken());
             gameService.leaveGame(command.playerColor(), command.gameID());
@@ -100,7 +100,7 @@ public class WebSocketHandler {
         }
     }
 
-    private void makeMove(MakeMove command, String username) throws IOException, DataAccessException {
+    private void makeMove(MakeMove command, String username) throws IOException {
         try {
             userService.validAuthToken(command.getAuthToken());
             GameData gameToVerify = gameService.getGame(command.gameID());

@@ -76,24 +76,23 @@ public class MySqlGameDAO implements GameDAO {
 
     }
 
-    private GameData readGameData(ResultSet rs) throws DataAccessException, SQLException {
+    private GameData readGameData(ResultSet rs) throws SQLException {
         Gson gson = new Gson();
-        var game_id = rs.getInt("game_id");
-        var white_username = rs.getString("white_username");
-        var black_username = rs.getString("black_username");
-        var game_name = rs.getString("game_name");
-        var chess_game_var = rs.getString("chess_game");
-        ChessGame chess_game;
-        if (chess_game_var != null) {
-            chess_game = gson.fromJson(chess_game_var, ChessGame.class);
+        var gameId = rs.getInt("game_id");
+        var whiteUsername = rs.getString("white_username");
+        var blackUsername = rs.getString("black_username");
+        var gameName = rs.getString("game_name");
+        var chessGameVar = rs.getString("chess_game");
+        ChessGame chessGame;
+        if (chessGameVar != null) {
+            chessGame = gson.fromJson(chessGameVar, ChessGame.class);
         } else {
-            chess_game = new ChessGame();
+            chessGame = new ChessGame();
         }
-        var player_color = rs.getString("player_color");
-        var observer_var = rs.getString("observer_list");
-        Type listType = new TypeToken<ArrayList<UserData>>() {
-        }.getType();
-        ArrayList<UserData> observer = gson.fromJson(observer_var, listType);
-        return new GameData(game_id, white_username, black_username, game_name, chess_game, player_color, observer);
+        var playerColor = rs.getString("player_color");
+        var observerList = rs.getString("observer_list");
+        Type listType = new TypeToken<ArrayList<UserData>>() {}.getType();
+        ArrayList<UserData> observer = gson.fromJson(observerList, listType);
+        return new GameData(gameId, whiteUsername, blackUsername, gameName, chessGame, playerColor, observer);
     }
 }

@@ -29,16 +29,6 @@ public class Serializer {
         return gson.toJson(statusResponse);
     }
 
-    public static Object interpretServerMessage(String message) {
-        ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
-        return switch (serverMessage.getServerMessageType()) {
-            case ERROR -> gson.fromJson(message, Error.class);
-            case NOTIFICATION -> gson.fromJson(message, Notification.class);
-            case LOAD_GAME -> gson.fromJson(message, LoadGame.class);
-            default -> null;
-        };
-    }
-
     public static Object interpretUserGameCommand(String message) {
         UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
         return switch (command.getCommandType()) {

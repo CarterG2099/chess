@@ -14,11 +14,6 @@ public class ChessBoardUI {
     public static final int BOARD_SIZE_IN_SQUARES = 8;
     private static final ChessBoard board = new ChessBoard();
 
-//    public enum Orientation {
-//        WHITE,
-//        BLACK
-//    }
-
     public static void main(String[] args) {
         board.resetBoard();
         drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
@@ -36,15 +31,15 @@ public class ChessBoardUI {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
-    public static void drawChessBoards(ChessBoard board) {
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.print(ERASE_SCREEN);
-        drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
-        drawChessBoardSpacer(out);
-        drawChessBoard(board, ChessGame.TeamColor.BLACK, null);
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_WHITE);
-    }
+//    public static void drawChessBoards(ChessBoard board) {
+//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+//        out.print(ERASE_SCREEN);
+//        drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
+//        drawChessBoardSpacer(out);
+//        drawChessBoard(board, ChessGame.TeamColor.BLACK, null);
+//        out.print(SET_BG_COLOR_DARK_GREY);
+//        out.print(SET_TEXT_COLOR_WHITE);
+//    }
 
     private static void drawChessBoardSpacer(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);

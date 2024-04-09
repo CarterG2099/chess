@@ -154,8 +154,6 @@ public class Client implements ServerMessageObserver {
         ChessPiece piece = currentGame.chessGame().getBoard().getPiece(position);
         if (piece == null) {
             return "No piece at position " + params[0].toUpperCase();
-        } else if (piece.getTeamColor() != playerColor) {
-            return "You can only highlight legal moves for your own pieces.";
         }
         Collection<ChessMove> legalMoves = currentGame.chessGame().validMoves(position);
         ChessBoardUI.drawChessBoard(currentGame.chessGame().getBoard(), playerColor, legalMoves);

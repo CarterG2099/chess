@@ -83,24 +83,6 @@ public class GameService {
 
     }
 
-//    public void leaveGame(GameData gameData, UserData user) throws DataAccessException.DataAccessException {
-//        GameData newGame = null;
-//        if(playerColor.isEmpty()) {
-//            ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
-//            newObserverList.removeIf(observer -> observer.username().equals(user.username()));
-//            newGame = new GameData(gameData.gameID(), null, null, gameData.gameName(), gameData.chessGame(), "", newObserverList);
-//            Server.gameDAO.leaveGame(gameData, user, "observer");
-//        }
-//        else if (playerColor.toUpperCase() == "WHITE") {
-//            newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
-//
-//        } else if (playerColor.toUpperCase() == "BLACK") {
-//            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
-//        }
-//        Server.gameDAO.deleteGame(gameData);
-//        Server.gameDAO.addGame(newGame);
-//    }
-
     public GameData makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
         GameData gameData = Server.gameDAO.getGame(gameID);
         Collection<ChessMove> legalMoves = gameData.chessGame().validMoves(move.getStartPosition());
@@ -108,8 +90,6 @@ public class GameService {
             throw new InvalidMoveException("Invalid move");
         } else {
             gameData.chessGame().makeMove(move);
-//            ChessGame newGame = gameData.chessGame().makeMove(move);
-//            GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), newGame, "", gameData.observerList());
             Server.gameDAO.deleteGame(gameData);
             Server.gameDAO.addGame(gameData);
             return gameData;
