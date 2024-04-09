@@ -2,7 +2,10 @@ package ui;
 
 import ServerClientCommunication.ServerFacade;
 import ServerClientCommunication.ServerMessageObserver;
-import chess.*;
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthData;

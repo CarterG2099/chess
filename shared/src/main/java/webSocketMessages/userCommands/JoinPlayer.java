@@ -1,6 +1,5 @@
 package webSocketMessages.userCommands;
 
-import chess.ChessGame;
 import model.GameData;
 
 public class JoinPlayer extends UserGameCommand {

@@ -1,6 +1,5 @@
 package ServerClientCommunication;
 
-import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;

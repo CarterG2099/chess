@@ -85,8 +85,7 @@ public class MySqlGameDAO implements GameDAO {
         ChessGame chess_game;
         if (chess_game_var != null) {
             chess_game = gson.fromJson(chess_game_var, ChessGame.class);
-        }
-        else {
+        } else {
             chess_game = new ChessGame();
         }
         var player_color = rs.getString("player_color");

@@ -73,8 +73,7 @@ public class GameService {
             newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
         } else if (playerColor.equalsIgnoreCase("BLACK")) {
             newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
-        }
-        else {
+        } else {
             ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
             newObserverList.removeIf(observer -> observer.username().equals(playerColor));
             newGame = new GameData(gameData.gameID(), null, null, gameData.gameName(), gameData.chessGame(), "", newObserverList);

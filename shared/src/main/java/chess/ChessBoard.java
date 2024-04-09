@@ -126,8 +126,7 @@ public class ChessBoard implements Cloneable {
                 ChessPiece originalPiece = getPiece(tempPosition);
                 if (originalPiece != null) {
                     clonedBoard.addPiece(tempPosition, originalPiece);
-                }
-                else {
+                } else {
                     clonedBoard.removePiece(tempPosition);
                 }
             }

@@ -27,7 +27,7 @@ public class ConnectionManager {
         for (var c : connections) {
             if (c.session.isOpen()) {
                 //Only send error message to sender
-                if(notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR && !c.authToken.equals(excludeCurrentAuthToken)){
+                if (notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR && !c.authToken.equals(excludeCurrentAuthToken)) {
                     continue;
                 }
                 //Only send notifications to other users

@@ -1,7 +1,7 @@
 package server.websocket;
+
 import chess.ChessGame;
 import chess.ChessPiece;
-import chess.InvalidMoveException;
 import dataAccess.DataAccessException;
 import model.GameData;
 import model.UserData;
@@ -14,6 +14,7 @@ import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.userCommands.*;
+
 import java.io.IOException;
 import java.util.Objects;
 
