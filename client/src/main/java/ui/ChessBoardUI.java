@@ -31,16 +31,6 @@ public class ChessBoardUI {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
-//    public static void drawChessBoards(ChessBoard board) {
-//        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-//        out.print(ERASE_SCREEN);
-//        drawChessBoard(board, ChessGame.TeamColor.WHITE, null);
-//        drawChessBoardSpacer(out);
-//        drawChessBoard(board, ChessGame.TeamColor.BLACK, null);
-//        out.print(SET_BG_COLOR_DARK_GREY);
-//        out.print(SET_TEXT_COLOR_WHITE);
-//    }
-
     private static void drawChessBoardSpacer(PrintStream out) {
         out.print(SET_BG_COLOR_BLACK);
         out.print(NEW_LINE);
@@ -96,8 +86,6 @@ public class ChessBoardUI {
         }
     }
 
-
-
     private static void drawColumn(PrintStream out, String colText) {
         out.print(SET_TEXT_BOLD);
         out.print(SET_TEXT_COLOR_MAGENTA);
@@ -106,22 +94,24 @@ public class ChessBoardUI {
     }
 
     private static void drawBoardRow(PrintStream out, int boardRow, ChessBoard board, ChessGame.TeamColor orientation, Collection<ChessMove> highlightedPositions) {
+        int startCol, endCol, step;
         if (orientation == ChessGame.TeamColor.WHITE) {
-            for (int boardCol = 1; boardCol <= BOARD_SIZE_IN_SQUARES; boardCol++) {
-                int tileToInt = getTileColor(boardRow, boardCol, highlightedPositions);
-                ChessPosition position = new ChessPosition(boardRow, boardCol);
-                ChessPiece piece = board.getPiece(position);
-                drawTile(out, piece, tileToInt);
-            }
+            startCol = 1;
+            endCol = BOARD_SIZE_IN_SQUARES + 1;
+            step = 1;
         } else {
-            for (int boardCol = BOARD_SIZE_IN_SQUARES; boardCol > 0; boardCol--) {
-                int tileToInt = getTileColor(boardRow, boardCol, highlightedPositions);
-                ChessPosition position = new ChessPosition(boardRow, boardCol);
-                ChessPiece piece = board.getPiece(position);
-                drawTile(out, piece, tileToInt);
-            }
+            startCol = BOARD_SIZE_IN_SQUARES;
+            endCol = 0;
+            step = -1;
+        }
+        for (int boardCol = startCol; boardCol != endCol; boardCol += step) {
+            int tileToInt = getTileColor(boardRow, boardCol, highlightedPositions);
+            ChessPosition position = new ChessPosition(boardRow, boardCol);
+            ChessPiece piece = board.getPiece(position);
+            drawTile(out, piece, tileToInt);
         }
     }
+
 
     private static int getTileColor(int boardRow, int boardCol, Collection<ChessMove> highlightedPositions) {
         if (highlightedPositions != null) {
