@@ -40,13 +40,14 @@ public class ServerFacade {
         return HttpCommunicator.makeRequest("POST", "/game", createGameRequest, authToken, GameData.class);
     }
 
-    public GameData joinRequest(GameData joinRequest, String authToken) throws DataAccessException {
-        return HttpCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
+    public void joinRequest(Client client, GameData gameData) throws DataAccessException {
+        ws = new WebSocketCommunicator(client.serverUrl, client);
+        ws.joinRequest(client.authToken, gameData);
+//        return HttpCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
     }
 
-    public void webSocketJoinRequest(Client client, Boolean joinAsPlayer) throws DataAccessException {
-        ws = new WebSocketCommunicator(client.serverUrl, client);
-        ws.joinRequest(client.authToken, client.currentGame.gameID(), client.playerColor, joinAsPlayer);
+    public void webSocketJoinRequest(Client client, GameData gameData, Boolean joinAsPlayer) throws DataAccessException {
+
     }
 
     public void leave(Client client, String playerColor) throws DataAccessException {

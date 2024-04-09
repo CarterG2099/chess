@@ -18,4 +18,8 @@ public class LoadGame extends ServerMessage {
     public ChessGame game() {
         return gameData().chessGame();
     }
+
+    public String playerColor() {
+        return gameData().playerColor();
+    }
 }

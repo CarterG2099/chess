@@ -100,20 +100,20 @@ public class ServerFacadeTests {
         Assertions.assertThrows(DataAccessException.class, () -> serverFacade.createGame(createGameRequest, registerResponse.authToken()));
     }
 
-    @Test
-    void joinRequest() throws DataAccessException {
-        GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
-        registerResponse = serverFacade.register(registerRequest);
-        GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
-        GameData joinRequest = new GameData(createGameResponse.gameID(), null, null, null, null, "white", null);
-        GameData joinResponse = serverFacade.joinRequest(joinRequest, registerResponse.authToken());
-        assertEquals("username", joinResponse.whiteUsername());
-    }
-
-    @Test
-    void joinRequestBad() throws DataAccessException {
-        GameData joinRequest = new GameData(0, "white", null, null, null, null, null);
-        registerResponse = serverFacade.register(registerRequest);
-        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.joinRequest(joinRequest, registerResponse.authToken()));
-    }
+//    @Test
+//    void joinRequest() throws DataAccessException {
+//        GameData createGameRequest = new GameData(0, null, null, "gameName", null, null, null);
+//        registerResponse = serverFacade.register(registerRequest);
+//        GameData createGameResponse = serverFacade.createGame(createGameRequest, registerResponse.authToken());
+//        GameData joinRequest = new GameData(createGameResponse.gameID(), null, null, null, null, "white", null);
+//        GameData joinResponse = serverFacade.joinRequest(joinRequest, registerResponse.authToken());
+//        assertEquals("username", joinResponse.whiteUsername());
+//    }
+//
+//    @Test
+//    void joinRequestBad() throws DataAccessException {
+//        GameData joinRequest = new GameData(0, "white", null, null, null, null, null);
+//        registerResponse = serverFacade.register(registerRequest);
+//        Assertions.assertThrows(DataAccessException.class, () -> serverFacade.joinRequest(joinRequest, registerResponse.authToken()));
+//    }
 }

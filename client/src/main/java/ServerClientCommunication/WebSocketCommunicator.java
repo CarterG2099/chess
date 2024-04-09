@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
+import model.GameData;
 import webSocketMessages.userCommands.*;
 
 import javax.websocket.*;
@@ -44,22 +45,19 @@ public class WebSocketCommunicator extends Endpoint {
     public void leave(String authToken, int gameID, String playerColor) throws DataAccessException {
         try {
             var leaveCommand = new Leave(authToken, gameID, playerColor);
-//            var command = new UserGameCommand(authToken, Leave.CommandType.LEAVE);
             this.session.getBasicRemote().sendText(new Gson().toJson(leaveCommand));
         } catch (IOException ex) {
             throw new DataAccessException(ex.getMessage(), 500);
         }
     }
 
-    public void joinRequest(String authToken, int gameID, ChessGame.TeamColor color, Boolean joinAsPlayer) throws DataAccessException {
+    public void joinRequest(String authToken, GameData gameData) throws DataAccessException {
         try {
-            if (joinAsPlayer) {
-                var joinCommand = new JoinPlayer(authToken, gameID, color);
-//                var command = new UserGameCommand(authToken, UserGameCommand.CommandType.JOIN_PLAYER);
+            if (gameData.playerColor() != null) {
+                var joinCommand = new JoinPlayer(authToken, gameData);
                 this.session.getBasicRemote().sendText(new Gson().toJson(joinCommand));
             } else {
-                var joinCommand = new JoinObserver(authToken, gameID);
-//                var command = new UserGameCommand(authToken, UserGameCommand.CommandType.JOIN_OBSERVER);
+                var joinCommand = new JoinObserver(authToken, gameData);
                 this.session.getBasicRemote().sendText(new Gson().toJson(joinCommand));
             }
         } catch (IOException ex) {
@@ -70,7 +68,6 @@ public class WebSocketCommunicator extends Endpoint {
     public void resign(String authToken, int gameID) throws DataAccessException {
         try {
             var resignCommand = new Resign(authToken, gameID);
-//            var command = new UserGameCommand(authToken, UserGameCommand.CommandType.RESIGN);
             this.session.getBasicRemote().sendText(new Gson().toJson(resignCommand));
         } catch (IOException ex) {
             throw new DataAccessException(ex.getMessage(), 500);

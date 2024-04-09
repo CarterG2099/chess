@@ -9,20 +9,22 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    public final ConcurrentHashMap<String, Connection> connections = new ConcurrentHashMap<>();
+    // ConcurrentHashMap with gameID as key and list of connections as value
+    public final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsByGameID = new ConcurrentHashMap<>();
 
-    public void add(String authToken, Session session) {
+    public void add(int gameID, String authToken, Session session) {
         var connection = new Connection(authToken, session);
-        connections.put(authToken, connection);
+        connectionsByGameID.computeIfAbsent(gameID, k -> new ArrayList<>()).add(connection);
     }
 
-    public void remove(String authToken) {
-        connections.remove(authToken);
+    public void remove(int gameID, String authToken) {
+        connectionsByGameID.getOrDefault(gameID, new ArrayList<>()).removeIf(connection -> connection.authToken.equals(authToken));
     }
 
-    public void broadcast(String excludeCurrentAuthToken, ServerMessage notification, Boolean excludeSender) throws IOException {
+    public void broadcast(int gameID, String excludeCurrentAuthToken, ServerMessage notification, Boolean excludeSender) throws IOException {
+        var connections = connectionsByGameID.getOrDefault(gameID, new ArrayList<>());
         var removeList = new ArrayList<Connection>();
-        for (var c : connections.values()) {
+        for (var c : connections) {
             if (c.session.isOpen()) {
                 //Only send error message to sender
                 if(notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR && !c.authToken.equals(excludeCurrentAuthToken)){
@@ -39,8 +41,7 @@ public class ConnectionManager {
         }
         // Clean up any connections that were left open.
         for (var c : removeList) {
-            connections.remove(c.authToken);
+            connections.remove(c);
         }
     }
 }
-// Path: src/main/java/server/websocket/Connection.java

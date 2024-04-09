@@ -111,12 +111,15 @@ public class Client implements ServerMessageObserver {
     }
 
     public String resign() throws DataAccessException {
+        if (currentGame == null) {
+            return "You are not currently in a game";
+        }
         Scanner scanner = new Scanner(System.in);
         System.out.println("Are you sure you want to resign? (y/n)");
         String confirmation = scanner.nextLine().trim().toLowerCase();
         if (confirmation.equals("y")) {
-            currentGame = null;
             serverFacade.resign(this);
+            currentGame = null;
             return "You have forfeited the game.";
         } else if (confirmation.equals("n")) {
             return "Resignation canceled.";
@@ -234,20 +237,18 @@ public class Client implements ServerMessageObserver {
         GameData gameToJoin = gameList.get(Integer.parseInt(params[0]) - 1);
         int gameID = gameToJoin.gameID();
         GameData joinRequest = new GameData(gameID, null, null, null, null, color, null);
-        GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
-        ChessBoard chessBoard = gameData.chessGame().getBoard();
-        ChessBoardUI.drawChessBoards(chessBoard);
-        currentGame = gameData;
+//        GameData gameData = serverFacade.joinRequest(joinRequest, authToken);
         if (color == null) {
-            serverFacade.webSocketJoinRequest(this, false);
+            playerColor = null;
+            serverFacade.joinRequest(this, joinRequest);
             return "You have joined " + gameList.get(Integer.parseInt(params[0]) - 1).gameName() + " as an observer.";
         } else if (color.equals("BLACK")) {
             playerColor = ChessGame.TeamColor.BLACK;
-            serverFacade.webSocketJoinRequest(this, true);
+            serverFacade.joinRequest(this, joinRequest);
             return "You have joined the game as black.";
         } else if (color.equals("WHITE")) {
             playerColor = ChessGame.TeamColor.WHITE;
-            serverFacade.webSocketJoinRequest(this, true);
+            serverFacade.joinRequest(this, joinRequest);
             return "You have joined the game as white.";
         }
         return "Invalid color";

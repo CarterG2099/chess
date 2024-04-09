@@ -9,4 +9,12 @@ public class Leave extends UserGameCommand {
         this.gameID = gameID;
         this.playerColor = playerColor;
     }
+
+    public int gameID() {
+        return gameID;
+    }
+
+    public String playerColor() {
+        return playerColor;
+    }
 }

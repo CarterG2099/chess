@@ -66,7 +66,25 @@ public class GameService {
         return newGame;
     }
 
-//    public void leaveGame(GameData gameData, UserData user, String playerColor) throws DataAccessException {
+    public void leaveGame(String playerColor, int gameID) throws DataAccessException {
+        GameData gameData = Server.gameDAO.getGame(gameID);
+        GameData newGame = null;
+        if (playerColor.equalsIgnoreCase("WHITE")) {
+            newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
+        } else if (playerColor.equalsIgnoreCase("BLACK")) {
+            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.chessGame(), "", gameData.observerList());
+        }
+        else {
+            ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
+            newObserverList.removeIf(observer -> observer.username().equals(playerColor));
+            newGame = new GameData(gameData.gameID(), null, null, gameData.gameName(), gameData.chessGame(), "", newObserverList);
+        }
+        Server.gameDAO.deleteGame(gameData);
+        Server.gameDAO.addGame(newGame);
+
+    }
+
+//    public void leaveGame(GameData gameData, UserData user) throws DataAccessException {
 //        GameData newGame = null;
 //        if(playerColor.isEmpty()) {
 //            ArrayList<UserData> newObserverList = new ArrayList<>(gameData.observerList());
