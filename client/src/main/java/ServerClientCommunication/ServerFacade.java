@@ -43,11 +43,6 @@ public class ServerFacade {
     public void joinRequest(Client client, GameData gameData) throws DataAccessException {
         ws = new WebSocketCommunicator(client.serverUrl, client);
         ws.joinRequest(client.authToken, gameData);
-//        return HttpCommunicator.makeRequest("PUT", "/game", joinRequest, authToken, GameData.class);
-    }
-
-    public void webSocketJoinRequest(Client client, GameData gameData, Boolean joinAsPlayer) throws DataAccessException {
-
     }
 
     public void leave(Client client, String playerColor) throws DataAccessException {
