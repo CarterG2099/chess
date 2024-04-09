@@ -8,9 +8,10 @@ import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.*;
+import DataAccessException.StatusResponse;
 
 public class Serializer {
-    static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     public static Object translateExceptionToJson(DataAccessException ex, Response res) {
         if (res != null) {
@@ -21,7 +22,7 @@ public class Serializer {
         return gson.toJson(statusResponse);
     }
 
-    static Object translateSuccessToJson(Response res) {
+    public static Object translateSuccessToJson(Response res) {
         StatusResponse statusResponse = new StatusResponse("Success", 200, null, null);
         res.status(200);
         res.body("Success");

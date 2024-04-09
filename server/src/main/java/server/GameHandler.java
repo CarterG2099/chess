@@ -7,6 +7,7 @@ import service.GameService;
 import service.UserService;
 import spark.Request;
 import spark.Response;
+import DataAccessException.StatusResponse;
 
 import static server.Serializer.gson;
 import static server.Serializer.translateExceptionToJson;

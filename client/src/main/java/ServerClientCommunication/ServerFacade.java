@@ -5,7 +5,7 @@ import chess.ChessMove;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import server.StatusResponse;
+import DataAccessException.StatusResponse;
 import ui.Client;
 
 

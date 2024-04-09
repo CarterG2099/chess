@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
-import static server.Serializer.translateExceptionToJson;
-
 public class Client implements ServerMessageObserver {
 
     private static ServerFacade serverFacade;
@@ -80,9 +78,6 @@ public class Client implements ServerMessageObserver {
                 result = (String) eval(line);
                 System.out.println(result);
             } catch (Exception e) {
-                if (e instanceof DataAccessException) {
-                    System.out.println(translateExceptionToJson((DataAccessException) e, null));
-                }
                 System.out.println(e.getMessage());
             }
         }
